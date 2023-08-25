@@ -25,12 +25,12 @@ void UI::RefreshUserInterface()
 	SDL_RenderClear(this->renderer);
 	SDL_Delay(30);
 }
-void UI::DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tileMap, Player* player)
+void UI::DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player)
 {
 	SDL_Rect playerTile = Tilemap::FindTile(0, 4);
 
 	SDL_RenderCopy(renderer,
-		tileMap,
+		tileMapTexture,
 		&playerTile,
 		&userInterfaceRect[player->GetPlayerPosX()][player->GetPlayerPosY()]);
 }
@@ -99,8 +99,40 @@ void UI::DrawMap(SDL_Renderer* renderer, Map* map, Tilemap* tileMap)
 		}
 	}
 }
-void UI::DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMap, std::string message)
+void UI::DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::string message)
 {
 	/// TODO: Add borders
-	DrawText(renderer, tileMap, 46, 43, message);
+	DrawText(renderer, tileMapTexture, 46, 43, message);
 }
+
+void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player)
+{
+	DrawText(renderer, tileMapTexture, 45, 10, "Inventory: " + std::to_string(player->GetPlayerItemsInInventory()));
+	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
+	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
+	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
+	DrawText(renderer, tileMapTexture, 86, 11, "Equipped:");
+	DrawInventoryItems(renderer, tileMapTexture, player->GetPlayerInventory());
+}
+
+void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item> inventory)
+{
+	int itemCount = 0;
+	for (Item x : inventory)
+	{
+		DrawText(renderer, tileMapTexture, 45, 12, x.GetItemName());
+		DrawText(renderer, tileMapTexture, 57, 12, std::to_string(x.GetItemBonusStrength()) + " " + std::to_string(x.GetItemBonusDexterity()) + " " + std::to_string(x.GetItemBonusIntellect()));
+		DrawText(renderer, tileMapTexture, 86, 12 + itemCount, std::to_string(x.GetIsEquipped()));
+		itemCount++;
+	}
+}
+
+void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor)
+{
+	DrawText(renderer, tileMapTexture, 45, 10, "Vendor " + vendor->GetVendorName() + ":");
+	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
+	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
+	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
+	DrawText(renderer, tileMapTexture, 86, 11, "Item price:");
+}
+

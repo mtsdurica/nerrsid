@@ -4,7 +4,7 @@
 
 Player::Player(std::string playerName, playerClass_t playerClass)
 	: playerName(std::move(playerName)), playerClass(playerClass), playerLevel(1), playerExperience(0), playerGold(0),
-	playerItemsInInventory(0), playerPosX(1), playerPosY(1)
+	playerItemsInInventory(0), playerPosX(1), playerPosY(1), playerMaximumItemsInInventory(50)
 {
 	switch (playerClass)
 	{
@@ -28,89 +28,107 @@ Player::Player(std::string playerName, playerClass_t playerClass)
 Player::~Player() = default;
 std::string Player::GetPlayerName() const
 {
-	return playerName;
+	return this->playerName;
 }
 playerClass_t Player::GetPlayerClass() const
 {
-	return playerClass;
+	return this->playerClass;
 }
 int Player::GetPlayerLevel() const
 {
-	return playerLevel;
+	return this->playerLevel;
 }
 int Player::GetPlayerExperience() const
 {
-	return playerExperience;
+	return this->playerExperience;
 }
 int Player::GetPlayerGold() const
 {
-	return playerGold;
+	return this->playerGold;
 }
 int Player::GetPlayerStrength() const
 {
-	return playerStrength;
+	return this->playerStrength;
 }
 int Player::GetPlayerDexterity() const
 {
-	return playerDexterity;
+	return this->playerDexterity;
 }
 int Player::GetPlayerIntellect() const
 {
-	return playerIntellect;
+	return this->playerIntellect;
+}
+std::vector<Item> Player::GetPlayerInventory()
+{
+	return this->playerInventory;
 }
 int Player::GetPlayerItemsInInventory() const
 {
-	return playerItemsInInventory;
+	return this->playerItemsInInventory;
+}
+int Player::GetPlayerMaximumItemsInInventory() const
+{
+	return this->playerMaximumItemsInInventory;
 }
 int Player::GetPlayerPosX() const
 {
-	return playerPosX;
+	return this->playerPosX;
 }
 int Player::GetPlayerPosY() const
 {
-	return playerPosY;
+	return this->playerPosY;
 }
 void Player::SetPlayerName(const std::string& playerName)
 {
-	Player::playerName = playerName;
+	this->playerName = playerName;
 }
 void Player::SetPlayerClass(playerClass_t playerClass)
 {
-	Player::playerClass = playerClass;
+	this->playerClass = playerClass;
 }
 void Player::SetPlayerLevel(int playerLevel)
 {
-	Player::playerLevel = playerLevel;
+	this->playerLevel = playerLevel;
 }
 void Player::SetPlayerExperience(int playerExperience)
 {
-	Player::playerExperience = playerExperience;
+	this->playerExperience = playerExperience;
 }
 void Player::SetPlayerGold(int playerGold)
 {
-	Player::playerGold = playerGold;
+	this->playerGold = playerGold;
 }
 void Player::SetPlayerStrength(int playerStrength)
 {
-	Player::playerStrength = playerStrength;
+	this->playerStrength = playerStrength;
 }
 void Player::SetPlayerDexterity(int playerDexterity)
 {
-	Player::playerDexterity = playerDexterity;
+	this->playerDexterity = playerDexterity;
 }
 void Player::SetPlayerIntellect(int playerIntellect)
 {
-	Player::playerIntellect = playerIntellect;
+	this->playerIntellect = playerIntellect;
+}
+bool Player::InsertIntoPlayerInventory(Item item)
+{
+	if (this->playerItemsInInventory < this->playerMaximumItemsInInventory)
+	{
+		this->playerItemsInInventory++;
+		this->playerInventory.push_back(item);
+		return true;
+	}
+	return false;
 }
 void Player::SetPlayerItemsInInventory(int playerItemsInInventory)
 {
-	Player::playerItemsInInventory = playerItemsInInventory;
+	this->playerItemsInInventory = playerItemsInInventory;
 }
 void Player::SetPlayerPosX(int playerPosX)
 {
-	Player::playerPosX = playerPosX;
+	this->playerPosX = playerPosX;
 }
 void Player::SetPlayerPosY(int playerPosY)
 {
-	Player::playerPosY = playerPosY;
+	this->playerPosY = playerPosY;
 }

@@ -31,12 +31,12 @@ HandledEvent Handler::KeyPressHandler(Player* player, SDL_Event eventToBeHandled
 		return ExitKeypressHandled;
 		break;
 	case SDLK_RETURN:
-		switch (eventToBeHandledGame.GetTypeOfEvent())
-		{
-		case VendorEvent:
-			return EnterKeypressHandled;
-			break;
-		}
+		return EnterKeypressHandled;
+		break;
+	case SDLK_i:
+		return InventoryKeypressHandled;
+		break;
+
 	}
 }
 
@@ -70,6 +70,31 @@ HandledEvent Handler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event
 			return EnterKeypressHandled;
 			break;
 		}
+	}
+}
+
+HandledEvent Handler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
+{
+	switch (eventToBeHandledSDL.key.keysym.sym)
+	{
+	case SDLK_UP:
+		return PlayerNavigationKeypressHandled;
+		break;
+	case SDLK_DOWN:
+		return PlayerNavigationKeypressHandled;
+		break;
+	case SDLK_LEFT:
+		return PlayerNavigationKeypressHandled;
+		break;
+	case SDLK_RIGHT:
+		return PlayerNavigationKeypressHandled;
+		break;
+	case SDLK_ESCAPE:
+		return ExitKeypressHandled;
+		break;
+	case SDLK_RETURN:
+		return EnterKeypressHandled;
+		break;
 	}
 }
 

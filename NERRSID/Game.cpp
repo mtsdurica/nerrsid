@@ -57,6 +57,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	auto* player = new Player("foo", Warrior);
 	Vendor* vendor = new Vendor("Bar", 2, 1);
 	Event* eventGame = new Event(EmptyEvent, "");
+	Item* item = new Item();
+
+	player->InsertIntoPlayerInventory(*item);
 
 	map->InsertVendor(vendor);
 
@@ -95,7 +98,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 						userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 						userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-						userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You are shopping now");
+						userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor);
 						SDL_RenderPresent(game->GetRenderer());
 
 						bool vendorShoppingFlag = true;
@@ -121,10 +124,51 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 										userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 										userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 										userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+										userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor);
 										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You bought something");
 										SDL_RenderPresent(game->GetRenderer());
 										break;
 									}
+								}
+							}
+						}
+					}
+					break;
+				case InventoryKeypressHandled:
+					userInterface->RefreshUserInterface();
+					userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
+					userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+					userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+					userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+					SDL_RenderPresent(game->GetRenderer());
+
+					bool inventoryBrowsingFlag = true;
+
+					while (inventoryBrowsingFlag)
+					{
+						while (SDL_PollEvent(&eventSDL))
+						{
+							if (eventSDL.type == SDL_QUIT)
+							{
+								inventoryBrowsingFlag = false;
+								gameIsRunning = false;
+							}
+							else if (eventSDL.type == SDL_KEYDOWN)
+							{
+								switch (Handler::InventoryKeyPressHandler(eventSDL))
+								{
+								case ExitKeypressHandled:
+									inventoryBrowsingFlag = false;
+									break;
+								case EnterKeypressHandled:
+									userInterface->RefreshUserInterface();
+									userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
+									userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+									userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+									userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+									userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You equipped something");
+									SDL_RenderPresent(game->GetRenderer());
+									break;
 								}
 							}
 						}

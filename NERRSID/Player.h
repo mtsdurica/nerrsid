@@ -1,9 +1,11 @@
 #pragma once
 #include <string>
 #include <SDL.h>
+#include <vector>
 
 #include "Map.h"
 #include "Event.h"
+#include "Item.h"
 
 typedef enum playerClass
 {
@@ -21,8 +23,9 @@ private:
 	int playerStrength;
 	int playerDexterity;
 	int playerIntellect;
-	// TODO: inventory stuff
+	std::vector<Item> playerInventory;
 	int playerItemsInInventory;
+	int playerMaximumItemsInInventory;
 	int playerPosX;
 	int playerPosY;
 
@@ -37,7 +40,9 @@ public:
 	int GetPlayerStrength() const;
 	int GetPlayerDexterity() const;
 	int GetPlayerIntellect() const;
+	std::vector<Item> GetPlayerInventory();
 	int GetPlayerItemsInInventory() const;
+	int GetPlayerMaximumItemsInInventory() const;
 	int GetPlayerPosX() const;
 	int GetPlayerPosY() const;
 	void SetPlayerName(const std::string& playerName);
@@ -48,6 +53,7 @@ public:
 	void SetPlayerStrength(int playerStrength);
 	void SetPlayerDexterity(int playerDexterity);
 	void SetPlayerIntellect(int playerIntellect);
+	bool InsertIntoPlayerInventory(Item item);
 	void SetPlayerItemsInInventory(int playerItemsInInventory);
 	void SetPlayerPosX(int playerPosX);
 	void SetPlayerPosY(int playerPosY);
