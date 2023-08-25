@@ -139,6 +139,9 @@ SDL_Rect Tilemap::charToRect(char srcChar)
 		return alpha_K;
 		break;
 	case 'L':
+		return alpha_L;
+		break;
+	case 'M':
 		return alpha_M;
 		break;
 	case 'N':
