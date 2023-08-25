@@ -1,7 +1,9 @@
 #pragma once
 #include <string>
 #include <SDL.h>
+
 #include "Map.h"
+#include "Event.h"
 
 typedef enum playerClass
 {
@@ -26,8 +28,8 @@ private:
 
 public:
 	Player(std::string playerName, playerClass_t playerClass);
-	virtual ~Player();
-	const std::string& GetPlayerName() const;
+	~Player();
+	std::string GetPlayerName() const;
 	playerClass_t GetPlayerClass() const;
 	int GetPlayerLevel() const;
 	int GetPlayerExperience() const;
@@ -38,18 +40,16 @@ public:
 	int GetPlayerItemsInInventory() const;
 	int GetPlayerPosX() const;
 	int GetPlayerPosY() const;
-	void SetPlayerName(const std::string& newPlayerName);
-	void SetPlayerClass(playerClass_t newPlayerClass);
-	void SetPlayerLevel(int newPlayerLevel);
-	void SetPlayerExperience(int newPlayerExperience);
-	void SetPlayerGold(int newPlayerGold);
-	void SetPlayerStrength(int newPlayerStrength);
-	void SetPlayerDexterity(int newPlayerDexterity);
-	void SetPlayerIntellect(int newPlayerIntellect);
-	void SetPlayerItemsInInventory(int newPlayerItemsInInventory);
-	void SetPlayerPosX(int newPlayerPosX);
-	void SetPlayerPosY(int newPlayerPosY);
-	void KeyPressHandler(SDL_Event, Map map);
-
+	void SetPlayerName(const std::string& playerName);
+	void SetPlayerClass(playerClass_t playerClass);
+	void SetPlayerLevel(int playerLevel);
+	void SetPlayerExperience(int playerExperience);
+	void SetPlayerGold(int playerGold);
+	void SetPlayerStrength(int playerStrength);
+	void SetPlayerDexterity(int playerDexterity);
+	void SetPlayerIntellect(int playerIntellect);
+	void SetPlayerItemsInInventory(int playerItemsInInventory);
+	void SetPlayerPosX(int playerPosX);
+	void SetPlayerPosY(int playerPosY);
 };
 

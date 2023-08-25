@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "Tilemap.h"
+#include "Vendor.h"
 
 #define MAX_X 40                // Max base room width
 #define MAX_Y 45              // Max base room height
@@ -12,7 +13,7 @@
 
 typedef enum tiles
 {
-	Wall, Walkable, PlayerTile
+	Wall, Walkable, PlayerTile, VendorTile
 } tiles;
 
 typedef struct point
@@ -42,18 +43,19 @@ class Map
 {
 private:
 	std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles{};
-	void drawHorizontalWall(wall*);
-	void drawVerticalWall(wall*);
-	static point getChildCenter(room*);
-	static UINT_CHANGEABLE randomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max);
-	void generateHorizontalSplit(room*);
-	void generateVerticalSplit(room*);
-	room initializeBase();
-	void generateMap();
+	void DrawHorizontalWall(wall* newWall);
+	void DrawVerticalWall(wall* newWall);
+	static point GetChildCenter(room* childRoom);
+	static UINT_CHANGEABLE RandomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max);
+	void GenerateHorizontalSplit(room* r);
+	void GenerateVerticalSplit(room* r);
+	room InitializeBase();
+	void GenerateMap();
 
 public:
 	Map();
 	~Map();
-	std::array<std::array<tiles, MAX_Y>, MAX_X>& getMapTiles();
+	std::array<std::array<tiles, MAX_Y>, MAX_X>& GetMapTiles();
+	void InsertVendor(Vendor* newVendor);
 };
 

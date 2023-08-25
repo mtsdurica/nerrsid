@@ -13,7 +13,7 @@ private:
 	SDL_Window* gameWindow;
 	SDL_Renderer* gameRenderer;
 	Tilemap* tileMap;
-	Game(int, int);
+	Game(int screenWidth, int screenHeight);
 
 public:
 	~Game();
@@ -21,24 +21,24 @@ public:
 	 *
 	 * @return Width of the game window
 	 */
-	int getScreenWidth();
+	int GetScreenWidth() const;
 	/**
 	 *
 	 * @return Height of the game window
 	 */
-	int getScreenHeight();
+	int GetScreenHeight() const;
 	/**
 	 *
 	 * @return Game renderer
 	 */
-	SDL_Renderer* getRenderer();
+	SDL_Renderer* GetRenderer() const;
 	/**
 	 *
 	 * @return Game tile map
 	 */
-	Tilemap* getTileMap();
+	Tilemap* GetTileMap() const;
 	/**
 	 * @brief Method used to build the game application
 	 */
-	static void Build(int, int);
+	static void Build(int gameScreenWidth, int gameScreenHeight);
 };

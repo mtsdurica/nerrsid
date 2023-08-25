@@ -1,5 +1,6 @@
 #include "Player.h"
 #include "Map.h"
+#include "UI.h"
 
 Player::Player(std::string playerName, playerClass_t playerClass)
 	: playerName(std::move(playerName)), playerClass(playerClass), playerLevel(1), playerExperience(0), playerGold(0),
@@ -25,7 +26,7 @@ Player::Player(std::string playerName, playerClass_t playerClass)
 	}
 }
 Player::~Player() = default;
-const std::string& Player::GetPlayerName() const
+std::string Player::GetPlayerName() const
 {
 	return playerName;
 }
@@ -69,75 +70,47 @@ int Player::GetPlayerPosY() const
 {
 	return playerPosY;
 }
-void Player::SetPlayerName(const std::string& newPlayerName)
+void Player::SetPlayerName(const std::string& playerName)
 {
-	Player::playerName = newPlayerName;
+	Player::playerName = playerName;
 }
-void Player::SetPlayerClass(playerClass_t newPlayerClass)
+void Player::SetPlayerClass(playerClass_t playerClass)
 {
-	Player::playerClass = newPlayerClass;
+	Player::playerClass = playerClass;
 }
-void Player::SetPlayerLevel(int newPlayerLevel)
+void Player::SetPlayerLevel(int playerLevel)
 {
-	Player::playerLevel = newPlayerLevel;
+	Player::playerLevel = playerLevel;
 }
-void Player::SetPlayerExperience(int newPlayerExperience)
+void Player::SetPlayerExperience(int playerExperience)
 {
-	Player::playerExperience = newPlayerExperience;
+	Player::playerExperience = playerExperience;
 }
-void Player::SetPlayerGold(int newPlayerGold)
+void Player::SetPlayerGold(int playerGold)
 {
-	Player::playerGold = newPlayerGold;
+	Player::playerGold = playerGold;
 }
-void Player::SetPlayerStrength(int newPlayerStrength)
+void Player::SetPlayerStrength(int playerStrength)
 {
-	Player::playerStrength = newPlayerStrength;
+	Player::playerStrength = playerStrength;
 }
-void Player::SetPlayerDexterity(int newPlayerDexterity)
+void Player::SetPlayerDexterity(int playerDexterity)
 {
-	Player::playerDexterity = newPlayerDexterity;
+	Player::playerDexterity = playerDexterity;
 }
-void Player::SetPlayerIntellect(int newPlayerIntellect)
+void Player::SetPlayerIntellect(int playerIntellect)
 {
-	Player::playerIntellect = newPlayerIntellect;
+	Player::playerIntellect = playerIntellect;
 }
-void Player::SetPlayerItemsInInventory(int newPlayerItemsInInventory)
+void Player::SetPlayerItemsInInventory(int playerItemsInInventory)
 {
-	Player::playerItemsInInventory = newPlayerItemsInInventory;
+	Player::playerItemsInInventory = playerItemsInInventory;
 }
-void Player::SetPlayerPosX(int newPlayerPosX)
+void Player::SetPlayerPosX(int playerPosX)
 {
-	Player::playerPosX = newPlayerPosX;
+	Player::playerPosX = playerPosX;
 }
-void Player::SetPlayerPosY(int newPlayerPosY)
+void Player::SetPlayerPosY(int playerPosY)
 {
-	Player::playerPosY = newPlayerPosY;
+	Player::playerPosY = playerPosY;
 }
-
-void Player::KeyPressHandler(SDL_Event eventToBeHandled, Map map)
-{
-	auto mapTiles = map.getMapTiles();
-
-	switch (eventToBeHandled.key.keysym.sym)
-	{
-	case SDLK_UP:
-		if (mapTiles[playerPosX][playerPosY - 1] == Walkable)
-			playerPosY--;
-		break;
-	case SDLK_DOWN:
-		if (mapTiles[playerPosX][playerPosY + 1] == Walkable)
-			playerPosY++;
-		break;
-	case SDLK_LEFT:
-		if (mapTiles[playerPosX - 1][playerPosY] == Walkable)
-			playerPosX--;
-		break;
-	case SDLK_RIGHT:
-		if (mapTiles[playerPosX + 1][playerPosY] == Walkable)
-			playerPosX++;
-		break;
-	}
-}
-
-
-

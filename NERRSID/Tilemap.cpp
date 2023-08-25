@@ -8,11 +8,11 @@ Tilemap::~Tilemap()
 {
 	SDL_DestroyTexture(tileMapTexture);
 }
-SDL_Rect Tilemap::findTile(int positionX, int positionY)
+SDL_Rect Tilemap::FindTile(int tilePositionX, int tilePositionY)
 {
 	SDL_Rect foundTile;
-	foundTile.x = positionX * 16;
-	foundTile.y = positionY * 16;
+	foundTile.x = tilePositionX * 16;
+	foundTile.y = tilePositionY * 16;
 	foundTile.w = 16;
 	foundTile.h = 16;
 
@@ -23,7 +23,7 @@ SDL_Texture* Tilemap::GetTileMapTexture() const
 	return tileMapTexture;
 }
 
-SDL_Rect Tilemap::charToRect(char srcChar)
+SDL_Rect Tilemap::CharToRect(char srcChar)
 {
 	switch (srcChar)
 	{

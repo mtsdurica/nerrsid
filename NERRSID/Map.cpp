@@ -7,27 +7,27 @@ Map::Map()
 	for (int x = 0; x < MAX_X; x++)
 		for (int y = 0; y < MAX_Y; y++)
 			mapTiles[x][y] = Walkable;
-	generateMap();
+	GenerateMap();
 }
 Map::~Map() = default;
-void Map::drawHorizontalWall(wall* newWall)
+void Map::DrawHorizontalWall(wall* newWall)
 {
 	for (UINT_CHANGEABLE x = newWall->start.x; x <= newWall->end.x; x++)
 		mapTiles[x][newWall->start.y] = Wall;
 }
-void Map::drawVerticalWall(wall* newWall)
+void Map::DrawVerticalWall(wall* newWall)
 {
 	for (UINT_CHANGEABLE y = newWall->start.y; y <= newWall->end.y; y++)
 		mapTiles[newWall->start.x][y] = Wall;
 }
-point Map::getChildCenter(room* childRoom)
+point Map::GetChildCenter(room* childRoom)
 {
 	point center;
 	center.x = childRoom->top.start.x + (childRoom->top.end.x - childRoom->top.start.x) / 2;
 	center.y = childRoom->right.start.y + (childRoom->right.end.y - childRoom->right.start.y) / 2;
 	return center;
 }
-UINT_CHANGEABLE Map::randomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
+UINT_CHANGEABLE Map::RandomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
 {
 	// Calculate the middle of the range
 	UINT_CHANGEABLE middle = (min + max) / 2;
@@ -35,7 +35,7 @@ UINT_CHANGEABLE Map::randomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
 	UINT_CHANGEABLE deviation = (max - min) / 3;
 	return (rand() % (deviation * 2 + 1)) + (middle - deviation);
 }
-void Map::generateHorizontalSplit(room* r)
+void Map::GenerateHorizontalSplit(room* r)
 {
 	if (r == nullptr)
 		return;
@@ -44,7 +44,7 @@ void Map::generateHorizontalSplit(room* r)
 		return;
 
 	UINT_CHANGEABLE
-		rand_y = randomInRange(r->left.start.y + (PSEUDO_ROOM_SIZE / 2), r->left.end.y - (PSEUDO_ROOM_SIZE / 2));
+		rand_y = RandomInRange(r->left.start.y + (PSEUDO_ROOM_SIZE / 2), r->left.end.y - (PSEUDO_ROOM_SIZE / 2));
 
 	wall new_split = { { r->top.start.x, rand_y }, { r->top.end.x, rand_y } };
 
@@ -58,18 +58,18 @@ void Map::generateHorizontalSplit(room* r)
 	  { 0, 0 } };
 	r->child2 = &child2;
 
-	drawHorizontalWall(&new_split);
+	DrawHorizontalWall(&new_split);
 
-	generateVerticalSplit(&child1);
-	child1.center = getChildCenter(&child1);
+	GenerateVerticalSplit(&child1);
+	child1.center = GetChildCenter(&child1);
 
-	generateVerticalSplit(&child2);
-	child2.center = getChildCenter(&child2);
+	GenerateVerticalSplit(&child2);
+	child2.center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
 	for (int i = child2.center.y; i > child1.center.y; i--)
 		mapTiles[child2.center.x][i] = Walkable;
 }
-void Map::generateVerticalSplit(room* r)
+void Map::GenerateVerticalSplit(room* r)
 {
 	if (r == nullptr)
 		return;
@@ -77,7 +77,7 @@ void Map::generateVerticalSplit(room* r)
 	if (r->top.start.x + PSEUDO_ROOM_SIZE >= r->top.end.x - PSEUDO_ROOM_SIZE)
 		return;
 
-	UINT_CHANGEABLE rand_x = randomInRange(r->top.start.x + PSEUDO_ROOM_SIZE, r->top.end.x - PSEUDO_ROOM_SIZE);
+	UINT_CHANGEABLE rand_x = RandomInRange(r->top.start.x + PSEUDO_ROOM_SIZE, r->top.end.x - PSEUDO_ROOM_SIZE);
 
 	wall new_split = { { rand_x, r->top.start.y }, { rand_x, r->bot.start.y } }; // third thingy maybe wrong
 
@@ -91,41 +91,46 @@ void Map::generateVerticalSplit(room* r)
 	 { 0, 0 } };
 	r->child2 = &child2;
 
-	drawVerticalWall(&new_split);
+	DrawVerticalWall(&new_split);
 
-	generateHorizontalSplit(&child1);
-	child1.center = getChildCenter(&child1);
+	GenerateHorizontalSplit(&child1);
+	child1.center = GetChildCenter(&child1);
 
-	generateHorizontalSplit(&child2);
-	child2.center = getChildCenter(&child2);
+	GenerateHorizontalSplit(&child2);
+	child2.center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
 	for (int i = child2.center.x; i > child1.center.x; i--)
 		mapTiles[i][child2.center.y] = Walkable;
 }
-room Map::initializeBase()
+room Map::InitializeBase()
 {
 	room newRoom =
 	{ {{ 0, 0 }, { MAX_X - 1, 0 }}, {{ 0, MAX_Y - 1 }, { MAX_X - 1, MAX_Y - 1 }}, {{ 0, 0 }, { 0, MAX_Y - 1 }},
 	 {{ MAX_X - 1, 0 }, { MAX_X - 1, MAX_Y - 1 }}, nullptr, nullptr, { 0, 0 } };
-	drawHorizontalWall(&newRoom.top);
-	drawHorizontalWall(&newRoom.bot);
-	drawVerticalWall(&newRoom.left);
-	drawVerticalWall(&newRoom.right);
+	DrawHorizontalWall(&newRoom.top);
+	DrawHorizontalWall(&newRoom.bot);
+	DrawVerticalWall(&newRoom.left);
+	DrawVerticalWall(&newRoom.right);
 	return newRoom;
 }
 
-void Map::generateMap()
+void Map::GenerateMap()
 {
-	room base = initializeBase();
+	room base = InitializeBase();
 
 	if (rand() % 2)
-		(void)generateVerticalSplit(&base);
+		(void)GenerateVerticalSplit(&base);
 	else
-		(void)generateHorizontalSplit(&base);
+		(void)GenerateHorizontalSplit(&base);
 
 }
 
-std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::getMapTiles()
+std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()
 {
 	return mapTiles;
+}
+
+void Map::InsertVendor(Vendor* newVendor)
+{
+	this->mapTiles[newVendor->GetVendorPosX()][newVendor->GetVendorPosY()] = VendorTile;
 }
