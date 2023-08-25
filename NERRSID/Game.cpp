@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <ctime>
 
 #include "Game.h"
 
@@ -45,6 +46,8 @@ int Game::getScreenHeight()
 }
 void Game::Build(int newScreenWidth, int newScreenHeight)
 {
+	srand(time(nullptr));
+
 	Game* game = new Game(newScreenWidth, newScreenHeight);
 	Map* map = new Map();
 	UI* userInterface = new UI(game->getRenderer());
@@ -72,7 +75,7 @@ void Game::Build(int newScreenWidth, int newScreenHeight)
 		userInterface->dumpMap(game->getRenderer(), map, game->getTileMap());
 		userInterface->drawPlayer(game->getRenderer(), game->getTileMap()->GetTileMapTexture(), player);
 		userInterface->drawPlayerInfo(game->getRenderer(), game->getTileMap()->GetTileMapTexture(), player);
-		
+
 		SDL_RenderPresent(game->getRenderer());
 	}
 
