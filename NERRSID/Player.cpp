@@ -58,9 +58,9 @@ int Player::GetPlayerIntellect() const
 {
 	return this->playerIntellect;
 }
-std::vector<Item> Player::GetPlayerInventory()
+std::vector<Item>* Player::GetPlayerInventory()
 {
-	return this->playerInventory;
+	return &this->playerInventory;
 }
 int Player::GetPlayerItemsInInventory() const
 {

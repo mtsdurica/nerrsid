@@ -8,18 +8,18 @@ class UI
 {
 private:
 	SDL_Renderer* renderer;
-	SDL_Rect userInterfaceRect[1600 / 16][MAX_Y]{};
+	SDL_Rect userInterfaceRect[GAME_RESOLUTION_WIDTH / 16][GAME_RESOLUTION_HEIGHT / 16];
 public:
 	UI(SDL_Renderer* renderer, int userInterfaceRectWidth, int userInterfaceRectHeight);
 	~UI();
 	void RefreshUserInterface();
-	void DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player);
-	void DrawPlayerInfo(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player);
-	void DrawMap(SDL_Renderer* renderer, Map* map, Tilemap* tileMap);
+	void DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player);
+	void DrawPlayerInfo(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player);
+	void DrawMap(SDL_Renderer* renderer, Map* map, Tilemap* tilemap);
 	void DrawText(SDL_Renderer* renderer, SDL_Texture*, int textPositionX, int textPositionY, std::string text);
-	void DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::string message);
-	void DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player);
-	void DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item> inventory);
-	void DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor);
+	void DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, std::string message);
+	void DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player, int selectedItem);
+	void DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player, int selectedItem);
+	void DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Vendor* vendor);
 };
 

@@ -40,7 +40,7 @@ public:
 	int GetPlayerStrength() const;
 	int GetPlayerDexterity() const;
 	int GetPlayerIntellect() const;
-	std::vector<Item> GetPlayerInventory();
+	std::vector<Item>* GetPlayerInventory();
 	int GetPlayerItemsInInventory() const;
 	int GetPlayerMaximumItemsInInventory() const;
 	int GetPlayerPosX() const;

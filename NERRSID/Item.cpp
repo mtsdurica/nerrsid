@@ -1,8 +1,8 @@
 #include "Item.h"
 
-Item::Item()
-	: itemName("foo"), itemMinimumLevel(1), itemPrice(23), itemBonusStrength(1), itemBonusDexterity(1),
-	itemBonusIntellect(1), isEquipped(false), itemClass(Weapon)
+Item::Item(std::string itemName, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect)
+	: itemName(std::move(itemName)), itemMinimumLevel(1), itemPrice(23), itemBonusStrength(itemBonusStrength), itemBonusDexterity(itemBonusDexterity),
+	itemBonusIntellect(itemBonusIntellect), isEquipped(false), itemClass(Weapon)
 {
 }
 

@@ -78,16 +78,10 @@ HandledEvent Handler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{
 	case SDLK_UP:
-		return PlayerNavigationKeypressHandled;
+		return ScrollUpKeypressHandled;
 		break;
 	case SDLK_DOWN:
-		return PlayerNavigationKeypressHandled;
-		break;
-	case SDLK_LEFT:
-		return PlayerNavigationKeypressHandled;
-		break;
-	case SDLK_RIGHT:
-		return PlayerNavigationKeypressHandled;
+		return ScrollDownKeypressHandled;
 		break;
 	case SDLK_ESCAPE:
 		return ExitKeypressHandled;

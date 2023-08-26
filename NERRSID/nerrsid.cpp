@@ -1,13 +1,11 @@
 #include <cstdlib>
 #include <SDL.h>
 #include "Game.h"
-
-const int SCREEN_WIDTH = 1600;
-const int SCREEN_HEIGHT = 720;
+#include "Map.h"
 
 int main(int argc, char* args[])
 {
-	Game::Build(SCREEN_WIDTH, SCREEN_HEIGHT);
+	Game::Build(GAME_RESOLUTION_WIDTH, GAME_RESOLUTION_HEIGHT);
 
 	return EXIT_SUCCESS;
 }

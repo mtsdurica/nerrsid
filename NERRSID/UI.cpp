@@ -25,16 +25,16 @@ void UI::RefreshUserInterface()
 	SDL_RenderClear(this->renderer);
 	SDL_Delay(30);
 }
-void UI::DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player)
+void UI::DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player)
 {
 	SDL_Rect playerTile = Tilemap::FindTile(0, 4);
 
 	SDL_RenderCopy(renderer,
-		tileMapTexture,
+		tilemapTexture,
 		&playerTile,
 		&userInterfaceRect[player->GetPlayerPosX()][player->GetPlayerPosY()]);
 }
-void UI::DrawText(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, int textPositionX, int textPositionY, std::string text)
+void UI::DrawText(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, int textPositionX, int textPositionY, std::string text)
 {
 	/// TODO: Add rest of characters
 	SDL_Rect letterTile;
@@ -42,7 +42,7 @@ void UI::DrawText(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, int textP
 	{
 		letterTile = Tilemap::CharToRect(text[index]);
 		SDL_RenderCopy(renderer,
-			tileMapTexture,
+			tilemapTexture,
 			&letterTile,
 			&userInterfaceRect[textPositionX + index][textPositionY]);
 	}
@@ -105,26 +105,40 @@ void UI::DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std:
 	DrawText(renderer, tileMapTexture, 46, 43, message);
 }
 
-void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player)
+void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem)
 {
+
 	DrawText(renderer, tileMapTexture, 45, 10, "Inventory: " + std::to_string(player->GetPlayerItemsInInventory()));
 	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Equipped:");
-	DrawInventoryItems(renderer, tileMapTexture, player->GetPlayerInventory());
+	DrawInventoryItems(renderer, tileMapTexture, player, selectedItem);
 }
 
-void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item> inventory)
+void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem)
 {
-	int itemCount = 0;
+	/*int itemCount = 0;
 	for (Item x : inventory)
 	{
-		DrawText(renderer, tileMapTexture, 45, 12, x.GetItemName());
-		DrawText(renderer, tileMapTexture, 57, 12, std::to_string(x.GetItemBonusStrength()) + " " + std::to_string(x.GetItemBonusDexterity()) + " " + std::to_string(x.GetItemBonusIntellect()));
+		if (itemCount == selectedItem)
+			x.SetIsSelected(true);
+		DrawText(renderer, tileMapTexture, 43, 12 + itemCount, std::to_string(selectedItem));
+		DrawText(renderer, tileMapTexture, 45, 12 + itemCount, x.GetItemName());
+		DrawText(renderer, tileMapTexture, 57, 12 + itemCount, std::to_string(x.GetItemBonusStrength()) + " " + std::to_string(x.GetItemBonusDexterity()) + " " + std::to_string(x.GetItemBonusIntellect()));
 		DrawText(renderer, tileMapTexture, 86, 12 + itemCount, std::to_string(x.GetIsEquipped()));
 		itemCount++;
+	}*/
+
+	for (int i = 0; i < player->GetPlayerItemsInInventory(); i++)
+	{
+		if (i == selectedItem)
+			DrawText(renderer, tileMapTexture, 43, 12 + i, "1");
+		DrawText(renderer, tileMapTexture, 45, 12 + i, player->GetPlayerInventory()->at(i).GetItemName());
+		DrawText(renderer, tileMapTexture, 57, 12 + i, std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusStrength()) + " " + std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusDexterity()) + " " + std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusIntellect()));
+		DrawText(renderer, tileMapTexture, 86, 12 + i, std::to_string(player->GetPlayerInventory()->at(i).GetIsEquipped()));
 	}
+
 }
 
 void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor)

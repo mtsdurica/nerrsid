@@ -6,8 +6,10 @@
 #include "Tilemap.h"
 #include "Vendor.h"
 
+#define GAME_RESOLUTION_WIDTH 1600
+#define GAME_RESOLUTION_HEIGHT 720
 #define MAX_X 40                // Max base room width
-#define MAX_Y 45              // Max base room height
+#define MAX_Y GAME_RESOLUTION_HEIGHT / 16           // Max base room height
 #define UINT_CHANGEABLE uint8_t // Changeable data type if needed to generate larger maps than 0-255
 #define PSEUDO_ROOM_SIZE 4      // Pseudo max room size
 

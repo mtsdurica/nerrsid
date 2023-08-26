@@ -21,7 +21,7 @@ private:
 	bool isEquipped;
 	itemClass_t itemClass;
 public:
-	Item();
+	Item(std::string itemName, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
 	~Item();
 	std::string GetItemName();
 	int GetItemMinimumLevel();

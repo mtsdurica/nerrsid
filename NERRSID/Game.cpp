@@ -57,9 +57,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	auto* player = new Player("foo", Warrior);
 	Vendor* vendor = new Vendor("Bar", 2, 1);
 	Event* eventGame = new Event(EmptyEvent, "");
-	Item* item = new Item();
+	Item* item = new Item("foo", 2, 1, 1);
+	Item* item_two = new Item("asdf", 3, 5, 6);
 
 	player->InsertIntoPlayerInventory(*item);
+	player->InsertIntoPlayerInventory(*item_two);
 
 	map->InsertVendor(vendor);
 
@@ -81,9 +83,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		while (SDL_PollEvent(&eventSDL))
 		{
 			if (eventSDL.type == SDL_QUIT)
-			{
 				gameIsRunning = false;
-			}
 			else if (eventSDL.type == SDL_KEYDOWN)
 			{
 				switch (Handler::KeyPressHandler(player, eventSDL, *eventGame, *map))
@@ -135,19 +135,21 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					}
 					break;
 				case InventoryKeypressHandled:
-					userInterface->RefreshUserInterface();
-					userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
-					userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-					userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-					userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-					SDL_RenderPresent(game->GetRenderer());
-
 					bool inventoryBrowsingFlag = true;
-
+					int selectedItem = 0;
+					std::string lastMessage;
 					while (inventoryBrowsingFlag)
 					{
+						userInterface->RefreshUserInterface();
+						userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
+						userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+						userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
+						userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, selectedItem);
+						userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), lastMessage);
+						SDL_RenderPresent(game->GetRenderer());
 						while (SDL_PollEvent(&eventSDL))
 						{
+
 							if (eventSDL.type == SDL_QUIT)
 							{
 								inventoryBrowsingFlag = false;
@@ -165,9 +167,28 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 									userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 									userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 									userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-									userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-									userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You equipped something");
+									if (!player->GetPlayerInventory()->at(selectedItem).GetIsEquipped())
+									{
+										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You equipped " + player->GetPlayerInventory()->at(selectedItem).GetItemName());
+										player->GetPlayerInventory()->at(selectedItem).SetIsEquipped(true);
+										lastMessage = "You equipped " + player->GetPlayerInventory()->at(selectedItem).GetItemName();
+									}
+									else
+									{
+										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You unequipped " + player->GetPlayerInventory()->at(selectedItem).GetItemName());
+										player->GetPlayerInventory()->at(selectedItem).SetIsEquipped(false);
+										lastMessage = "You unequipped " + player->GetPlayerInventory()->at(selectedItem).GetItemName();
+									}
+									userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, selectedItem);
 									SDL_RenderPresent(game->GetRenderer());
+									break;
+								case ScrollDownKeypressHandled:
+									if (selectedItem < player->GetPlayerItemsInInventory() - 1)
+										selectedItem++;
+									break;
+								case ScrollUpKeypressHandled:
+									if (selectedItem > 0)
+										selectedItem--;
 									break;
 								}
 							}
