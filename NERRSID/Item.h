@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+
 typedef enum itemClass
 {
 	Weapon,
@@ -8,6 +9,8 @@ typedef enum itemClass
 	Chestplate,
 	Leggings,
 } itemClass_t;
+
+class Player;
 
 class Item
 {
@@ -20,6 +23,7 @@ private:
 	int itemBonusIntellect;
 	bool isEquipped;
 	itemClass_t itemClass;
+
 public:
 	Item(std::string itemName, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
 	~Item();
@@ -32,5 +36,7 @@ public:
 	bool GetIsEquipped();
 	itemClass_t GetItemClass();
 	void SetIsEquipped(bool isEquipped);
+	std::string EquipItem(Player* player);
+	std::string UnequipItem(Player* player);
 };
 

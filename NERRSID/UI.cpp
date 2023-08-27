@@ -105,48 +105,40 @@ void UI::DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std:
 	DrawText(renderer, tileMapTexture, 46, 43, message);
 }
 
-void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem)
+void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem, int startingItem, int endingItem)
 {
-
 	DrawText(renderer, tileMapTexture, 45, 10, "Inventory: " + std::to_string(player->GetPlayerItemsInInventory()));
 	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Equipped:");
-	DrawInventoryItems(renderer, tileMapTexture, player, selectedItem);
+	DrawInventoryItems(renderer, tileMapTexture, player->GetPlayerInventory(), player->GetPlayerItemsInInventory(), selectedItem, startingItem, endingItem);
 }
 
-void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem)
+void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem)
 {
-	/*int itemCount = 0;
-	for (Item x : inventory)
-	{
-		if (itemCount == selectedItem)
-			x.SetIsSelected(true);
-		DrawText(renderer, tileMapTexture, 43, 12 + itemCount, std::to_string(selectedItem));
-		DrawText(renderer, tileMapTexture, 45, 12 + itemCount, x.GetItemName());
-		DrawText(renderer, tileMapTexture, 57, 12 + itemCount, std::to_string(x.GetItemBonusStrength()) + " " + std::to_string(x.GetItemBonusDexterity()) + " " + std::to_string(x.GetItemBonusIntellect()));
-		DrawText(renderer, tileMapTexture, 86, 12 + itemCount, std::to_string(x.GetIsEquipped()));
-		itemCount++;
-	}*/
+	if (itemsInInventory < endingItem)
+		endingItem = itemsInInventory;
 
-	for (int i = 0; i < player->GetPlayerItemsInInventory(); i++)
+	int positionOfCursor = 0;
+	for (int i = startingItem; i < endingItem; i++)
 	{
 		if (i == selectedItem)
-			DrawText(renderer, tileMapTexture, 43, 12 + i, "1");
-		DrawText(renderer, tileMapTexture, 45, 12 + i, player->GetPlayerInventory()->at(i).GetItemName());
-		DrawText(renderer, tileMapTexture, 57, 12 + i, std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusStrength()) + " " + std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusDexterity()) + " " + std::to_string(player->GetPlayerInventory()->at(i).GetItemBonusIntellect()));
-		DrawText(renderer, tileMapTexture, 86, 12 + i, std::to_string(player->GetPlayerInventory()->at(i).GetIsEquipped()));
+			DrawText(renderer, tileMapTexture, 44, 12 + positionOfCursor, "1");
+		DrawText(renderer, tileMapTexture, 45, 12 + positionOfCursor, inventory->at(i).GetItemName());
+		DrawText(renderer, tileMapTexture, 57, 12 + positionOfCursor, std::to_string(inventory->at(i).GetItemBonusStrength()) + " " + std::to_string(inventory->at(i).GetItemBonusDexterity()) + " " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
+		DrawText(renderer, tileMapTexture, 86, 12 + positionOfCursor, std::to_string(inventory->at(i).GetIsEquipped()));
+		positionOfCursor++;
 	}
-
 }
 
-void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor)
+void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor, int selectedItem, int startingItem, int endingItem)
 {
-	DrawText(renderer, tileMapTexture, 45, 10, "Vendor " + vendor->GetVendorName() + ":");
+	DrawText(renderer, tileMapTexture, 45, 10, "Vendor " + vendor->GetVendorName() + ": " + std::to_string(vendor->GetVendorItemsInInventory()));
 	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Item price:");
+	DrawInventoryItems(renderer, tileMapTexture, vendor->GetVendorInventory(), vendor->GetVendorItemsInInventory(), selectedItem, startingItem, endingItem);
 }
 

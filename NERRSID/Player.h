@@ -26,6 +26,10 @@ private:
 	std::vector<Item> playerInventory;
 	int playerItemsInInventory;
 	int playerMaximumItemsInInventory;
+	Item* equippedWeapon;
+	Item* equippedHelmet;
+	Item* equippedChestplate;
+	Item* equippedLeggings;
 	int playerPosX;
 	int playerPosY;
 
@@ -43,6 +47,10 @@ public:
 	std::vector<Item>* GetPlayerInventory();
 	int GetPlayerItemsInInventory() const;
 	int GetPlayerMaximumItemsInInventory() const;
+	Item* GetEquippedWeapon() const;
+	Item* GetEquippedHelmet() const;
+	Item* GetEquippedChestplate() const;
+	Item* GetEquippedLeggings() const;
 	int GetPlayerPosX() const;
 	int GetPlayerPosY() const;
 	void SetPlayerName(const std::string& playerName);
@@ -55,6 +63,10 @@ public:
 	void SetPlayerIntellect(int playerIntellect);
 	bool InsertIntoPlayerInventory(Item item);
 	void SetPlayerItemsInInventory(int playerItemsInInventory);
+	void SetEquippedWeapon(Item* equippedWeapon);
+	void SetEquippedHelmet(Item* equippedHelmet);
+	void SetEquippedChestplate(Item* equippedChestplate);
+	void SetEquippedLeggings(Item* equippedLeggings);
 	void SetPlayerPosX(int playerPosX);
 	void SetPlayerPosY(int playerPosY);
 };

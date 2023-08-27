@@ -45,20 +45,10 @@ HandledEvent Handler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{
 	case SDLK_UP:
-
-		return PlayerNavigationKeypressHandled;
+		return ScrollUpKeypressHandled;
 		break;
 	case SDLK_DOWN:
-
-		return PlayerNavigationKeypressHandled;
-		break;
-	case SDLK_LEFT:
-
-		return PlayerNavigationKeypressHandled;
-		break;
-	case SDLK_RIGHT:
-
-		return PlayerNavigationKeypressHandled;
+		return ScrollDownKeypressHandled;
 		break;
 	case SDLK_ESCAPE:
 		return ExitKeypressHandled;
@@ -88,6 +78,36 @@ HandledEvent Handler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
 		break;
 	case SDLK_RETURN:
 		return EnterKeypressHandled;
+		break;
+	}
+}
+
+std::tuple<int, int, int> Handler::MenuNavigation(HandledEvent keypress, int playerItemsInInventory, int selectedItem, int displayedItems, int startingItem, int endingItem)
+{
+	switch (keypress)
+	{
+	case ScrollDownKeypressHandled:
+		if (selectedItem < playerItemsInInventory - 1)
+			selectedItem++;
+		if (selectedItem == endingItem)
+		{
+			startingItem += displayedItems;
+			if ((playerItemsInInventory - startingItem) < displayedItems)
+				endingItem = playerItemsInInventory;
+			else
+				endingItem += displayedItems;
+		}
+		return { selectedItem, startingItem, endingItem };
+		break;
+	case ScrollUpKeypressHandled:
+		if (selectedItem > 0)
+			selectedItem--;
+		if ((selectedItem == startingItem - 1) && (selectedItem != 0))
+		{
+			endingItem -= endingItem - startingItem;
+			startingItem -= displayedItems;
+		}
+		return { selectedItem, startingItem, endingItem };
 		break;
 	}
 }

@@ -4,7 +4,8 @@
 
 Player::Player(std::string playerName, playerClass_t playerClass)
 	: playerName(std::move(playerName)), playerClass(playerClass), playerLevel(1), playerExperience(0), playerGold(0),
-	playerItemsInInventory(0), playerPosX(1), playerPosY(1), playerMaximumItemsInInventory(50)
+	playerItemsInInventory(0), playerMaximumItemsInInventory(50), equippedWeapon(nullptr), equippedHelmet(nullptr), equippedChestplate(nullptr), equippedLeggings(nullptr),
+	playerPosX(1), playerPosY(1)
 {
 	switch (playerClass)
 	{
@@ -70,6 +71,22 @@ int Player::GetPlayerMaximumItemsInInventory() const
 {
 	return this->playerMaximumItemsInInventory;
 }
+Item* Player::GetEquippedWeapon() const
+{
+	return this->equippedWeapon;
+}
+Item* Player::GetEquippedHelmet() const
+{
+	return this->equippedHelmet;
+}
+Item* Player::GetEquippedChestplate() const
+{
+	return this->equippedChestplate;
+}
+Item* Player::GetEquippedLeggings() const
+{
+	return this->equippedLeggings;
+}
 int Player::GetPlayerPosX() const
 {
 	return this->playerPosX;
@@ -123,6 +140,22 @@ bool Player::InsertIntoPlayerInventory(Item item)
 void Player::SetPlayerItemsInInventory(int playerItemsInInventory)
 {
 	this->playerItemsInInventory = playerItemsInInventory;
+}
+void Player::SetEquippedWeapon(Item* equippedWeapon)
+{
+	this->equippedWeapon = equippedWeapon;
+}
+void Player::SetEquippedHelmet(Item* equippedHelmet)
+{
+	this->equippedHelmet = equippedHelmet;
+}
+void Player::SetEquippedChestplate(Item* equippedChestplate)
+{
+	this->equippedChestplate = equippedChestplate;
+}
+void Player::SetEquippedLeggings(Item* equippedLeggings)
+{
+	this->equippedLeggings = equippedLeggings;
 }
 void Player::SetPlayerPosX(int playerPosX)
 {

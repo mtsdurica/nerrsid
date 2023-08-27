@@ -18,8 +18,8 @@ public:
 	void DrawMap(SDL_Renderer* renderer, Map* map, Tilemap* tilemap);
 	void DrawText(SDL_Renderer* renderer, SDL_Texture*, int textPositionX, int textPositionY, std::string text);
 	void DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, std::string message);
-	void DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player, int selectedItem);
-	void DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player, int selectedItem);
-	void DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Vendor* vendor);
+	void DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player, int selectedItem, int startingItem, int endingItem);
+	void DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, std::vector<Item>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem);
+	void DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Vendor* vendor, int selectedItem, int startingItem, int endingItem);
 };
 
