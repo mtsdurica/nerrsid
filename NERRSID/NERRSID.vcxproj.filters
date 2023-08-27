@@ -39,10 +39,16 @@
     <ClInclude Include="Vendor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Handler.h">
+    <ClInclude Include="GameEventHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,10 +77,16 @@
     <ClCompile Include="Vendor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Handler.cpp">
+    <ClCompile Include="GameEventHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -6,7 +6,8 @@
 #include "Game.h"
 #include "Event.h"
 #include "Vendor.h"
-#include "Handler.h"
+#include "GameEventHandler.h"
+#include "Menu.h"
 
 Game::Game(int screenWidth, int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight)
 {
@@ -55,7 +56,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	Game* game = new Game(gameScreenWidth, gameScreenHeight);
 	Map* map = new Map();
 	UI* userInterface = new UI(game->GetRenderer(), game->GetScreenWidth(), game->GetScreenHeight());
-	auto* player = new Player("foo", Warrior);
+	auto* player = new Player("foo", Warrior, 1, 1);
 	Vendor* vendor = new Vendor("Bar", 2, 1);
 	Event* eventGame = new Event(EmptyEvent, "");
 	Item* item = new Item("foo", 2, 1, 1);
@@ -68,16 +69,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	Item* item_eight = new Item("foo21", 3, 5, 6);
 	Item* item_nine = new Item("f2obar", 3, 5, 6);
 
-	player->InsertIntoPlayerInventory(*item);
-	player->InsertIntoPlayerInventory(*item_two);
-	player->InsertIntoPlayerInventory(*item_three);
-	player->InsertIntoPlayerInventory(*item_four);
-	player->InsertIntoPlayerInventory(*item_five);
+	player->InsertIntoInventory(*item);
+	player->InsertIntoInventory(*item_two);
+	player->InsertIntoInventory(*item_three);
+	player->InsertIntoInventory(*item_four);
+	player->InsertIntoInventory(*item_five);
 
-	vendor->InsertIntoVendorInventory(*item_six);
-	vendor->InsertIntoVendorInventory(*item_seven);
-	vendor->InsertIntoVendorInventory(*item_eight);
-	vendor->InsertIntoVendorInventory(*item_nine);
+	vendor->InsertIntoInventory(*item_six);
+	vendor->InsertIntoInventory(*item_seven);
+	vendor->InsertIntoInventory(*item_eight);
+	vendor->InsertIntoInventory(*item_nine);
 
 	map->InsertVendor(vendor);
 
@@ -87,7 +88,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	{
 		SDL_Event eventSDL;
 
-		*eventGame = Handler::CollisionHandler(*player, *map);
+		*eventGame = GameEventHandler::CollisionHandler(*player, *map);
 
 		userInterface->RefreshUserInterface();
 		userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
@@ -102,7 +103,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				gameIsRunning = false;
 			else if (eventSDL.type == SDL_KEYDOWN)
 			{
-				switch (Handler::KeyPressHandler(player, eventSDL, *eventGame, *map))
+				switch (GameEventHandler::KeyPressHandler(player, eventSDL, *eventGame, *map))
 				{
 				case ExitKeypressHandled:
 					gameIsRunning = false;
@@ -111,10 +112,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					if (eventGame->GetTypeOfEvent() == VendorEvent)
 					{
 						bool vendorShoppingFlag = true;
-						int displayedItems = 3;
-						int selectedItem = 0;
-						int startingItem = 0;
-						int endingItem = displayedItems;
+						Menu* menu = new Menu(vendor->GetItemsInInventory());
 
 						while (vendorShoppingFlag)
 						{
@@ -122,7 +120,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 							userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 							userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 							userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-							userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor, selectedItem, startingItem, endingItem);
+							userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
 							SDL_RenderPresent(game->GetRenderer());
 							while (SDL_PollEvent(&eventSDL))
 							{
@@ -133,7 +131,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								}
 								else if (eventSDL.type == SDL_KEYDOWN)
 								{
-									switch (Handler::VendorKeyPressHandler(eventSDL, *eventGame))
+									switch (GameEventHandler::VendorKeyPressHandler(eventSDL, *eventGame))
 									{
 									case ExitKeypressHandled:
 										vendorShoppingFlag = false;
@@ -143,15 +141,15 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 										userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 										userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 										userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-										userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor, selectedItem, startingItem, endingItem);
+										userInterface->DrawVendorPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
 										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), "You bought something");
 										SDL_RenderPresent(game->GetRenderer());
 										break;
 									case ScrollDownKeypressHandled:
-										std::tie(selectedItem, startingItem, endingItem) = Handler::MenuNavigation(ScrollDownKeypressHandled, vendor->GetVendorItemsInInventory(), selectedItem, displayedItems, startingItem, endingItem);
+										menu->ScrollDown();
 										break;
 									case ScrollUpKeypressHandled:
-										std::tie(selectedItem, startingItem, endingItem) = Handler::MenuNavigation(ScrollUpKeypressHandled, vendor->GetVendorItemsInInventory(), selectedItem, displayedItems, startingItem, endingItem);
+										menu->ScrollUp();
 										break;
 									}
 								}
@@ -161,10 +159,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					break;
 				case InventoryKeypressHandled:
 					bool inventoryBrowsingFlag = true;
-					int displayedItems = 3;
-					int selectedItem = 0;
-					int startingItem = 0;
-					int endingItem = displayedItems;
+					Menu* menu = new Menu(player->GetItemsInInventory());
 
 					std::string lastMessage;
 					while (inventoryBrowsingFlag)
@@ -173,7 +168,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 						userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 						userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-						userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, selectedItem, startingItem, endingItem);
+						userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
 						userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), lastMessage);
 						SDL_RenderPresent(game->GetRenderer());
 						while (SDL_PollEvent(&eventSDL))
@@ -185,7 +180,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 							}
 							else if (eventSDL.type == SDL_KEYDOWN)
 							{
-								switch (Handler::InventoryKeyPressHandler(eventSDL))
+								switch (GameEventHandler::InventoryKeyPressHandler(eventSDL))
 								{
 								case ExitKeypressHandled:
 									inventoryBrowsingFlag = false;
@@ -195,24 +190,24 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 									userInterface->DrawMap(game->GetRenderer(), map, game->GetTileMap());
 									userInterface->DrawPlayer(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
 									userInterface->DrawPlayerInfo(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player);
-									if (!player->GetPlayerInventory()->at(selectedItem).GetIsEquipped())
+									if (!player->GetInventory()->at(menu->GetSelectedItem()).GetIsEquipped())
 									{
-										lastMessage = player->GetPlayerInventory()->at(selectedItem).EquipItem(player);
+										lastMessage = player->GetInventory()->at(menu->GetSelectedItem()).EquipItem(player);
 										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), lastMessage);
 									}
 									else
 									{
-										lastMessage = player->GetPlayerInventory()->at(selectedItem).UnequipItem(player);
+										lastMessage = player->GetInventory()->at(menu->GetSelectedItem()).UnequipItem(player);
 										userInterface->DrawStatusBar(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), lastMessage);
 									}
-									userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, selectedItem, startingItem, endingItem);
+									userInterface->DrawInventoryPopup(game->GetRenderer(), game->GetTileMap()->GetTileMapTexture(), player, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
 									SDL_RenderPresent(game->GetRenderer());
 									break;
 								case ScrollDownKeypressHandled:
-									std::tie(selectedItem, startingItem, endingItem) = Handler::MenuNavigation(ScrollDownKeypressHandled, player->GetPlayerItemsInInventory(), selectedItem, displayedItems, startingItem, endingItem);
+									menu->ScrollDown();
 									break;
 								case ScrollUpKeypressHandled:
-									std::tie(selectedItem, startingItem, endingItem) = Handler::MenuNavigation(ScrollUpKeypressHandled, player->GetPlayerItemsInInventory(), selectedItem, displayedItems, startingItem, endingItem);
+									menu->ScrollUp();
 									break;
 								}
 							}

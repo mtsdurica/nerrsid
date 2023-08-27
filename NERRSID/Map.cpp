@@ -132,5 +132,5 @@ std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()
 
 void Map::InsertVendor(Vendor* newVendor)
 {
-	this->mapTiles[newVendor->GetVendorPosX()][newVendor->GetVendorPosY()] = VendorTile;
+	this->mapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
 }

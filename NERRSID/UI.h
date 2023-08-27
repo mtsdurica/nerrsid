@@ -12,6 +12,7 @@ private:
 public:
 	UI(SDL_Renderer* renderer, int userInterfaceRectWidth, int userInterfaceRectHeight);
 	~UI();
+	void DrawUI();
 	void RefreshUserInterface();
 	void DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player);
 	void DrawPlayerInfo(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player* player);

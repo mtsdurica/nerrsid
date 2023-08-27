@@ -11,7 +11,7 @@ typedef enum HandledEvent
 	ExitKeypressHandled, EnterKeypressHandled, PlayerNavigationKeypressHandled, InventoryKeypressHandled, ScrollDownKeypressHandled, ScrollUpKeypressHandled
 } HandledEvent;
 
-class Handler
+class GameEventHandler
 {
 public:
 	static HandledEvent KeyPressHandler(Player* player, SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame, Map map);

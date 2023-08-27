@@ -19,6 +19,7 @@ UI::~UI()
 {
 
 }
+
 void UI::RefreshUserInterface()
 {
 	SDL_SetRenderDrawColor(this->renderer, 0, 0, 0, 0);
@@ -32,7 +33,7 @@ void UI::DrawPlayer(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, Player*
 	SDL_RenderCopy(renderer,
 		tilemapTexture,
 		&playerTile,
-		&userInterfaceRect[player->GetPlayerPosX()][player->GetPlayerPosY()]);
+		&userInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
 }
 void UI::DrawText(SDL_Renderer* renderer, SDL_Texture* tilemapTexture, int textPositionX, int textPositionY, std::string text)
 {
@@ -62,11 +63,11 @@ void UI::DrawPlayerInfo(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Pla
 		classString = "Wizard";
 		break;
 	}
-	DrawText(renderer, tileMapTexture, 45, 0, "Name:       " + player->GetPlayerName());
+	DrawText(renderer, tileMapTexture, 45, 0, "Name:       " + player->GetName());
 	DrawText(renderer, tileMapTexture, 45, 1, "Class:      " + classString);
 	DrawText(renderer, tileMapTexture, 45, 2, "Level:      " + std::to_string(player->GetPlayerLevel()));
 	DrawText(renderer, tileMapTexture, 45, 3, "Experience: " + std::to_string(player->GetPlayerExperience()));
-	DrawText(renderer, tileMapTexture, 45, 4, "Gold:       " + std::to_string(player->GetPlayerGold()));
+	DrawText(renderer, tileMapTexture, 45, 4, "Gold:       " + std::to_string(player->GetGold()));
 	DrawText(renderer, tileMapTexture, 45, 5, "Strength:   " + std::to_string(player->GetPlayerStrength()));
 	DrawText(renderer, tileMapTexture, 45, 6, "Dexterity:  " + std::to_string(player->GetPlayerDexterity()));
 	DrawText(renderer, tileMapTexture, 45, 7, "Intellect:  " + std::to_string(player->GetPlayerIntellect()));
@@ -107,12 +108,12 @@ void UI::DrawStatusBar(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std:
 
 void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Player* player, int selectedItem, int startingItem, int endingItem)
 {
-	DrawText(renderer, tileMapTexture, 45, 10, "Inventory: " + std::to_string(player->GetPlayerItemsInInventory()));
+	DrawText(renderer, tileMapTexture, 45, 10, "Inventory: " + std::to_string(player->GetItemsInInventory()));
 	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Equipped:");
-	DrawInventoryItems(renderer, tileMapTexture, player->GetPlayerInventory(), player->GetPlayerItemsInInventory(), selectedItem, startingItem, endingItem);
+	DrawInventoryItems(renderer, tileMapTexture, player->GetInventory(), player->GetItemsInInventory(), selectedItem, startingItem, endingItem);
 }
 
 void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem)
@@ -134,11 +135,14 @@ void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture,
 
 void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Vendor* vendor, int selectedItem, int startingItem, int endingItem)
 {
-	DrawText(renderer, tileMapTexture, 45, 10, "Vendor " + vendor->GetVendorName() + ": " + std::to_string(vendor->GetVendorItemsInInventory()));
+	DrawText(renderer, tileMapTexture, 45, 10, "Vendor " + vendor->GetName() + ": " + std::to_string(vendor->GetItemsInInventory()));
 	DrawText(renderer, tileMapTexture, 45, 11, "Item name:");
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Item price:");
-	DrawInventoryItems(renderer, tileMapTexture, vendor->GetVendorInventory(), vendor->GetVendorItemsInInventory(), selectedItem, startingItem, endingItem);
+	DrawInventoryItems(renderer, tileMapTexture, vendor->GetInventory(), vendor->GetItemsInInventory(), selectedItem, startingItem, endingItem);
 }
 
+void UI::DrawUI()
+{
+}

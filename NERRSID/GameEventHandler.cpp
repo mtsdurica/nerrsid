@@ -1,30 +1,30 @@
 
-#include "Handler.h"
+#include "GameEventHandler.h"
 
-HandledEvent Handler::KeyPressHandler(Player* player, SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame, Map map)
+HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame, Map map)
 {
 	auto mapTiles = map.GetMapTiles();
 
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{
 	case SDLK_UP:
-		if (mapTiles[player->GetPlayerPosX()][player->GetPlayerPosY() - 1] == Walkable || mapTiles[player->GetPlayerPosX()][player->GetPlayerPosY() - 1] == VendorTile)
-			player->SetPlayerPosY(player->GetPlayerPosY() - 1);
+		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Walkable || mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile)
+			player->SetPositionYCoordinate(player->GetPositionYCoordinate() - 1);
 		return PlayerNavigationKeypressHandled;
 		break;
 	case SDLK_DOWN:
-		if (mapTiles[player->GetPlayerPosX()][player->GetPlayerPosY() + 1] == Walkable || mapTiles[player->GetPlayerPosX()][player->GetPlayerPosY() + 1] == VendorTile)
-			player->SetPlayerPosY(player->GetPlayerPosY() + 1);
+		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Walkable || mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile)
+			player->SetPositionYCoordinate(player->GetPositionYCoordinate() + 1);
 		return PlayerNavigationKeypressHandled;
 		break;
 	case SDLK_LEFT:
-		if (mapTiles[player->GetPlayerPosX() - 1][player->GetPlayerPosY()] == Walkable || mapTiles[player->GetPlayerPosX() - 1][player->GetPlayerPosY()] == VendorTile)
-			player->SetPlayerPosX(player->GetPlayerPosX() - 1);
+		if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Walkable || mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile)
+			player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
 		return PlayerNavigationKeypressHandled;
 		break;
 	case SDLK_RIGHT:
-		if (mapTiles[player->GetPlayerPosX() + 1][player->GetPlayerPosY()] == Walkable || mapTiles[player->GetPlayerPosX() + 1][player->GetPlayerPosY()] == VendorTile)
-			player->SetPlayerPosX(player->GetPlayerPosX() + 1);
+		if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Walkable || mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile)
+			player->SetPositionXCoordinate(player->GetPositionXCoordinate() + 1);
 		return PlayerNavigationKeypressHandled;
 		break;
 	case SDLK_ESCAPE:
@@ -40,7 +40,7 @@ HandledEvent Handler::KeyPressHandler(Player* player, SDL_Event eventToBeHandled
 	}
 }
 
-HandledEvent Handler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame)
+HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame)
 {
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{
@@ -63,7 +63,7 @@ HandledEvent Handler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event
 	}
 }
 
-HandledEvent Handler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
+HandledEvent GameEventHandler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
 {
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{
@@ -82,7 +82,7 @@ HandledEvent Handler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
 	}
 }
 
-std::tuple<int, int, int> Handler::MenuNavigation(HandledEvent keypress, int playerItemsInInventory, int selectedItem, int displayedItems, int startingItem, int endingItem)
+std::tuple<int, int, int> GameEventHandler::MenuNavigation(HandledEvent keypress, int playerItemsInInventory, int selectedItem, int displayedItems, int startingItem, int endingItem)
 {
 	switch (keypress)
 	{
@@ -112,13 +112,13 @@ std::tuple<int, int, int> Handler::MenuNavigation(HandledEvent keypress, int pla
 	}
 }
 
-Event Handler::CollisionHandler(Player player, Map map)
+Event GameEventHandler::CollisionHandler(Player player, Map map)
 {
 	Event* collisionEvent = nullptr;
 
 	auto mapTiles = map.GetMapTiles();
 
-	switch (mapTiles[player.GetPlayerPosX()][player.GetPlayerPosY()])
+	switch (mapTiles[player.GetPositionXCoordinate()][player.GetPositionYCoordinate()])
 	{
 	case VendorTile:
 		collisionEvent = new Event(VendorEvent, "Press ENTER to interact with vendor");

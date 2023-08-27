@@ -130,22 +130,26 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="Handler.h" />
+    <ClInclude Include="GameEventHandler.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Tilemap.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Vendor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="Handler.cpp" />
+    <ClCompile Include="GameEventHandler.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="nerrsid.cpp" />
     <ClCompile Include="Tilemap.cpp" />
