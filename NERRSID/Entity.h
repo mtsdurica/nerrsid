@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <vector>
+#include <array>
 
 #include "Item.h"
 
@@ -9,17 +9,17 @@ class Entity
 protected:
 	std::string name;
 	int gold;
-	std::vector<Item> inventory;
+	std::array<Item, 50> inventory;
 	int itemsInInventory;
 	int maximumItemsInInventory;
 	int positionXCoordinate;
 	int positionYCoordinate;
 public:
 	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
-	~Entity();
+	virtual ~Entity();
 	std::string GetName() const;
 	int GetGold() const;
-	std::vector<Item>* GetInventory();
+	std::array<Item, 50>* GetInventory();
 	int GetItemsInInventory() const;
 	int GetMaximumItemsInInventory() const;
 	int GetPositionXCoordinate() const;

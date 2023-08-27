@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 
 #include "Item.h"
 #include "Entity.h"
@@ -33,10 +34,10 @@ public:
 	int GetPlayerStrength() const;
 	int GetPlayerDexterity() const;
 	int GetPlayerIntellect() const;
-	Item* GetEquippedWeapon() const;
-	Item* GetEquippedHelmet() const;
-	Item* GetEquippedChestplate() const;
-	Item* GetEquippedLeggings() const;
+	Item* GetEquippedWeapon();
+	Item* GetEquippedHelmet();
+	Item* GetEquippedChestplate();
+	Item* GetEquippedLeggings();
 	void SetPlayerClass(playerClass_t playerClass);
 	void SetPlayerLevel(int playerLevel);
 	void SetPlayerExperience(int playerExperience);
@@ -49,5 +50,8 @@ public:
 	void SetEquippedLeggings(Item* equippedLeggings);
 	void SetPositionXCoordinate(int positionXCoordinate);
 	void SetPositionYCoordinate(int positionYCoordinate);
+	std::string EquipItem(Item* item);
+	std::string UnequipItem(itemClass_t itemClass);
+	std::tuple<std::string, bool> PurchaseItem(Item item);
 };
 

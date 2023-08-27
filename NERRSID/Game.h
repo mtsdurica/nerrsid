@@ -34,7 +34,7 @@ public:
 	SDL_Renderer* GetRenderer() const;
 	/**
 	 *
-	 * @return Game tile map
+	 * @return Game tilemap
 	 */
 	Tilemap* GetTileMap() const;
 	/**

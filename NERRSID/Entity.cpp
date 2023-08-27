@@ -1,7 +1,8 @@
 #include "Entity.h"
 
 Entity::Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate)
-	: name(std::move(name)), gold(gold), itemsInInventory(itemsInInventory), maximumItemsInInventory(maximumItemsInInventory), positionXCoordinate(positionXCoordinate), positionYCoordinate(positionYCoordinate)
+	: name(std::move(name)), gold(gold), itemsInInventory(itemsInInventory), maximumItemsInInventory(maximumItemsInInventory), positionXCoordinate(positionXCoordinate),
+	positionYCoordinate(positionYCoordinate)
 {
 }
 
@@ -17,7 +18,7 @@ int Entity::GetGold() const
 	return this->gold;
 }
 
-std::vector<Item>* Entity::GetInventory()
+std::array<Item, 50>* Entity::GetInventory()
 {
 	return &this->inventory;
 }
@@ -56,8 +57,8 @@ bool Entity::InsertIntoInventory(Item item)
 {
 	if (this->itemsInInventory < this->maximumItemsInInventory)
 	{
+		this->inventory.at(this->itemsInInventory) = item;
 		this->itemsInInventory++;
-		this->inventory.push_back(item);
 		return true;
 	}
 	return false;

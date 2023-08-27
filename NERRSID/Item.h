@@ -25,7 +25,8 @@ private:
 	itemClass_t itemClass;
 
 public:
-	Item(std::string itemName, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
+	Item();
+	Item(std::string itemName, itemClass_t itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
 	~Item();
 	std::string GetItemName();
 	int GetItemMinimumLevel();
@@ -36,7 +37,5 @@ public:
 	bool GetIsEquipped();
 	itemClass_t GetItemClass();
 	void SetIsEquipped(bool isEquipped);
-	std::string EquipItem(Player* player);
-	std::string UnequipItem(Player* player);
 };
 

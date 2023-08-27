@@ -1,6 +1,6 @@
 #include "Menu.h"
 
-Menu::Menu(int allItems) : allItems(allItems), selectedItem(0), displayedItems(3), endingItem(displayedItems), startingItem(0)
+Menu::Menu(int allItems) : allItems(allItems), selectedItem(0), displayedItems(10), endingItem(displayedItems), startingItem(0)
 {
 }
 

@@ -23,6 +23,6 @@ public:
 	eventType GetTypeOfEvent() const;
 	std::string GetEventMessage() const;
 	void SetEventMessage(std::string eventMessage);
-
+	void SetTypeOfEvent(eventType typeOfEvent);
 };
 

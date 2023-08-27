@@ -122,7 +122,6 @@ void Map::GenerateMap()
 		(void)GenerateVerticalSplit(&base);
 	else
 		(void)GenerateHorizontalSplit(&base);
-
 }
 
 std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()

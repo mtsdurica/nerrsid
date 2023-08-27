@@ -17,7 +17,7 @@ UI::UI(SDL_Renderer* renderer, int userInterfaceRectWidth, int userInterfaceRect
 }
 UI::~UI()
 {
-
+	SDL_DestroyRenderer(this->renderer);
 }
 
 void UI::RefreshUserInterface()
@@ -116,7 +116,7 @@ void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture,
 	DrawInventoryItems(renderer, tileMapTexture, player->GetInventory(), player->GetItemsInInventory(), selectedItem, startingItem, endingItem);
 }
 
-void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::vector<Item>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem)
+void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::array<Item, 50>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem)
 {
 	if (itemsInInventory < endingItem)
 		endingItem = itemsInInventory;

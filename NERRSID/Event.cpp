@@ -20,3 +20,8 @@ void Event::SetEventMessage(std::string eventMessage)
 {
 	this->eventMessage = std::move(eventMessage);
 }
+
+void Event::SetTypeOfEvent(eventType typeOfEvent)
+{
+	this->typeOfEvent = typeOfEvent;
+}
