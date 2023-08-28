@@ -2,6 +2,8 @@
 
 Tilemap::Tilemap(SDL_Renderer* renderer)
 {
+	// Tilemap downloaded from here under public domain license:
+	// http://www.bay12forums.com/smf/index.php?topic=144897.0
 	this->tileMapTexture = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP("tilemap.bmp"));
 }
 Tilemap::~Tilemap()

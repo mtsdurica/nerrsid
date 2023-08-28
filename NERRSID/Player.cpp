@@ -153,27 +153,37 @@ std::string Player::EquipItem(Item* item)
 		if (this->GetEquippedWeapon())
 			this->UnequipItem(Weapon);
 		this->equippedWeapon = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedWeapon->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedWeapon->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedWeapon->GetItemBonusIntellect());
 		break;
 	case Helmet:
 		if (this->GetEquippedHelmet())
 			this->UnequipItem(Helmet);
 		this->equippedHelmet = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedHelmet->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedHelmet->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedHelmet->GetItemBonusIntellect());
 		break;
 	case Chestplate:
 		if (this->GetEquippedChestplate())
 			this->UnequipItem(Chestplate);
 		this->equippedChestplate = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedChestplate->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedChestplate->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedChestplate->GetItemBonusIntellect());
 		break;
 	case Leggings:
 		if (this->GetEquippedLeggings())
 			this->UnequipItem(Leggings);
 		this->equippedLeggings = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedLeggings->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedLeggings->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedLeggings->GetItemBonusIntellect());
 		break;
 	}
 	item->SetIsEquipped(true);
-	this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedWeapon->GetItemBonusStrength());
-	this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedWeapon->GetItemBonusDexterity());
-	this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedWeapon->GetItemBonusIntellect());
+
 	return "You equipped " + item->GetItemName();
 }
 

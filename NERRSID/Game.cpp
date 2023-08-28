@@ -4,7 +4,7 @@
 #include <ctime>
 
 #include "Game.h"
-#include "Event.h"
+#include "GameEvent.h"
 #include "Vendor.h"
 #include "GameEventHandler.h"
 #include "Menu.h"
@@ -58,12 +58,8 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	Map map;
 	UI userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
 	Player player("foo", Warrior, 1, 1);
-	Vendor vendor("Bar", 2, 1);
-	Event eventGame(EmptyEvent, "");
-	Item item("foo", Weapon, 0, 2, 1, 1);
-	vendor.InsertIntoInventory(item);
-	map.InsertVendor(&vendor);
-
+	GameEvent eventGame(EmptyEvent, "");
+	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
 	bool gameIsRunning = true;
 
 	while (gameIsRunning)
@@ -85,7 +81,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				gameIsRunning = false;
 			else if (eventSDL.type == SDL_KEYDOWN)
 			{
-				switch (GameEventHandler::KeyPressHandler(&player, eventSDL, eventGame, map))
+				switch (GameEventHandler::KeyPressHandler(&player, &eventSDL, map.GetMapTiles()))
 				{
 				case ExitKeypressHandled:
 					gameIsRunning = false;
@@ -93,8 +89,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				case EnterKeypressHandled:
 					if (eventGame.GetTypeOfEvent() == VendorEvent)
 					{
+						Vendor* vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 						bool vendorShoppingFlag = true;
-						Menu menu(vendor.GetItemsInInventory());
+						Menu menu(vendor->GetItemsInInventory());
 						std::string message = "";
 						bool itemSold = false;
 
@@ -104,7 +101,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 							userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
 							userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
 							userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-							userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+							userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
 							userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), message);
 							SDL_RenderPresent(game.GetRenderer());
 							while (SDL_PollEvent(&eventSDL))
@@ -116,7 +113,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								}
 								else if (eventSDL.type == SDL_KEYDOWN)
 								{
-									switch (GameEventHandler::VendorKeyPressHandler(eventSDL, eventGame))
+									switch (GameEventHandler::VendorKeyPressHandler(&eventSDL))
 									{
 									case ExitKeypressHandled:
 										vendorShoppingFlag = false;
@@ -126,12 +123,21 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 										userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
 										userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
 										userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-										userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-										std::tie(message, itemSold) = player.PurchaseItem(vendor.GetInventory()->at(menu.GetSelectedItem()));
-										if (itemSold)
-											vendor.RemoveItemFromInventory(menu.GetSelectedItem());
+										userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+										if (vendor->GetItemsInInventory())
+										{
+											std::tie(message, itemSold) = player.PurchaseItem(vendor->GetInventory()->at(menu.GetSelectedItem()));
+											if (itemSold)
+											{
+
+												vendor->RemoveItemFromInventory(menu.GetSelectedItem());
+												menu.SetSelectedItem(0);
+												menu.SetAllItems();
+											}
+										}
 										userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), message);
 										SDL_RenderPresent(game.GetRenderer());
+
 										break;
 									case ScrollDownKeypressHandled:
 										menu.ScrollDown();

@@ -113,12 +113,15 @@ void UI::DrawInventoryPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture,
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Equipped:");
-	DrawInventoryItems(renderer, tileMapTexture, player->GetInventory(), player->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	if (player->GetItemsInInventory())
+		DrawInventoryItems(renderer, tileMapTexture, player->GetInventory(), player->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	else
+		DrawText(renderer, tileMapTexture, 45, 12, "No items in inventory");
 }
 
 void UI::DrawInventoryItems(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, std::array<Item, 50>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem)
 {
-	if (itemsInInventory < endingItem)
+	if (itemsInInventory <= endingItem)
 		endingItem = itemsInInventory;
 
 	int positionOfCursor = 0;
@@ -140,7 +143,10 @@ void UI::DrawVendorPopup(SDL_Renderer* renderer, SDL_Texture* tileMapTexture, Ve
 	DrawText(renderer, tileMapTexture, 57, 11, "Item stats:");
 	DrawText(renderer, tileMapTexture, 70, 11, "Item quantity:");
 	DrawText(renderer, tileMapTexture, 86, 11, "Item price:");
-	DrawInventoryItems(renderer, tileMapTexture, vendor->GetInventory(), vendor->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	if (vendor->GetItemsInInventory())
+		DrawInventoryItems(renderer, tileMapTexture, vendor->GetInventory(), vendor->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	else
+		DrawText(renderer, tileMapTexture, 45, 12, "No items for sale");
 }
 
 void UI::DrawUI()

@@ -45,3 +45,13 @@ int Menu::GetEndingItem() const
 {
 	return this->endingItem;
 }
+
+void Menu::SetSelectedItem(int selectedItem)
+{
+	this->selectedItem = selectedItem;
+}
+
+void Menu::SetAllItems()
+{
+	this->allItems--;
+}

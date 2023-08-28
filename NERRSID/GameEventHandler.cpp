@@ -1,11 +1,11 @@
 
 #include "GameEventHandler.h"
 
-HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame, Map map)
+HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event* eventToBeHandledSDL, std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles)
 {
-	auto mapTiles = map.GetMapTiles();
+	/// TODO: Needs rework
 
-	switch (eventToBeHandledSDL.key.keysym.sym)
+	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
 	case SDLK_UP:
 		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Walkable || mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile)
@@ -36,13 +36,12 @@ HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event eventTo
 	case SDLK_i:
 		return InventoryKeypressHandled;
 		break;
-
 	}
 }
 
-HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame)
+HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event* eventToBeHandledSDL)
 {
-	switch (eventToBeHandledSDL.key.keysym.sym)
+	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
 	case SDLK_UP:
 		return ScrollUpKeypressHandled;
@@ -54,12 +53,8 @@ HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event eventToBeHandledS
 		return ExitKeypressHandled;
 		break;
 	case SDLK_RETURN:
-		switch (eventToBeHandledGame.GetTypeOfEvent())
-		{
-		case VendorEvent:
-			return EnterKeypressHandled;
-			break;
-		}
+		return EnterKeypressHandled;
+		break;
 	}
 }
 
@@ -83,9 +78,9 @@ HandledEvent GameEventHandler::InventoryKeyPressHandler(SDL_Event eventToBeHandl
 	}
 }
 
-Event GameEventHandler::CollisionHandler(Player player, Map map)
+GameEvent GameEventHandler::CollisionHandler(Player player, Map map)
 {
-	Event collisionEvent(EmptyEvent, "");
+	GameEvent collisionEvent(EmptyEvent, "");
 
 	auto mapTiles = map.GetMapTiles();
 

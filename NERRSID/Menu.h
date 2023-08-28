@@ -15,5 +15,7 @@ public:
 	int GetSelectedItem() const;
 	int GetStartingItem() const;
 	int GetEndingItem() const;
+	void SetSelectedItem(int selectedItem);
+	void SetAllItems();
 };
 

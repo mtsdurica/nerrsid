@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <array>
+#include <list>
 #include <SDL.h>
 
 #include "Tilemap.h"
@@ -45,6 +46,8 @@ class Map
 {
 private:
 	std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles{};
+	std::array<Vendor, 5> mapVendors;
+	int numberOfVendors;
 	void DrawHorizontalWall(wall* newWall);
 	void DrawVerticalWall(wall* newWall);
 	static point GetChildCenter(room* childRoom);
@@ -52,12 +55,16 @@ private:
 	void GenerateHorizontalSplit(room* r);
 	void GenerateVerticalSplit(room* r);
 	room InitializeBase();
+	void GenerateVendors();
 	void GenerateMap();
 
 public:
 	Map();
 	~Map();
 	std::array<std::array<tiles, MAX_Y>, MAX_X>& GetMapTiles();
+	std::array<Vendor, 5>& GetMapVendors();
 	void InsertVendor(Vendor* newVendor);
+	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
+	int GetNumberOfVendors();
 };
 

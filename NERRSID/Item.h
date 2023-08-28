@@ -26,6 +26,7 @@ private:
 
 public:
 	Item();
+	/// TODO: Add itemMinimumLevel to constructor
 	Item(std::string itemName, itemClass_t itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
 	~Item();
 	std::string GetItemName();

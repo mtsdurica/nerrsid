@@ -17,28 +17,30 @@ private:
 
 public:
 	~Game();
-	/**
-	 *
-	 * @return Width of the game window
-	 */
+	/// <summary>
+	/// Get width of the game window
+	/// </summary>
+	/// <returns>Game window width</returns>
 	int GetScreenWidth() const;
-	/**
-	 *
-	 * @return Height of the game window
-	 */
+	/// <summary>
+	/// Get height of the game window
+	/// </summary>
+	/// <returns>Game window height</returns>
 	int GetScreenHeight() const;
-	/**
-	 *
-	 * @return Game renderer
-	 */
+	/// <summary>
+	/// Get renderer of the game
+	/// </summary>
+	/// <returns>Game renderer</returns>
 	SDL_Renderer* GetRenderer() const;
-	/**
-	 *
-	 * @return Game tilemap
-	 */
+	/// <summary>
+	/// Get tilemap of the game
+	/// </summary>
+	/// <returns>Game tilemap</returns>
 	Tilemap* GetTileMap() const;
-	/**
-	 * @brief Method used to build the game application
-	 */
+	/// <summary>
+	/// Build the game logic
+	/// </summary>
+	/// <param name="gameScreenWidth">Width of the game window</param>
+	/// <param name="gameScreenHeight">Height of the game window</param>
 	static void Build(int gameScreenWidth, int gameScreenHeight);
 };

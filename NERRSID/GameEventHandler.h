@@ -3,7 +3,7 @@
 #include <tuple>
 
 #include "Player.h"
-#include "Event.h"
+#include "GameEvent.h"
 #include "Map.h"
 
 typedef enum HandledEvent
@@ -14,10 +14,34 @@ typedef enum HandledEvent
 class GameEventHandler
 {
 public:
-	static HandledEvent KeyPressHandler(Player* player, SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame, Map map);
-	static HandledEvent VendorKeyPressHandler(SDL_Event eventToBeHandledSDL, Event eventToBeHandledGame);
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="player"></param>
+	/// <param name="eventToBeHandledSDL"></param>
+	/// <param name="mapTiles"></param>
+	/// <returns></returns>
+	static HandledEvent KeyPressHandler(Player* player, SDL_Event* eventToBeHandledSDL, std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles);
+	/// <summary>
+	/// Vendor popup keypress handler
+	/// </summary>
+	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
+	/// <param name="eventToBeHandledGame"></param>
+	/// <returns></returns>
+	static HandledEvent VendorKeyPressHandler(SDL_Event* eventToBeHandledSDL);
+	/// <summary>
+	/// Inventory popup keypress handler
+	/// </summary>
+	/// <param name="eventToBeHandledSDL"></param>
+	/// <returns></returns>
 	static HandledEvent InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL);
-	static Event CollisionHandler(Player player, Map map);
+	/// <summary>
+	/// Player collision handler
+	/// </summary>
+	/// <param name="player"></param>
+	/// <param name="map"></param>
+	/// <returns></returns>
+	static GameEvent CollisionHandler(Player player, Map map);
 };
 
 

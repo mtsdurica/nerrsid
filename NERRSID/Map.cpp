@@ -2,7 +2,7 @@
 
 #include "Map.h"
 
-Map::Map()
+Map::Map() : numberOfVendors(0)
 {
 	for (int x = 0; x < MAX_X; x++)
 		for (int y = 0; y < MAX_Y; y++)
@@ -114,14 +114,33 @@ room Map::InitializeBase()
 	return newRoom;
 }
 
+void Map::GenerateVendors()
+{
+	int numOfGeneratedVendors = Map::RandomInRange(0, 5);
+	for (int i = 0; i < numOfGeneratedVendors; i++)
+	{
+		Vendor vendor("Bar", 0, 0);
+		vendor.CreateInventory();
+		do
+		{
+			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MAX_X - 1));
+			vendor.SetPositionYCoordinate(Map::RandomInRange(1, MAX_Y - 1));
+		} while (this->mapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != Walkable);
+		this->InsertVendor(&vendor);
+		this->mapVendors.at(this->numberOfVendors) = vendor;
+		this->numberOfVendors++;
+	}
+}
+
 void Map::GenerateMap()
 {
 	room base = InitializeBase();
 
 	if (rand() % 2)
-		(void)GenerateVerticalSplit(&base);
+		GenerateVerticalSplit(&base);
 	else
-		(void)GenerateHorizontalSplit(&base);
+		GenerateHorizontalSplit(&base);
+	this->GenerateVendors();
 }
 
 std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()
@@ -129,7 +148,26 @@ std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()
 	return mapTiles;
 }
 
+std::array<Vendor, 5>& Map::GetMapVendors()
+{
+	return mapVendors;
+}
+
 void Map::InsertVendor(Vendor* newVendor)
 {
 	this->mapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
+}
+
+Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate)
+{
+	for (int i = 0; i < numberOfVendors; i++)
+	{
+		if (mapVendors->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapVendors->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(mapVendors->at(i));
+	}
+}
+
+int Map::GetNumberOfVendors()
+{
+	return this->numberOfVendors;
 }
