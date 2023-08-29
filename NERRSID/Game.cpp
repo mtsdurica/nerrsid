@@ -58,10 +58,15 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		exit(EXIT_FAILURE);
 	Game game(gameScreenWidth, gameScreenHeight);
 	UI userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
-	Player player("foo", Warrior, 1, 1);
+
+	bool gameIsRunning = false;
+	Player player("", Warrior, 0, 0);
+	std::tie(gameIsRunning, player) = userInterface.DrawStartingMenu(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture());
+
+	//Player player("foo", Warrior, 1, 1);
 	GameEvent eventGame(EmptyEvent, "");
 	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
-	bool gameIsRunning = true;
+
 
 	while (gameIsRunning)
 	{

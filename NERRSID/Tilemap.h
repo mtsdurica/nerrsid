@@ -70,7 +70,12 @@
 /// Other
 #define space Tilemap::FindTile(0, 0)
 #define colon Tilemap::FindTile(10, 3)
-
+#define line_horizontal Tilemap::FindTile(4,12)
+#define line_vertical Tilemap::FindTile(3,11)
+#define corner_top_right Tilemap::FindTile(15,11)
+#define corner_top_left Tilemap::FindTile(10,13)
+#define corner_bottom_left Tilemap::FindTile(0,12)
+#define corner_bottom_right Tilemap::FindTile(9,13)
 
 class Tilemap
 {
