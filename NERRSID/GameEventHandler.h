@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <tuple>
+#include <iostream>
 
 #include "Player.h"
 #include "GameEvent.h"

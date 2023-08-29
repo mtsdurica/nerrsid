@@ -7,7 +7,6 @@ Map::Map() : numberOfVendors(0)
 	for (int x = 0; x < MAX_X; x++)
 		for (int y = 0; y < MAX_Y; y++)
 			mapTiles[x][y] = Walkable;
-	GenerateMap();
 }
 Map::~Map() = default;
 void Map::DrawHorizontalWall(wall* newWall)
@@ -114,13 +113,14 @@ room Map::InitializeBase()
 	return newRoom;
 }
 
-void Map::GenerateVendors()
+bool Map::GenerateVendors()
 {
 	int numOfGeneratedVendors = Map::RandomInRange(0, 5);
 	for (int i = 0; i < numOfGeneratedVendors; i++)
 	{
 		Vendor vendor("Bar", 0, 0);
-		vendor.CreateInventory();
+		if (!vendor.CreateInventory())
+			return false;
 		do
 		{
 			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MAX_X - 1));
@@ -130,9 +130,10 @@ void Map::GenerateVendors()
 		this->mapVendors.at(this->numberOfVendors) = vendor;
 		this->numberOfVendors++;
 	}
+	return true;
 }
 
-void Map::GenerateMap()
+bool Map::GenerateMap()
 {
 	room base = InitializeBase();
 
@@ -140,7 +141,10 @@ void Map::GenerateMap()
 		GenerateVerticalSplit(&base);
 	else
 		GenerateHorizontalSplit(&base);
-	this->GenerateVendors();
+	if (!this->GenerateVendors())
+		return false;
+
+	return true;
 }
 
 std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()

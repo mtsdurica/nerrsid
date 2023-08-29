@@ -1,0 +1,44 @@
+{
+  "itemList": [
+    {
+      "itemName": "Spanghelm",
+      "itemType": 1,
+      "itemPrice": 0,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Estoc",
+      "itemType": 0,
+      "itemPrice": 0,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Greataxe",
+      "itemType": 0,
+      "itemPrice": 0,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Shotel",
+      "itemType": 0,
+      "itemPrice": 0,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Balder Helm",
+      "itemType": 1,
+      "itemPrice": 0,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    }
+  ]
+}

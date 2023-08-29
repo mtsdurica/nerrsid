@@ -55,8 +55,7 @@ private:
 	void GenerateHorizontalSplit(room* r);
 	void GenerateVerticalSplit(room* r);
 	room InitializeBase();
-	void GenerateVendors();
-	void GenerateMap();
+	bool GenerateVendors();
 
 public:
 	Map();
@@ -66,5 +65,6 @@ public:
 	void InsertVendor(Vendor* newVendor);
 	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
 	int GetNumberOfVendors();
+	bool GenerateMap();
 };
 

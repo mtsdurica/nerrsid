@@ -53,9 +53,10 @@ int Game::GetScreenHeight() const
 void Game::Build(int gameScreenWidth, int gameScreenHeight)
 {
 	srand(time(nullptr));
-
-	Game game(gameScreenWidth, gameScreenHeight);
 	Map map;
+	if (!map.GenerateMap())
+		exit(EXIT_FAILURE);
+	Game game(gameScreenWidth, gameScreenHeight);
 	UI userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
 	Player player("foo", Warrior, 1, 1);
 	GameEvent eventGame(EmptyEvent, "");
@@ -89,7 +90,8 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				case EnterKeypressHandled:
 					if (eventGame.GetTypeOfEvent() == VendorEvent)
 					{
-						Vendor* vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+						Vendor* vendor = nullptr;
+						vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 						bool vendorShoppingFlag = true;
 						Menu menu(vendor->GetItemsInInventory());
 						std::string message = "";

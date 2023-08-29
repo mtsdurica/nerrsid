@@ -1,3 +1,7 @@
+#include <rapidjson/filereadstream.h>
+#include <rapidjson/document.h>
+#include <iostream>
+
 #include "Vendor.h"
 #include "Map.h"
 
@@ -27,16 +31,68 @@ int Vendor::RandomInRange(int min, int max)
 	return (rand() % (max + 1 - min) + min);
 }
 
-void Vendor::CreateInventory()
+bool Vendor::CreateInventory()
 {
-	std::array<Item, 5> itemShuffleBag =
+	std::array<Item, 5> itemShuffleBag;
+
+	FILE* fp;
+	fopen_s(&fp, "./itemset.json", "rb");
+
+	char readBuffer[65536];
+	rapidjson::FileReadStream inputStream(fp, readBuffer, sizeof(readBuffer));
+	rapidjson::Document document;
+
+	document.ParseStream(inputStream);
+	if (document.HasParseError())
 	{
-		Item("Estoc", Weapon, 0, 1, 0, 0),
-		Item("Spanghelm", Helmet, 0, 2, 0, 0),
-		Item("Shotel", Weapon, 0, 3, 0, 0),
-		Item("Greateaxe", Weapon, 0, 4, 0, 0),
-		Item("Balder helm", Helmet, 0, 5, 0, 0),
-	};
+		std::cerr << "Error: JSON parsing failure" << std::endl;
+		fclose(fp);
+		return false;
+	}
+	fclose(fp);
+
+	if (document.HasMember("itemList") && document["itemList"].IsArray())
+	{
+		const rapidjson::Value& itemList = document["itemList"];
+		for (rapidjson::SizeType i = 0; i < itemList.Size(); i++)
+		{
+			std::string itemName = "";
+			int itemPrice = 0, itemBonusStrength = 0, itemBonusDexterity = 0, itemBonusIntellect = 0;
+			itemClass_t itemClass = Weapon;
+			if (itemList[i].HasMember("itemName")
+				&& itemList[i].HasMember("itemType")
+				&& itemList[i].HasMember("itemPrice")
+				&& itemList[i].HasMember("itemBonusStrength")
+				&& itemList[i].HasMember("itemBonusDexterity")
+				&& itemList[i].HasMember("itemBonusIntellect"))
+			{
+
+				itemName = itemList[i]["itemName"].GetString();
+				switch (itemList[i]["itemType"].GetInt())
+				{
+				case 0:
+					itemClass = Weapon;
+					break;
+				case 1:
+					itemClass = Helmet;
+					break;
+				case 2:
+					itemClass = Chestplate;
+					break;
+				case 3:
+					itemClass = Leggings;
+					break;
+				}
+				itemPrice = itemList[i]["itemPrice"].GetInt();
+				itemBonusStrength = itemList[i]["itemBonusStrength"].GetInt();
+				itemBonusDexterity = itemList[i]["itemBonusDexterity"].GetInt();
+				itemBonusIntellect = itemList[i]["itemBonusIntellect"].GetInt();
+			}
+			else return false;
+			Item item(itemName, itemClass, itemPrice, itemBonusStrength, itemBonusDexterity, itemBonusIntellect);
+			itemShuffleBag[i] = item;
+		}
+	}
 
 	this->itemsInInventory = Vendor::RandomInRange(1, 5);
 	for (int i = 0; i < this->itemsInInventory; i++)
@@ -44,4 +100,6 @@ void Vendor::CreateInventory()
 		int selectedItem = Vendor::RandomInRange(0, 4);
 		this->inventory.at(i) = itemShuffleBag.at(selectedItem);
 	}
+
+	return true;
 }
