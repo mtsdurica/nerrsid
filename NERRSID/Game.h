@@ -1,5 +1,6 @@
 #pragma once
 #include <SDL.h>
+
 #include "Player.h"
 #include "Map.h"
 #include "Tilemap.h"
@@ -37,6 +38,8 @@ public:
 	/// </summary>
 	/// <returns>Game tilemap</returns>
 	Tilemap* GetTileMap() const;
+
+	static std::tuple<bool, Player> IntroSequence(UI* userInterface, SDL_Texture* tilemapTexture);
 	/// <summary>
 	/// Build the game logic
 	/// </summary>

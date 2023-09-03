@@ -8,6 +8,7 @@
 #include "Vendor.h"
 #include "GameEventHandler.h"
 #include "Menu.h"
+#include "KeypressHandler.h"
 
 Game::Game(int screenWidth, int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight)
 {
@@ -27,6 +28,7 @@ Game::Game(int screenWidth, int screenHeight) : screenWidth(screenWidth), screen
 
 	this->tileMap = new Tilemap(gameRenderer);
 }
+
 Game::~Game()
 {
 	delete tileMap;
@@ -34,22 +36,151 @@ Game::~Game()
 	SDL_DestroyWindow(this->gameWindow);
 	SDL_Quit();
 }
+
 SDL_Renderer* Game::GetRenderer() const
 {
 	return gameRenderer;
 }
+
 Tilemap* Game::GetTileMap() const
 {
 	return tileMap;
 }
+
 int Game::GetScreenWidth() const
 {
 	return screenWidth;
 }
+
 int Game::GetScreenHeight() const
 {
 	return screenHeight;
 }
+
+std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* tilemapTexture)
+{
+	SDL_Event eventSDL;
+	bool menuIsActive = true;
+	bool characterCreationFlag = true;
+	int positionOfCursor = 0;
+	Menu menu(2);
+	Player player("", Warrior, 1, 1);
+	std::string playerName = "";
+	while (menuIsActive)
+	{
+		userInterface->RefreshUserInterface();
+		userInterface->DrawStartupMenu(tilemapTexture, menu.GetSelectedItem());
+		SDL_RenderPresent(userInterface->GetRenderer());
+		while (SDL_PollEvent(&eventSDL))
+		{
+			if (eventSDL.type == SDL_QUIT)
+				return { false, player };
+			else if (eventSDL.type == SDL_KEYDOWN)
+			{
+				switch (eventSDL.key.keysym.sym)
+				{
+				case SDLK_UP:
+					menu.ScrollUp();
+					break;
+				case SDLK_DOWN:
+					menu.ScrollDown();
+					break;
+				case SDLK_RETURN:
+					switch (menu.GetSelectedItem())
+					{
+					case 0:
+						userInterface->RefreshUserInterface();
+						while (characterCreationFlag)
+						{
+							userInterface->DrawText(tilemapTexture, 0, 0, "Enter name:");
+							SDL_RenderPresent(userInterface->GetRenderer());
+							while (SDL_PollEvent(&eventSDL))
+							{
+								userInterface->DrawPlayerCreationName(tilemapTexture, playerName);
+								SDL_RenderPresent(userInterface->GetRenderer());
+								if (eventSDL.type == SDL_QUIT)
+									return { false, player };
+								else if (eventSDL.type == SDL_KEYDOWN)
+								{
+									switch (eventSDL.key.keysym.sym)
+									{
+									case SDLK_RETURN:
+									{
+										if (playerName.empty())
+											break;
+										player.SetName(playerName);
+										Menu menuClassSelection(3);
+										while (true)
+										{
+											userInterface->RefreshUserInterface();
+											userInterface->DrawPlayerClassSelection(tilemapTexture, menuClassSelection.GetSelectedItem());
+											SDL_RenderPresent(userInterface->GetRenderer());
+											while (SDL_PollEvent(&eventSDL))
+											{
+												if (eventSDL.type == SDL_QUIT)
+													return { false, player };
+												else if (eventSDL.type == SDL_KEYDOWN)
+												{
+													switch (eventSDL.key.keysym.sym)
+													{
+													case SDLK_UP:
+														menuClassSelection.ScrollUp();
+														break;
+													case SDLK_DOWN:
+														menuClassSelection.ScrollDown();
+														break;
+													case SDLK_RETURN:
+														switch (menuClassSelection.GetSelectedItem())
+														{
+														case 0:
+														{
+															Player playerReturning(playerName, Warrior, 1, 1);
+															return{ true, playerReturning };
+															break;
+														}
+														case 1:
+														{
+															Player playerReturning(playerName, Wizard, 1, 1);
+															return{ true, playerReturning };
+															break;
+														}
+														case 2:
+														{
+															Player playerReturning(playerName, Assassin, 1, 1);
+															return{ true, playerReturning };
+															break;
+														}
+														}
+														break;
+													}
+												}
+											}
+										}
+										break;
+									}
+									default:
+										//TODO: REOWRk
+										playerName += (char)eventSDL.text.text[8];
+										break;
+									}
+								}
+							}
+						}
+						break;
+					case 1:
+						return { false, player };
+						break;
+					}
+					break;
+				case SDLK_ESCAPE:
+					return { false, player };
+					break;
+				}
+			}
+		}
+	}
+}
+
 void Game::Build(int gameScreenWidth, int gameScreenHeight)
 {
 	srand(time(nullptr));
@@ -61,7 +192,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 
 	bool gameIsRunning = false;
 	Player player("", Warrior, 0, 0);
-	std::tie(gameIsRunning, player) = userInterface.DrawStartingMenu(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture());
+	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTileMap()->GetTileMapTexture());
 
 	//Player player("foo", Warrior, 1, 1);
 	GameEvent eventGame(EmptyEvent, "");
@@ -75,10 +206,10 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		eventGame = GameEventHandler::CollisionHandler(player, map);
 
 		userInterface.RefreshUserInterface();
-		userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
-		userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-		userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-		userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), eventGame.GetEventMessage());
+		userInterface.DrawMap(&map, game.GetTileMap());
+		userInterface.DrawPlayer(game.GetTileMap()->GetTileMapTexture(), &player);
+		userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
+		userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), eventGame.GetEventMessage());
 		SDL_RenderPresent(game.GetRenderer());
 
 		while (SDL_PollEvent(&eventSDL))
@@ -105,11 +236,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						while (vendorShoppingFlag)
 						{
 							userInterface.RefreshUserInterface();
-							userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
-							userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-							userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-							userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-							userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), message);
+							userInterface.DrawMap(&map, game.GetTileMap());
+							userInterface.DrawPlayer(game.GetTileMap()->GetTileMapTexture(), &player);
+							userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
+							userInterface.DrawVendorPopup(game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+							userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), message);
 							SDL_RenderPresent(game.GetRenderer());
 							while (SDL_PollEvent(&eventSDL))
 							{
@@ -127,10 +258,10 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 										break;
 									case EnterKeypressHandled:
 										userInterface.RefreshUserInterface();
-										userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
-										userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-										userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-										userInterface.DrawVendorPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+										userInterface.DrawMap(&map, game.GetTileMap());
+										userInterface.DrawPlayer(game.GetTileMap()->GetTileMapTexture(), &player);
+										userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
+										userInterface.DrawVendorPopup(game.GetTileMap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
 										if (vendor->GetItemsInInventory())
 										{
 											std::tie(message, itemSold) = player.PurchaseItem(vendor->GetInventory()->at(menu.GetSelectedItem()));
@@ -142,7 +273,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 												menu.SetAllItems();
 											}
 										}
-										userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), message);
+										userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), message);
 										SDL_RenderPresent(game.GetRenderer());
 
 										break;
@@ -166,11 +297,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					while (inventoryBrowsingFlag)
 					{
 						userInterface.RefreshUserInterface();
-						userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
-						userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-						userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-						userInterface.DrawInventoryPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-						userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), lastMessage);
+						userInterface.DrawMap(&map, game.GetTileMap());
+						userInterface.DrawPlayer(game.GetTileMap()->GetTileMapTexture(), &player);
+						userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
+						userInterface.DrawInventoryPopup(game.GetTileMap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+						userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), lastMessage);
 						SDL_RenderPresent(game.GetRenderer());
 						while (SDL_PollEvent(&eventSDL))
 						{
@@ -188,21 +319,21 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 									break;
 								case EnterKeypressHandled:
 									userInterface.RefreshUserInterface();
-									userInterface.DrawMap(game.GetRenderer(), &map, game.GetTileMap());
-									userInterface.DrawPlayer(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
-									userInterface.DrawPlayerInfo(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player);
+									userInterface.DrawMap(&map, game.GetTileMap());
+									userInterface.DrawPlayer(game.GetTileMap()->GetTileMapTexture(), &player);
+									userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
 									if (!player.GetInventory()->at(menu.GetSelectedItem()).GetIsEquipped())
 									{
 
 										lastMessage = player.EquipItem(&(player.GetInventory()->at(menu.GetSelectedItem())));
-										userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), lastMessage);
+										userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), lastMessage);
 									}
 									else
 									{
 										lastMessage = player.UnequipItem(player.GetInventory()->at(menu.GetSelectedItem()).GetItemClass());
-										userInterface.DrawStatusBar(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), lastMessage);
+										userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), lastMessage);
 									}
-									userInterface.DrawInventoryPopup(game.GetRenderer(), game.GetTileMap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
+									userInterface.DrawInventoryPopup(game.GetTileMap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
 									SDL_RenderPresent(game.GetRenderer());
 									break;
 								case ScrollDownKeypressHandled:

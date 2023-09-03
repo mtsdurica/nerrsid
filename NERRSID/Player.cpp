@@ -13,22 +13,18 @@ Player::Player(std::string playerName, playerClass_t playerClass, int positionXC
 		playerStrength = 10;
 		playerDexterity = 5;
 		playerIntellect = 0;
-		this->InsertIntoInventory(Item("Rusty sword", Weapon, 0, 1, 0, 0));
 		break;
 	case Wizard:
 		playerStrength = 0;
 		playerDexterity = 5;
 		playerIntellect = 10;
-		this->InsertIntoInventory(Item("Magic stick", Weapon, 0, 0, 0, 1));
 		break;
 	case Assassin:
 		playerStrength = 5;
 		playerDexterity = 10;
 		playerIntellect = 0;
-		this->InsertIntoInventory(Item("Thief blade", Weapon, 0, 0, 1, 0));
 		break;
 	}
-	this->EquipItem(&(this->inventory.at(0)));
 }
 
 Player::~Player()
