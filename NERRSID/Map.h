@@ -1,70 +1,71 @@
 #pragma once
 #include <cstdint>
 #include <array>
-#include <list>
 #include <SDL.h>
 
-#include "Tilemap.h"
 #include "Vendor.h"
 
-#define GAME_RESOLUTION_WIDTH 1600
-#define GAME_RESOLUTION_HEIGHT 720
-#define MAX_X 40                // Max base room width
-#define MAX_Y GAME_RESOLUTION_HEIGHT / 16           // Max base room height
 #define UINT_CHANGEABLE uint8_t // Changeable data type if needed to generate larger maps than 0-255
-#define PSEUDO_ROOM_SIZE 4      // Pseudo max room size
 
-typedef enum tiles
+enum
 {
-	Wall, Walkable, PlayerTile, VendorTile
-} tiles;
+	GameResolutionWidth = 1600,
+	GameResolutionHeight = 720,
+	MaxX = 40,            // Max base room width
+	MaxY = (GameResolutionHeight / 16),    // Max base room height
+	PseudoRoomSize = 4      // Pseudo max room size
+};
 
-typedef struct point
+typedef enum Tiles
 {
-	UINT_CHANGEABLE x;
-	UINT_CHANGEABLE y;
-} point;
+	WallTile, WalkableTile, PlayerTile, VendorTile
+} Tiles;
 
-typedef struct wall
+typedef struct Point
 {
-	point start; // Start point of the wall
-	point end;   // End point of the wall
-} wall;
+	UINT_CHANGEABLE X;
+	UINT_CHANGEABLE Y;
+} Point;
 
-typedef struct room
+typedef struct Wall
 {
-	wall top;            // Top wall
-	wall bot;            // Bottom wall
-	wall left;           // Left wall
-	wall right;          // Right wall
-	struct room* child1; // Left/top child
-	struct room* child2; // Right/Bottom child
-	point center;        // Center point of the room
-} room;
+	Point Start; // Start point of the wall
+	Point End;   // End point of the wall
+} Wall;
+
+typedef struct Room
+{
+	Wall Top;            // Top wall
+	Wall Bot;            // Bottom wall
+	Wall Left;           // Left wall
+	Wall Right;          // Right wall
+	struct Room* Child1; // Left/top child
+	struct Room* Child2; // Right/Bottom child
+	Point Center;        // Center point of the room
+} Room;
 
 class Map
 {
 private:
-	std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles{};
-	std::array<Vendor, 5> mapVendors;
-	int numberOfVendors;
-	void DrawHorizontalWall(wall* newWall);
-	void DrawVerticalWall(wall* newWall);
-	static point GetChildCenter(room* childRoom);
-	static UINT_CHANGEABLE RandomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max);
-	void GenerateHorizontalSplit(room* r);
-	void GenerateVerticalSplit(room* r);
-	room InitializeBase();
+	std::array<std::array<Tiles, MaxY>, MaxX> MapTiles{};
+	std::array<Vendor, 5> MapVendors;
+	int NumberOfVendors;
+	void DrawHorizontalWall(const Wall* newWall);
+	void DrawVerticalWall(const Wall* newWall);
+	static Point GetChildCenter(const Room* childRoom);
+	static UINT_CHANGEABLE RandomInRange(const UINT_CHANGEABLE min, const UINT_CHANGEABLE max);
+	void GenerateHorizontalSplit(Room* r);
+	void GenerateVerticalSplit(Room* r);
+	Room InitializeBase();
 	bool GenerateVendors();
 
 public:
 	Map();
 	~Map();
-	std::array<std::array<tiles, MAX_Y>, MAX_X>& GetMapTiles();
+	std::array<std::array<Tiles, MaxY>, MaxX>& GetMapTiles();
 	std::array<Vendor, 5>& GetMapVendors();
-	void InsertVendor(Vendor* newVendor);
+	void InsertVendor(const Vendor* newVendor);
 	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
-	int GetNumberOfVendors();
+	int GetNumberOfVendors() const;
 	bool GenerateMap();
 };
-

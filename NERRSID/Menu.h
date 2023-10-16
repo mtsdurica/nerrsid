@@ -2,13 +2,13 @@
 class Menu
 {
 private:
-	int displayedItems;
-	int allItems;
-	int selectedItem;
-	int startingItem;
-	int endingItem;
+	int DisplayedItems;
+	int AllItems;
+	int SelectedItem;
+	int StartingItem;
+	int EndingItem;
 public:
-	Menu(int allItems);
+	explicit Menu(int allItems);
 	~Menu();
 	void ScrollDown();
 	void ScrollUp();

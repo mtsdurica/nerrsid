@@ -1,6 +1,7 @@
 #include "Menu.h"
 
-Menu::Menu(int allItems) : allItems(allItems), selectedItem(0), displayedItems(10), endingItem(displayedItems), startingItem(0)
+Menu::Menu(const int allItems) : DisplayedItems(10), AllItems(allItems), SelectedItem(0), StartingItem(0),
+EndingItem(DisplayedItems)
 {
 }
 
@@ -8,50 +9,50 @@ Menu::~Menu() = default;
 
 void Menu::ScrollDown()
 {
-	if (this->selectedItem < this->allItems - 1)
-		this->selectedItem++;
-	if (this->selectedItem == this->endingItem)
+	if (this->SelectedItem < this->AllItems - 1)
+		this->SelectedItem++;
+	if (this->SelectedItem == this->EndingItem)
 	{
-		this->startingItem += this->displayedItems;
-		if ((this->allItems - this->startingItem) < this->displayedItems)
-			this->endingItem = allItems;
+		this->StartingItem += this->DisplayedItems;
+		if ((this->AllItems - this->StartingItem) < this->DisplayedItems)
+			this->EndingItem = AllItems;
 		else
-			this->endingItem += this->displayedItems;
+			this->EndingItem += this->DisplayedItems;
 	}
 }
 
 void Menu::ScrollUp()
 {
-	if (this->selectedItem > 0)
-		this->selectedItem--;
-	if ((this->selectedItem == this->startingItem - 1) && (this->selectedItem != 0))
+	if (this->SelectedItem > 0)
+		this->SelectedItem--;
+	if ((this->SelectedItem == this->StartingItem - 1) && (this->SelectedItem != 0))
 	{
-		this->endingItem -= this->endingItem - this->startingItem;
-		this->startingItem -= this->displayedItems;
+		this->EndingItem -= this->EndingItem - this->StartingItem;
+		this->StartingItem -= this->DisplayedItems;
 	}
 }
 
 int Menu::GetSelectedItem() const
 {
-	return this->selectedItem;
+	return this->SelectedItem;
 }
 
 int Menu::GetStartingItem() const
 {
-	return this->startingItem;
+	return this->StartingItem;
 }
 
 int Menu::GetEndingItem() const
 {
-	return this->endingItem;
+	return this->EndingItem;
 }
 
-void Menu::SetSelectedItem(int selectedItem)
+void Menu::SetSelectedItem(const int selectedItem)
 {
-	this->selectedItem = selectedItem;
+	this->SelectedItem = selectedItem;
 }
 
 void Menu::SetAllItems()
 {
-	this->allItems--;
+	this->AllItems--;
 }

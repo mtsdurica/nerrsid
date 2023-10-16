@@ -4,13 +4,15 @@ Tilemap::Tilemap(SDL_Renderer* renderer)
 {
 	// Tilemap downloaded from here under public domain license:
 	// http://www.bay12forums.com/smf/index.php?topic=144897.0
-	this->tileMapTexture = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP("tilemap.bmp"));
+	this->TileMapTexture = SDL_CreateTextureFromSurface(renderer, SDL_LoadBMP("tilemap.bmp"));
 }
+
 Tilemap::~Tilemap()
 {
-	SDL_DestroyTexture(tileMapTexture);
+	SDL_DestroyTexture(TileMapTexture);
 }
-SDL_Rect Tilemap::FindTile(int tilePositionX, int tilePositionY)
+
+SDL_Rect Tilemap::FindTile(const int tilePositionX, const int tilePositionY)
 {
 	SDL_Rect foundTile;
 	foundTile.x = tilePositionX * 16;
@@ -20,206 +22,143 @@ SDL_Rect Tilemap::FindTile(int tilePositionX, int tilePositionY)
 
 	return foundTile;
 }
+
 SDL_Texture* Tilemap::GetTileMapTexture() const
 {
-	return tileMapTexture;
+	return TileMapTexture;
 }
 
-SDL_Rect Tilemap::CharToRect(char srcChar)
+SDL_Rect Tilemap::CharToRect(const char srcChar)
 {
 	switch (srcChar)
 	{
 	case 'a':
-		return alpha_a;
-		break;
+		return ALPHA_a;
 	case 'b':
-		return alpha_b;
-		break;
+		return ALPHA_b;
 	case 'c':
-		return alpha_c;
-		break;
+		return ALPHA_c;
 	case 'd':
-		return alpha_d;
-		break;
+		return ALPHA_d;
 	case 'e':
-		return alpha_e;
-		break;
+		return ALPHA_e;
 	case 'f':
-		return alpha_f;
-		break;
+		return ALPHA_f;
 	case 'g':
-		return alpha_g;
-		break;
+		return ALPHA_g;
 	case 'h':
-		return alpha_h;
-		break;
+		return ALPHA_h;
 	case 'i':
-		return alpha_i;
-		break;
+		return ALPHA_i;
 	case 'j':
-		return alpha_j;
-		break;
+		return ALPHA_j;
 	case 'k':
-		return alpha_k;
-		break;
+		return ALPHA_k;
 	case 'l':
-		return alpha_l;
-		break;
+		return ALPHA_l;
 	case 'm':
-		return alpha_m;
-		break;
+		return ALPHA_m;
 	case 'n':
-		return alpha_n;
-		break;
+		return ALPHA_n;
 	case 'o':
-		return alpha_o;
-		break;
+		return ALPHA_o;
 	case 'p':
-		return alpha_p;
-		break;
+		return ALPHA_p;
 	case 'q':
-		return alpha_q;
-		break;
+		return ALPHA_q;
 	case 'r':
-		return alpha_r;
-		break;
+		return ALPHA_r;
 	case 's':
-		return alpha_s;
-		break;
+		return ALPHA_s;
 	case 't':
-		return alpha_t;
-		break;
+		return ALPHA_t;
 	case 'u':
-		return alpha_u;
-		break;
+		return ALPHA_u;
 	case 'v':
-		return alpha_v;
-		break;
+		return ALPHA_v;
 	case 'w':
-		return alpha_w;
-		break;
+		return ALPHA_w;
 	case 'x':
-		return alpha_x;
-		break;
+		return ALPHA_x;
 	case 'y':
-		return alpha_y;
-		break;
+		return ALPHA_y;
 	case 'z':
-		return alpha_z;
-		break;
+		return ALPHA_z;
 	case 'A':
-		return alpha_A;
-		break;
+		return ALPHA_A;
 	case 'B':
-		return alpha_B;
-		break;
+		return ALPHA_B;
 	case 'C':
-		return alpha_C;
-		break;
+		return ALPHA_C;
 	case 'D':
-		return alpha_D;
-		break;
+		return ALPHA_D;
 	case 'E':
-		return alpha_E;
-		break;
+		return ALPHA_E;
 	case 'F':
-		return alpha_F;
-		break;
+		return ALPHA_F;
 	case 'G':
-		return alpha_G;
-		break;
+		return ALPHA_G;
 	case 'H':
-		return alpha_H;
-		break;
+		return ALPHA_H;
 	case 'I':
-		return alpha_I;
-		break;
+		return ALPHA_I;
 	case 'J':
-		return alpha_J;
-		break;
+		return ALPHA_J;
 	case 'K':
-		return alpha_K;
-		break;
+		return ALPHA_K;
 	case 'L':
-		return alpha_L;
-		break;
+		return ALPHA_L;
 	case 'M':
-		return alpha_M;
-		break;
+		return ALPHA_M;
 	case 'N':
-		return alpha_N;
-		break;
+		return ALPHA_N;
 	case 'O':
-		return alpha_O;
-		break;
+		return ALPHA_O;
 	case 'P':
-		return alpha_P;
-		break;
+		return ALPHA_P;
 	case 'Q':
-		return alpha_Q;
-		break;
+		return ALPHA_Q;
 	case 'R':
-		return alpha_R;
-		break;
+		return ALPHA_R;
 	case 'S':
-		return alpha_S;
-		break;
+		return ALPHA_S;
 	case 'T':
-		return alpha_T;
-		break;
+		return ALPHA_T;
 	case 'U':
-		return alpha_U;
-		break;
+		return ALPHA_U;
 	case 'V':
-		return alpha_V;
-		break;
+		return ALPHA_V;
 	case 'W':
-		return alpha_W;
-		break;
+		return ALPHA_W;
 	case 'X':
-		return alpha_X;
-		break;
+		return ALPHA_X;
 	case 'Y':
-		return alpha_Y;
-		break;
+		return ALPHA_Y;
 	case 'Z':
-		return alpha_Z;
-		break;
+		return ALPHA_Z;
 	case '0':
-		return num_0;
-		break;
+		return NUM_0;
 	case '1':
-		return num_1;
-		break;
+		return NUM_1;
 	case '2':
-		return num_2;
-		break;
+		return NUM_2;
 	case '3':
-		return num_3;
-		break;
+		return NUM_3;
 	case '4':
-		return num_4;
-		break;
+		return NUM_4;
 	case '5':
-		return num_5;
-		break;
+		return NUM_5;
 	case '6':
-		return num_6;
-		break;
+		return NUM_6;
 	case '7':
-		return num_7;
-		break;
+		return NUM_7;
 	case '8':
-		return num_8;
-		break;
+		return NUM_8;
 	case '9':
-		return num_9;
-		break;
+		return NUM_9;
 	case ' ':
-		return space;
-		break;
+		return SPACE;
 	case ':':
-		return colon;
-		break;
+		return COLON;
 	}
 }

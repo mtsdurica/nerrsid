@@ -2,42 +2,42 @@
 #include <string>
 
 
-typedef enum itemClass
+typedef enum ItemClass
 {
 	UndefinedItemClass = -1,
 	Weapon,
 	Helmet,
 	Chestplate,
 	Leggings,
-} itemClass_t;
+} ItemClassT;
 
 class Player;
 
 class Item
 {
 private:
-	std::string itemName;
-	int itemMinimumLevel;
-	int itemPrice;
-	int itemBonusStrength;
-	int itemBonusDexterity;
-	int itemBonusIntellect;
-	bool isEquipped;
-	itemClass_t itemClass;
+	std::string ItemName;
+	int ItemMinimumLevel;
+	int ItemPrice;
+	int ItemBonusStrength;
+	int ItemBonusDexterity;
+	int ItemBonusIntellect;
+	bool IsEquipped;
+	ItemClassT ItemClass;
 
 public:
 	Item();
 	/// TODO: Add itemMinimumLevel to constructor
-	Item(std::string itemName, itemClass_t itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
+	Item(std::string itemName, ItemClassT itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect);
 	~Item();
 	std::string GetItemName();
-	int GetItemMinimumLevel();
-	int GetItemPrice();
-	int GetItemBonusStrength();
-	int GetItemBonusDexterity();
-	int GetItemBonusIntellect();
-	bool GetIsEquipped();
-	itemClass_t GetItemClass();
+	int GetItemMinimumLevel() const;
+	int GetItemPrice() const;
+	int GetItemBonusStrength() const;
+	int GetItemBonusDexterity() const;
+	int GetItemBonusIntellect() const;
+	bool GetIsEquipped() const;
+	ItemClassT GetItemClass() const;
 	void SetIsEquipped(bool isEquipped);
 };
 

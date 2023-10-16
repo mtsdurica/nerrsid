@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-typedef enum gameEventType
+typedef enum GameEventType
 {
 	EmptyEvent,
 	AmbushEvent,
@@ -9,23 +9,23 @@ typedef enum gameEventType
 	GainExperienceEvent,
 	UseConsumableEvent,
 	ChestEvent
-} gameEventType;
+} GameEventType;
 
 class GameEvent
 {
 private:
-	gameEventType typeOfEvent;
-	std::string eventMessage;
+	GameEventType TypeOfEvent;
+	std::string EventMessage;
 	/// TODO: vendor inv
 public:
 	GameEvent();
-	GameEvent(gameEventType typeOfEvent, std::string eventMessage);
+	GameEvent(GameEventType typeOfEvent, std::string eventMessage);
 	~GameEvent();
 	/// <summary>
 	/// Get event type
 	/// </summary>
 	/// <returns>Event type</returns>
-	gameEventType GetTypeOfEvent() const;
+	GameEventType GetTypeOfEvent() const;
 	/// <summary>
 	/// Get event message
 	/// </summary>
@@ -40,6 +40,5 @@ public:
 	/// Set type of the game event
 	/// </summary>
 	/// <param name="typeOfEvent">New type of event</param>
-	void SetTypeOfEvent(gameEventType typeOfEvent);
+	void SetTypeOfEvent(GameEventType typeOfEvent);
 };
-
