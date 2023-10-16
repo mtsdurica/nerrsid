@@ -3,63 +3,62 @@
 
 
 Item::Item()
-	: itemName(""), itemClass(UndefinedItemClass), itemBonusStrength(-1), itemBonusDexterity(-1), itemBonusIntellect(-1), isEquipped(false), itemMinimumLevel(-1),
-	itemPrice(-1)
+	: ItemMinimumLevel(-1), ItemPrice(-1), ItemBonusStrength(-1), ItemBonusDexterity(-1), ItemBonusIntellect(-1),
+	IsEquipped(false),
+	ItemClass(UndefinedItemClass)
 {
 }
 
-Item::Item(std::string itemName, itemClass_t itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect)
-	: itemName(std::move(itemName)), itemMinimumLevel(1), itemPrice(itemPrice), itemBonusStrength(itemBonusStrength), itemBonusDexterity(itemBonusDexterity),
-	itemBonusIntellect(itemBonusIntellect), isEquipped(false), itemClass(itemClass)
+Item::Item(std::string itemName, const ItemClassT itemClass, const int itemPrice, const int itemBonusStrength, const int itemBonusDexterity, const int itemBonusIntellect)
+	: ItemName(std::move(itemName)), ItemMinimumLevel(1), ItemPrice(itemPrice), ItemBonusStrength(itemBonusStrength), ItemBonusDexterity(itemBonusDexterity),
+	ItemBonusIntellect(itemBonusIntellect), IsEquipped(false), ItemClass(itemClass)
 {
 }
 
-Item::~Item()
-{
-}
+Item::~Item() = default;
 
 std::string Item::GetItemName()
 {
-	return this->itemName;
+	return this->ItemName;
 }
 
-int Item::GetItemMinimumLevel()
+int Item::GetItemMinimumLevel() const
 {
-	return this->itemMinimumLevel;
+	return this->ItemMinimumLevel;
 }
 
-int Item::GetItemPrice()
+int Item::GetItemPrice() const
 {
-	return this->itemPrice;
+	return this->ItemPrice;
 }
 
-int Item::GetItemBonusStrength()
+int Item::GetItemBonusStrength() const
 {
-	return this->itemBonusStrength;
+	return this->ItemBonusStrength;
 }
 
-int Item::GetItemBonusDexterity()
+int Item::GetItemBonusDexterity() const
 {
-	return this->itemBonusDexterity;
+	return this->ItemBonusDexterity;
 }
 
-int Item::GetItemBonusIntellect()
+int Item::GetItemBonusIntellect() const
 {
-	return this->itemBonusIntellect;
+	return this->ItemBonusIntellect;
 }
 
-bool Item::GetIsEquipped()
+bool Item::GetIsEquipped() const
 {
-	return this->isEquipped;
+	return this->IsEquipped;
 }
 
-itemClass_t Item::GetItemClass()
+ItemClassT Item::GetItemClass() const
 {
-	return this->itemClass;
+	return this->ItemClass;
 }
 
-void Item::SetIsEquipped(bool isEquipped)
+void Item::SetIsEquipped(const bool isEquipped)
 {
-	this->isEquipped = isEquipped;
+	this->IsEquipped = isEquipped;
 }
 

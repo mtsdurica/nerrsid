@@ -6,43 +6,42 @@
 #include "Item.h"
 #include "Entity.h"
 
-typedef enum playerClass
+typedef enum PlayerClass
 {
 	UndefinedPlayerClass = -1,
 	Wizard,
 	Warrior,
 	Assassin
-} playerClass_t;
+} PlayerClassT;
 
-class Player : public Entity
+class Player final : public Entity
 {
 private:
-	playerClass_t playerClass;
-	int playerLevel;
-	int playerExperience;
-	int playerStrength;
-	int playerDexterity;
-	int playerIntellect;
-	Item* equippedWeapon;
-	Item* equippedHelmet;
-	Item* equippedChestplate;
-	Item* equippedLeggings;
+	PlayerClassT PlayerClass;
+	int PlayerLevel;
+	int PlayerExperience;
+	int PlayerStrength;
+	int PlayerDexterity;
+	int PlayerIntellect;
+	Item* EquippedWeapon;
+	Item* EquippedHelmet;
+	Item* EquippedChestplate;
+	Item* EquippedLeggings;
 
 public:
 	Player();
-	Player(std::string playerName, playerClass_t playerClass, int positionXCoordinate, int positionYCoordinate);
-	~Player();
-	playerClass_t GetPlayerClass() const;
+	Player(const std::string& playerName, PlayerClassT playerClass, int positionXCoordinate, int positionYCoordinate);
+	PlayerClassT GetPlayerClass() const;
 	int GetPlayerLevel() const;
 	int GetPlayerExperience() const;
 	int GetPlayerStrength() const;
 	int GetPlayerDexterity() const;
 	int GetPlayerIntellect() const;
-	Item* GetEquippedWeapon();
-	Item* GetEquippedHelmet();
-	Item* GetEquippedChestplate();
-	Item* GetEquippedLeggings();
-	void SetPlayerClass(playerClass_t playerClass);
+	Item* GetEquippedWeapon() const;
+	Item* GetEquippedHelmet() const;
+	Item* GetEquippedChestplate() const;
+	Item* GetEquippedLeggings() const;
+	void SetPlayerClass(PlayerClassT playerClass);
 	void SetPlayerLevel(int playerLevel);
 	void SetPlayerExperience(int playerExperience);
 	void SetPlayerStrength(int playerStrength);
@@ -52,10 +51,8 @@ public:
 	void SetEquippedHelmet(Item* equippedHelmet);
 	void SetEquippedChestplate(Item* equippedChestplate);
 	void SetEquippedLeggings(Item* equippedLeggings);
-	void SetPositionXCoordinate(int positionXCoordinate);
-	void SetPositionYCoordinate(int positionYCoordinate);
 	std::string EquipItem(Item* item);
-	std::string UnequipItem(itemClass_t itemClass);
+	std::string UnequipItem(ItemClassT itemClass);
 	std::tuple<std::string, bool> PurchaseItem(Item item);
 };
 

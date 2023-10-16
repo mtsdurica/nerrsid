@@ -2,128 +2,127 @@
 
 #include "Map.h"
 
-Map::Map() : numberOfVendors(0)
+Map::Map() : NumberOfVendors(0)
 {
-	for (int x = 0; x < MAX_X; x++)
-		for (int y = 0; y < MAX_Y; y++)
-			mapTiles[x][y] = Walkable;
+	for (int x = 0; x < MaxX; x++)
+		for (int y = 0; y < MaxY; y++)
+			MapTiles[x][y] = WalkableTile;
 }
 
 Map::~Map() = default;
 
-void Map::DrawHorizontalWall(wall* newWall)
+void Map::DrawHorizontalWall(const Wall* newWall)
 {
-	for (UINT_CHANGEABLE x = newWall->start.x; x <= newWall->end.x; x++)
-		mapTiles[x][newWall->start.y] = Wall;
+	for (UINT_CHANGEABLE x = newWall->Start.X; x <= newWall->End.X; x++)
+		MapTiles[x][newWall->Start.Y] = WallTile;
 }
 
-void Map::DrawVerticalWall(wall* newWall)
+void Map::DrawVerticalWall(const Wall* newWall)
 {
-	for (UINT_CHANGEABLE y = newWall->start.y; y <= newWall->end.y; y++)
-		mapTiles[newWall->start.x][y] = Wall;
+	for (UINT_CHANGEABLE y = newWall->Start.Y; y <= newWall->End.Y; y++)
+		MapTiles[newWall->Start.X][y] = WallTile;
 }
 
-point Map::GetChildCenter(room* childRoom)
+Point Map::GetChildCenter(const Room* childRoom)
 {
-	point center;
-	center.x = childRoom->top.start.x + (childRoom->top.end.x - childRoom->top.start.x) / 2;
-	center.y = childRoom->right.start.y + (childRoom->right.end.y - childRoom->right.start.y) / 2;
+	Point center;
+	center.X = childRoom->Top.Start.X + (childRoom->Top.End.X - childRoom->Top.Start.X) / 2;
+	center.Y = childRoom->Right.Start.Y + (childRoom->Right.End.Y - childRoom->Right.Start.Y) / 2;
 	return center;
 }
 
-UINT_CHANGEABLE Map::RandomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
+UINT_CHANGEABLE Map::RandomInRange(const UINT_CHANGEABLE min, const UINT_CHANGEABLE max)
 {
 	/// Calculate the middle of the range
-	UINT_CHANGEABLE middle = (min + max) / 2;
+	const UINT_CHANGEABLE middle = (min + max) / 2;
 	/// Calculate the allowable deviation from the middle
-	UINT_CHANGEABLE deviation = (max - min) / 3;
-	return (rand() % (deviation * 2 + 1)) + (middle - deviation);
+	const UINT_CHANGEABLE deviation = (max - min) / 3;
+	return static_cast<uint8_t>(rand() % (deviation * 2 + 1)) + (middle - deviation);
 }
 
-void Map::GenerateHorizontalSplit(room* r)
+void Map::GenerateHorizontalSplit(Room* r)
 {
 	if (r == nullptr)
 		return;
 
-	if (r->left.start.y + (PSEUDO_ROOM_SIZE / 2) >= r->left.end.y - (PSEUDO_ROOM_SIZE / 2))
+	if (r->Left.Start.Y + (PseudoRoomSize / 2) >= r->Left.End.Y - (PseudoRoomSize / 2))
 		return;
 
-	UINT_CHANGEABLE
-		rand_y = RandomInRange(r->left.start.y + (PSEUDO_ROOM_SIZE / 2), r->left.end.y - (PSEUDO_ROOM_SIZE / 2));
+	const UINT_CHANGEABLE randY = RandomInRange(r->Left.Start.Y + (PseudoRoomSize / 2), r->Left.End.Y - (PseudoRoomSize / 2));
 
-	wall new_split = { { r->top.start.x, rand_y }, { r->top.end.x, rand_y } };
+	const Wall newSplit = { { r->Top.Start.X, randY }, { r->Top.End.X, randY } };
 
-	room child1 =
-	{ r->top, new_split, { r->top.start, new_split.start }, { r->top.end, new_split.end }, nullptr, nullptr,
+	Room child1 =
+	{ r->Top, newSplit, { r->Top.Start, newSplit.Start }, { r->Top.End, newSplit.End }, nullptr, nullptr,
 	  { 0, 0 } };
-	r->child1 = &child1;
+	r->Child1 = &child1;
 
-	room child2 =
-	{ new_split, r->bot, { new_split.start, r->bot.start }, { new_split.end, r->bot.end }, nullptr, nullptr,
+	Room child2 =
+	{ newSplit, r->Bot, { newSplit.Start, r->Bot.Start }, { newSplit.End, r->Bot.End }, nullptr, nullptr,
 	  { 0, 0 } };
-	r->child2 = &child2;
+	r->Child2 = &child2;
 
-	DrawHorizontalWall(&new_split);
+	DrawHorizontalWall(&newSplit);
 
 	GenerateVerticalSplit(&child1);
-	child1.center = GetChildCenter(&child1);
+	child1.Center = GetChildCenter(&child1);
 
 	GenerateVerticalSplit(&child2);
-	child2.center = GetChildCenter(&child2);
+	child2.Center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
-	for (int i = child2.center.y; i > child1.center.y; i--)
-		mapTiles[child2.center.x][i] = Walkable;
+	for (int i = child2.Center.Y; i > child1.Center.Y; i--)
+		MapTiles[child2.Center.X][i] = WalkableTile;
 }
 
-void Map::GenerateVerticalSplit(room* r)
+void Map::GenerateVerticalSplit(Room* r)
 {
 	if (r == nullptr)
 		return;
 
-	if (r->top.start.x + PSEUDO_ROOM_SIZE >= r->top.end.x - PSEUDO_ROOM_SIZE)
+	if (r->Top.Start.X + PseudoRoomSize >= r->Top.End.X - PseudoRoomSize)
 		return;
 
-	UINT_CHANGEABLE rand_x = RandomInRange(r->top.start.x + PSEUDO_ROOM_SIZE, r->top.end.x - PSEUDO_ROOM_SIZE);
+	const UINT_CHANGEABLE randX = RandomInRange(r->Top.Start.X + PseudoRoomSize, r->Top.End.X - PseudoRoomSize);
 
-	wall new_split = { { rand_x, r->top.start.y }, { rand_x, r->bot.start.y } }; // third thingy maybe wrong
+	const Wall newSplit = { { randX, r->Top.Start.Y }, { randX, r->Bot.Start.Y } }; // third thingy maybe wrong
 
-	room child1 =
-	{ { r->top.start, new_split.start }, { r->bot.start, new_split.end }, r->left, new_split, nullptr, nullptr,
+	Room child1 =
+	{ { r->Top.Start, newSplit.Start }, { r->Bot.Start, newSplit.End }, r->Left, newSplit, nullptr, nullptr,
 	 { 0, 0 } };
-	r->child1 = &child1;
+	r->Child1 = &child1;
 
-	room child2 =
-	{ { new_split.start, r->top.end }, { new_split.end, r->bot.end }, new_split, r->right, nullptr, nullptr,
+	Room child2 =
+	{ { newSplit.Start, r->Top.End }, { newSplit.End, r->Bot.End }, newSplit, r->Right, nullptr, nullptr,
 	 { 0, 0 } };
-	r->child2 = &child2;
+	r->Child2 = &child2;
 
-	DrawVerticalWall(&new_split);
+	DrawVerticalWall(&newSplit);
 
 	GenerateHorizontalSplit(&child1);
-	child1.center = GetChildCenter(&child1);
+	child1.Center = GetChildCenter(&child1);
 
 	GenerateHorizontalSplit(&child2);
-	child2.center = GetChildCenter(&child2);
+	child2.Center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
-	for (int i = child2.center.x; i > child1.center.x; i--)
-		mapTiles[i][child2.center.y] = Walkable;
+	for (int i = child2.Center.X; i > child1.Center.X; i--)
+		MapTiles[i][child2.Center.Y] = WalkableTile;
 }
 
-room Map::InitializeBase()
+Room Map::InitializeBase()
 {
-	room newRoom =
-	{ {{ 0, 0 }, { MAX_X - 1, 0 }}, {{ 0, MAX_Y - 1 }, { MAX_X - 1, MAX_Y - 1 }}, {{ 0, 0 }, { 0, MAX_Y - 1 }},
-	 {{ MAX_X - 1, 0 }, { MAX_X - 1, MAX_Y - 1 }}, nullptr, nullptr, { 0, 0 } };
-	DrawHorizontalWall(&newRoom.top);
-	DrawHorizontalWall(&newRoom.bot);
-	DrawVerticalWall(&newRoom.left);
-	DrawVerticalWall(&newRoom.right);
+	constexpr Room newRoom =
+	{ {{ 0, 0 }, { MaxX - 1, 0 }}, {{ 0, MaxY - 1 }, { MaxX - 1, MaxY - 1 }}, {{ 0, 0 }, { 0, MaxY - 1 }},
+	 {{ MaxX - 1, 0 }, { MaxX - 1, MaxY - 1 }}, nullptr, nullptr, { 0, 0 } };
+	DrawHorizontalWall(&newRoom.Top);
+	DrawHorizontalWall(&newRoom.Bot);
+	DrawVerticalWall(&newRoom.Left);
+	DrawVerticalWall(&newRoom.Right);
 	return newRoom;
 }
 
 bool Map::GenerateVendors()
 {
-	int numOfGeneratedVendors = Map::RandomInRange(0, 5);
+	const int numOfGeneratedVendors = Map::RandomInRange(0, 5);
 	for (int i = 0; i < numOfGeneratedVendors; i++)
 	{
 		Vendor vendor("Bar", 0, 0);
@@ -131,19 +130,19 @@ bool Map::GenerateVendors()
 			return false;
 		do
 		{
-			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MAX_X - 1));
-			vendor.SetPositionYCoordinate(Map::RandomInRange(1, MAX_Y - 1));
-		} while (this->mapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != Walkable);
+			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
+			vendor.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+		} while (this->MapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != WalkableTile);
 		this->InsertVendor(&vendor);
-		this->mapVendors.at(this->numberOfVendors) = vendor;
-		this->numberOfVendors++;
+		this->MapVendors.at(this->NumberOfVendors) = vendor;
+		this->NumberOfVendors++;
 	}
 	return true;
 }
 
 bool Map::GenerateMap()
 {
-	room base = InitializeBase();
+	Room base = InitializeBase();
 
 	if (rand() % 2)
 		GenerateVerticalSplit(&base);
@@ -155,29 +154,30 @@ bool Map::GenerateMap()
 	return true;
 }
 
-std::array<std::array<tiles, MAX_Y>, MAX_X>& Map::GetMapTiles()
+std::array<std::array<Tiles, MaxY>, MaxX>& Map::GetMapTiles()
 {
-	return mapTiles;
+	return MapTiles;
 }
 
 std::array<Vendor, 5>& Map::GetMapVendors()
 {
-	return mapVendors;
+	return MapVendors;
 }
 
-void Map::InsertVendor(Vendor* newVendor)
+void Map::InsertVendor(const Vendor* newVendor)
 {
-	this->mapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
+	this->MapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
 }
 
-Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate)
+Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, const int numberOfVendors, const int playerPositionXCoordinate, const int playerPositionYCoordinate)
 {
 	for (int i = 0; i < numberOfVendors; i++)
 		if (mapVendors->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapVendors->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
 			return &(mapVendors->at(i));
+	return nullptr;
 }
 
-int Map::GetNumberOfVendors()
+int Map::GetNumberOfVendors() const
 {
-	return this->numberOfVendors;
+	return this->NumberOfVendors;
 }

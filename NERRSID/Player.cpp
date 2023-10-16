@@ -1,156 +1,142 @@
 #include "Player.h"
 #include "Map.h"
-#include "UI.h"
+#include "UserInterface.h"
 
 
-Player::Player() : Entity(), playerClass(UndefinedPlayerClass), playerLevel(1),
-playerExperience(-1), playerStrength(-1), playerDexterity(-1), playerIntellect(-1), equippedWeapon(nullptr),
-equippedHelmet(nullptr), equippedChestplate(nullptr), equippedLeggings(nullptr)
+Player::Player() : Entity(), PlayerClass(UndefinedPlayerClass), PlayerLevel(1),
+PlayerExperience(-1), PlayerStrength(-1), PlayerDexterity(-1), PlayerIntellect(-1), EquippedWeapon(nullptr),
+EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 {
 }
 
-Player::Player(std::string playerName, playerClass_t playerClass, int positionXCoordinate, int positionYCoordinate)
-	: Entity(playerName, 0, 0, 50, positionXCoordinate, positionYCoordinate), playerClass(playerClass), playerLevel(1),
-	playerExperience(0), playerStrength(0), playerDexterity(0), playerIntellect(0), equippedWeapon(nullptr),
-	equippedHelmet(nullptr), equippedChestplate(nullptr), equippedLeggings(nullptr)
+Player::Player(const std::string& playerName, const PlayerClassT playerClass, const int positionXCoordinate, const int positionYCoordinate)
+	: Entity(playerName, 0, 0, 50, positionXCoordinate, positionYCoordinate), PlayerClass(playerClass), PlayerLevel(1),
+	PlayerExperience(0), PlayerStrength(0), PlayerDexterity(0), PlayerIntellect(0), EquippedWeapon(nullptr),
+	EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 {
 	switch (playerClass)
 	{
 	case Warrior:
-		playerStrength = 10;
-		playerDexterity = 5;
-		playerIntellect = 0;
+		PlayerStrength = 10;
+		PlayerDexterity = 5;
+		PlayerIntellect = 0;
 		break;
 	case Wizard:
-		playerStrength = 0;
-		playerDexterity = 5;
-		playerIntellect = 10;
+		PlayerStrength = 0;
+		PlayerDexterity = 5;
+		PlayerIntellect = 10;
 		break;
 	case Assassin:
-		playerStrength = 5;
-		playerDexterity = 10;
-		playerIntellect = 0;
+		PlayerStrength = 5;
+		PlayerDexterity = 10;
+		PlayerIntellect = 0;
 		break;
-	default:
-		playerStrength = -1;
-		playerDexterity = -1;
-		playerIntellect = -1;
+	case UndefinedPlayerClass:
+		PlayerStrength = -1;
+		PlayerDexterity = -1;
+		PlayerIntellect = -1;
 		break;
 	}
 }
 
-Player::~Player()
+PlayerClassT Player::GetPlayerClass() const
 {
-}
-
-playerClass_t Player::GetPlayerClass() const
-{
-	return this->playerClass;
+	return this->PlayerClass;
 }
 
 int Player::GetPlayerLevel() const
 {
-	return this->playerLevel;
+	return this->PlayerLevel;
 }
 
 int Player::GetPlayerExperience() const
 {
-	return this->playerExperience;
+	return this->PlayerExperience;
 }
 
 int Player::GetPlayerStrength() const
 {
-	return this->playerStrength;
+	return this->PlayerStrength;
 }
 
 int Player::GetPlayerDexterity() const
 {
-	return this->playerDexterity;
+	return this->PlayerDexterity;
 }
 
 int Player::GetPlayerIntellect() const
 {
-	return this->playerIntellect;
+	return this->PlayerIntellect;
 }
 
-Item* Player::GetEquippedWeapon()
+Item* Player::GetEquippedWeapon() const
 {
-	return this->equippedWeapon;
+	return this->EquippedWeapon;
 }
 
-Item* Player::GetEquippedHelmet()
+Item* Player::GetEquippedHelmet() const
 {
-	return this->equippedHelmet;
+	return this->EquippedHelmet;
 }
 
-Item* Player::GetEquippedChestplate()
+Item* Player::GetEquippedChestplate() const
 {
-	return this->equippedChestplate;
+	return this->EquippedChestplate;
 }
 
-Item* Player::GetEquippedLeggings()
+Item* Player::GetEquippedLeggings() const
 {
-	return this->equippedLeggings;
+	return this->EquippedLeggings;
 }
 
-void Player::SetPlayerClass(playerClass_t playerClass)
+void Player::SetPlayerClass(const PlayerClassT playerClass)
 {
-	this->playerClass = playerClass;
+	this->PlayerClass = playerClass;
 }
 
-void Player::SetPlayerLevel(int playerLevel)
+void Player::SetPlayerLevel(const int playerLevel)
 {
-	this->playerLevel = playerLevel;
+	this->PlayerLevel = playerLevel;
 }
 
-void Player::SetPlayerExperience(int playerExperience)
+void Player::SetPlayerExperience(const int playerExperience)
 {
-	this->playerExperience = playerExperience;
+	this->PlayerExperience = playerExperience;
 }
 
-void Player::SetPlayerStrength(int playerStrength)
+void Player::SetPlayerStrength(const int playerStrength)
 {
-	this->playerStrength = playerStrength;
+	this->PlayerStrength = playerStrength;
 }
 
-void Player::SetPlayerDexterity(int playerDexterity)
+void Player::SetPlayerDexterity(const int playerDexterity)
 {
-	this->playerDexterity = playerDexterity;
+	this->PlayerDexterity = playerDexterity;
 }
 
-void Player::SetPlayerIntellect(int playerIntellect)
+void Player::SetPlayerIntellect(const int playerIntellect)
 {
-	this->playerIntellect = playerIntellect;
+	this->PlayerIntellect = playerIntellect;
 }
 
 void Player::SetEquippedWeapon(Item* equippedWeapon)
 {
-	this->equippedWeapon = equippedWeapon;
+	this->EquippedWeapon = equippedWeapon;
 }
 
 void Player::SetEquippedHelmet(Item* equippedHelmet)
 {
-	this->equippedHelmet = equippedHelmet;
+	this->EquippedHelmet = equippedHelmet;
 }
 
 void Player::SetEquippedChestplate(Item* equippedChestplate)
 {
-	this->equippedChestplate = equippedChestplate;
+	this->EquippedChestplate = equippedChestplate;
 }
 
 void Player::SetEquippedLeggings(Item* equippedLeggings)
 {
-	this->equippedLeggings = equippedLeggings;
-}
-
-void Player::SetPositionXCoordinate(int positionXCoordinate)
-{
-	this->positionXCoordinate = positionXCoordinate;
-}
-
-void Player::SetPositionYCoordinate(int positionYCoordinate)
-{
-	this->positionYCoordinate = positionYCoordinate;
+	this->EquippedLeggings = equippedLeggings;
 }
 
 std::string Player::EquipItem(Item* item)
@@ -160,34 +146,36 @@ std::string Player::EquipItem(Item* item)
 	case Weapon:
 		if (this->GetEquippedWeapon())
 			this->UnequipItem(Weapon);
-		this->equippedWeapon = item;
-		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedWeapon->GetItemBonusStrength());
-		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedWeapon->GetItemBonusDexterity());
-		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedWeapon->GetItemBonusIntellect());
+		this->EquippedWeapon = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->EquippedWeapon->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->EquippedWeapon->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->EquippedWeapon->GetItemBonusIntellect());
 		break;
 	case Helmet:
 		if (this->GetEquippedHelmet())
 			this->UnequipItem(Helmet);
-		this->equippedHelmet = item;
-		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedHelmet->GetItemBonusStrength());
-		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedHelmet->GetItemBonusDexterity());
-		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedHelmet->GetItemBonusIntellect());
+		this->EquippedHelmet = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->EquippedHelmet->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->EquippedHelmet->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->EquippedHelmet->GetItemBonusIntellect());
 		break;
 	case Chestplate:
 		if (this->GetEquippedChestplate())
 			this->UnequipItem(Chestplate);
-		this->equippedChestplate = item;
-		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedChestplate->GetItemBonusStrength());
-		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedChestplate->GetItemBonusDexterity());
-		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedChestplate->GetItemBonusIntellect());
+		this->EquippedChestplate = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->EquippedChestplate->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->EquippedChestplate->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->EquippedChestplate->GetItemBonusIntellect());
 		break;
 	case Leggings:
 		if (this->GetEquippedLeggings())
 			this->UnequipItem(Leggings);
-		this->equippedLeggings = item;
-		this->SetPlayerStrength(this->GetPlayerStrength() + this->equippedLeggings->GetItemBonusStrength());
-		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->equippedLeggings->GetItemBonusDexterity());
-		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->equippedLeggings->GetItemBonusIntellect());
+		this->EquippedLeggings = item;
+		this->SetPlayerStrength(this->GetPlayerStrength() + this->EquippedLeggings->GetItemBonusStrength());
+		this->SetPlayerDexterity(this->GetPlayerDexterity() + this->EquippedLeggings->GetItemBonusDexterity());
+		this->SetPlayerIntellect(this->GetPlayerIntellect() + this->EquippedLeggings->GetItemBonusIntellect());
+		break;
+	case UndefinedItemClass:
 		break;
 	}
 	item->SetIsEquipped(true);
@@ -195,9 +183,9 @@ std::string Player::EquipItem(Item* item)
 	return "You equipped " + item->GetItemName();
 }
 
-std::string Player::UnequipItem(itemClass_t itemClass)
+std::string Player::UnequipItem(const ItemClassT itemClass)
 {
-	std::string unequippedItemName = "";
+	std::string unequippedItemName;
 	switch (itemClass)
 	{
 	case Weapon:
@@ -232,13 +220,15 @@ std::string Player::UnequipItem(itemClass_t itemClass)
 		unequippedItemName = this->GetEquippedLeggings()->GetItemName();
 		this->SetEquippedLeggings(nullptr);
 		break;
+	case UndefinedItemClass:
+		break;
 	}
 	return "You unequipped " + unequippedItemName;
 }
 
 std::tuple<std::string, bool> Player::PurchaseItem(Item item)
 {
-	if (item.GetItemPrice() > this->gold)
+	if (item.GetItemPrice() > this->Gold)
 		return { "Not enough money", false };
 	this->InsertIntoInventory(item);
 	return { item.GetItemName() + " purchased", true };

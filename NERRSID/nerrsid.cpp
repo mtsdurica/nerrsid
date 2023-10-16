@@ -3,9 +3,9 @@
 #include "Game.h"
 #include "Map.h"
 
-int main(int argc, char* args[])
+int main(int argc, char* argv[])
 {
-	Game::Build(GAME_RESOLUTION_WIDTH, GAME_RESOLUTION_HEIGHT);
+	Game::Build(GameResolutionWidth, GameResolutionHeight);
 
 	return EXIT_SUCCESS;
 }

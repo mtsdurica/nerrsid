@@ -1,11 +1,10 @@
 #include "GameEvent.h"
 
-GameEvent::GameEvent() : typeOfEvent(EmptyEvent), eventMessage("")
+GameEvent::GameEvent() : TypeOfEvent(EmptyEvent)
 {
 }
 
-
-GameEvent::GameEvent(gameEventType typeOfEvent, std::string eventMessage) : typeOfEvent(typeOfEvent), eventMessage(std::move(eventMessage))
+GameEvent::GameEvent(const GameEventType typeOfEvent, std::string eventMessage) : TypeOfEvent(typeOfEvent), EventMessage(std::move(eventMessage))
 {
 }
 
@@ -13,20 +12,20 @@ GameEvent::~GameEvent() = default;
 
 std::string GameEvent::GetEventMessage() const
 {
-	return this->eventMessage;
+	return this->EventMessage;
 }
 
-gameEventType GameEvent::GetTypeOfEvent() const
+GameEventType GameEvent::GetTypeOfEvent() const
 {
-	return this->typeOfEvent;
+	return this->TypeOfEvent;
 }
 
 void GameEvent::SetEventMessage(std::string eventMessage)
 {
-	this->eventMessage = std::move(eventMessage);
+	this->EventMessage = std::move(eventMessage);
 }
 
-void GameEvent::SetTypeOfEvent(gameEventType typeOfEvent)
+void GameEvent::SetTypeOfEvent(const GameEventType typeOfEvent)
 {
-	this->typeOfEvent = typeOfEvent;
+	this->TypeOfEvent = typeOfEvent;
 }

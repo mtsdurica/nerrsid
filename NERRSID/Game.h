@@ -4,17 +4,17 @@
 #include "Player.h"
 #include "Map.h"
 #include "Tilemap.h"
-#include "UI.h"
+#include "UserInterface.h"
 
 class Game
 {
 private:
-	int screenWidth;
-	int screenHeight;
-	SDL_Window* gameWindow;
-	SDL_Renderer* gameRenderer;
-	Tilemap* tileMap;
-	Game(int screenWidth, int screenHeight);
+	int ScreenWidth;
+	int ScreenHeight;
+	SDL_Window* GameWindow;
+	SDL_Renderer* GameRenderer;
+	Tilemap* TileMap;
+	Game(const int screenWidth, const int screenHeight);
 
 public:
 	~Game();
@@ -37,14 +37,14 @@ public:
 	/// Get tilemap of the game
 	/// </summary>
 	/// <returns>Game tilemap</returns>
-	Tilemap* GetTileMap() const;
+	Tilemap* GetTilemap() const;
 	/// <summary>
 	/// asdf
 	/// </summary>
-	/// <param name="userInterface">Pointer to the UI object</param>
+	/// <param name="userInterface">Pointer to the UserInterface object</param>
 	/// <param name="tilemapTexture"></param>
 	/// <returns></returns>
-	static std::tuple<bool, Player> IntroSequence(UI* userInterface, SDL_Texture* tilemapTexture);
+	static std::tuple<bool, Player> IntroSequence(UserInterface* userInterface, SDL_Texture* tilemapTexture);
 	/// <summary>
 	/// Build the game logic
 	/// </summary>

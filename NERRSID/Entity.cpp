@@ -1,12 +1,12 @@
 #include "Entity.h"
 
-Entity::Entity() : name(""), gold(-1), itemsInInventory(-1), maximumItemsInInventory(-1), positionXCoordinate(-1), positionYCoordinate(-1)
+Entity::Entity() : Gold(-1), ItemsInInventory(-1), MaximumItemsInInventory(-1), PositionXCoordinate(-1), PositionYCoordinate(-1)
 {
 }
 
-Entity::Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate)
-	: name(std::move(name)), gold(gold), itemsInInventory(itemsInInventory), maximumItemsInInventory(maximumItemsInInventory), positionXCoordinate(positionXCoordinate),
-	positionYCoordinate(positionYCoordinate)
+Entity::Entity(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate)
+	: Name(std::move(name)), Gold(gold), ItemsInInventory(itemsInInventory), MaximumItemsInInventory(maximumItemsInInventory), PositionXCoordinate(positionXCoordinate),
+	PositionYCoordinate(positionYCoordinate)
 {
 }
 
@@ -14,71 +14,71 @@ Entity::~Entity() = default;
 
 std::string Entity::GetName() const
 {
-	return this->name;
+	return this->Name;
 }
 
 int Entity::GetGold() const
 {
-	return this->gold;
+	return this->Gold;
 }
 
 std::array<Item, 50>* Entity::GetInventory()
 {
-	return &this->inventory;
+	return &this->Inventory;
 }
 
 int Entity::GetItemsInInventory() const
 {
-	return this->itemsInInventory;
+	return this->ItemsInInventory;
 }
 
 int Entity::GetMaximumItemsInInventory() const
 {
-	return this->maximumItemsInInventory;
+	return this->MaximumItemsInInventory;
 }
 
 int Entity::GetPositionXCoordinate() const
 {
-	return this->positionXCoordinate;
+	return this->PositionXCoordinate;
 }
 
 int Entity::GetPositionYCoordinate() const
 {
-	return this->positionYCoordinate;
+	return this->PositionYCoordinate;
 }
 
 void Entity::SetName(const std::string& name)
 {
-	this->name = name;
+	this->Name = name;
 }
 
-void Entity::SetGold(int gold)
+void Entity::SetGold(const int gold)
 {
-	this->gold = gold;
+	this->Gold = gold;
 }
 
-bool Entity::InsertIntoInventory(Item item)
+bool Entity::InsertIntoInventory(const Item& item)
 {
-	if (this->itemsInInventory < this->maximumItemsInInventory)
+	if (this->ItemsInInventory < this->MaximumItemsInInventory)
 	{
-		this->inventory.at(this->itemsInInventory) = item;
-		this->itemsInInventory++;
+		this->Inventory.at(this->ItemsInInventory) = item;
+		this->ItemsInInventory++;
 		return true;
 	}
 	return false;
 }
 
-void Entity::SetItemsInInventory(int itemsInInventory)
+void Entity::SetItemsInInventory(const int itemsInInventory)
 {
-	this->itemsInInventory = itemsInInventory;
+	this->ItemsInInventory = itemsInInventory;
 }
 
-void Entity::SetPositionXCoordinate(int positionXCoordinate)
+void Entity::SetPositionXCoordinate(const int positionXCoordinate)
 {
-	this->positionXCoordinate = positionXCoordinate;
+	this->PositionXCoordinate = positionXCoordinate;
 }
 
-void Entity::SetPositionYCoordinate(int positionYCoordinate)
+void Entity::SetPositionYCoordinate(const int positionYCoordinate)
 {
-	this->positionYCoordinate = positionYCoordinate;
+	this->PositionYCoordinate = positionYCoordinate;
 }

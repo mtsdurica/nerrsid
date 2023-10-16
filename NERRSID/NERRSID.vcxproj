@@ -140,7 +140,7 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Tilemap.h" />
-    <ClInclude Include="UI.h" />
+    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="Vendor.h" />
   </ItemGroup>
   <ItemGroup>
@@ -154,7 +154,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="nerrsid.cpp" />
     <ClCompile Include="Tilemap.cpp" />
-    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="Vendor.cpp" />
   </ItemGroup>
   <ItemGroup>

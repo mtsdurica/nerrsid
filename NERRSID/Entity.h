@@ -7,13 +7,13 @@
 class Entity
 {
 protected:
-	std::string name;
-	int gold;
-	std::array<Item, 50> inventory;
-	int itemsInInventory;
-	int maximumItemsInInventory;
-	int positionXCoordinate;
-	int positionYCoordinate;
+	std::string Name;
+	int Gold;
+	std::array<Item, 50> Inventory;
+	int ItemsInInventory;
+	int MaximumItemsInInventory;
+	int PositionXCoordinate;
+	int PositionYCoordinate;
 public:
 	Entity();
 	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
@@ -62,22 +62,22 @@ public:
 	/// Set entity gold
 	/// </summary>
 	/// <param name="gold">New gold value</param>
-	void SetGold(int gold);
+	void SetGold(const int gold);
 	/// <summary>
 	/// Set number of items in entity inventory
 	/// </summary>
 	/// <param name="itemsInInventory">New number of items in inventory</param>
-	void SetItemsInInventory(int itemsInInventory);
+	void SetItemsInInventory(const int itemsInInventory);
 	/// <summary>
 	/// Set entity position X axis coordinate
 	/// </summary>
-	/// <param name="positionYCoordinate">New X axis coordinate</param>
-	void SetPositionXCoordinate(int positionXCoordinate);
+	/// <param name="positionXCoordinate">New X axis coordinate</param>
+	void SetPositionXCoordinate(const int positionXCoordinate);
 	/// <summary>
 	/// Set entity position Y axis coordinate
 	/// </summary>
 	/// <param name="positionYCoordinate">New Y axis coordinate</param>
-	void SetPositionYCoordinate(int positionYCoordinate);
+	void SetPositionYCoordinate(const int positionYCoordinate);
 	/// <summary>
 	/// Insert item into entity inventory
 	/// </summary>
@@ -85,5 +85,5 @@ public:
 	/// <returns>
 	/// true if item was inserted; false if item was not inserted, due to inventory being full
 	/// </returns>
-	bool InsertIntoInventory(Item item);
+	bool InsertIntoInventory(const Item& item);
 };
