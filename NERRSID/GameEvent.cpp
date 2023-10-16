@@ -1,5 +1,10 @@
 #include "GameEvent.h"
 
+GameEvent::GameEvent() : typeOfEvent(EmptyEvent), eventMessage("")
+{
+}
+
+
 GameEvent::GameEvent(gameEventType typeOfEvent, std::string eventMessage) : typeOfEvent(typeOfEvent), eventMessage(std::move(eventMessage))
 {
 }

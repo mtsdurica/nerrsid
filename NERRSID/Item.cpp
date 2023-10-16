@@ -3,12 +3,9 @@
 
 
 Item::Item()
+	: itemName(""), itemClass(UndefinedItemClass), itemBonusStrength(-1), itemBonusDexterity(-1), itemBonusIntellect(-1), isEquipped(false), itemMinimumLevel(-1),
+	itemPrice(-1)
 {
-	this->itemName = "";
-	this->itemClass = Weapon;
-	this->itemBonusStrength = 0;
-	this->itemBonusDexterity = 0;
-	this->itemBonusIntellect = 0;
 }
 
 Item::Item(std::string itemName, itemClass_t itemClass, int itemPrice, int itemBonusStrength, int itemBonusDexterity, int itemBonusIntellect)

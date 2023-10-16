@@ -18,6 +18,7 @@ private:
 	std::string eventMessage;
 	/// TODO: vendor inv
 public:
+	GameEvent();
 	GameEvent(gameEventType typeOfEvent, std::string eventMessage);
 	~GameEvent();
 	/// <summary>

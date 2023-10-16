@@ -4,6 +4,7 @@
 
 typedef enum itemClass
 {
+	UndefinedItemClass = -1,
 	Weapon,
 	Helmet,
 	Chestplate,

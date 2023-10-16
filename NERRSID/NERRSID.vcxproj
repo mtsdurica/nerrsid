@@ -136,7 +136,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameEventHandler.h" />
     <ClInclude Include="Item.h" />
-    <ClInclude Include="KeypressHandler.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
@@ -150,7 +149,6 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameEventHandler.cpp" />
     <ClCompile Include="Item.cpp" />
-    <ClCompile Include="KeypressHandler.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />

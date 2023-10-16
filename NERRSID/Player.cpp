@@ -2,9 +2,16 @@
 #include "Map.h"
 #include "UI.h"
 
+
+Player::Player() : Entity(), playerClass(UndefinedPlayerClass), playerLevel(1),
+playerExperience(-1), playerStrength(-1), playerDexterity(-1), playerIntellect(-1), equippedWeapon(nullptr),
+equippedHelmet(nullptr), equippedChestplate(nullptr), equippedLeggings(nullptr)
+{
+}
+
 Player::Player(std::string playerName, playerClass_t playerClass, int positionXCoordinate, int positionYCoordinate)
 	: Entity(playerName, 0, 0, 50, positionXCoordinate, positionYCoordinate), playerClass(playerClass), playerLevel(1),
-	playerExperience(0), playerStrength(0), playerDexterity(0), playerIntellect(0), equippedWeapon(),
+	playerExperience(0), playerStrength(0), playerDexterity(0), playerIntellect(0), equippedWeapon(nullptr),
 	equippedHelmet(nullptr), equippedChestplate(nullptr), equippedLeggings(nullptr)
 {
 	switch (playerClass)
@@ -23,6 +30,11 @@ Player::Player(std::string playerName, playerClass_t playerClass, int positionXC
 		playerStrength = 5;
 		playerDexterity = 10;
 		playerIntellect = 0;
+		break;
+	default:
+		playerStrength = -1;
+		playerDexterity = -1;
+		playerIntellect = -1;
 		break;
 	}
 }

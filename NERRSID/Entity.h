@@ -15,6 +15,7 @@ protected:
 	int positionXCoordinate;
 	int positionYCoordinate;
 public:
+	Entity();
 	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
 	virtual ~Entity();
 	/// <summary>
@@ -30,7 +31,7 @@ public:
 	/// <summary>
 	/// Get entity inventory
 	/// </summary>
-	/// <returns>Entity inventory</returns>
+	/// <returns>Pointer to entity inventory</returns>
 	std::array<Item, 50>* GetInventory();
 	/// <summary>
 	/// Get current number of items in entity inventory

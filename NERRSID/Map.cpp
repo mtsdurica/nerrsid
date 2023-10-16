@@ -8,17 +8,21 @@ Map::Map() : numberOfVendors(0)
 		for (int y = 0; y < MAX_Y; y++)
 			mapTiles[x][y] = Walkable;
 }
+
 Map::~Map() = default;
+
 void Map::DrawHorizontalWall(wall* newWall)
 {
 	for (UINT_CHANGEABLE x = newWall->start.x; x <= newWall->end.x; x++)
 		mapTiles[x][newWall->start.y] = Wall;
 }
+
 void Map::DrawVerticalWall(wall* newWall)
 {
 	for (UINT_CHANGEABLE y = newWall->start.y; y <= newWall->end.y; y++)
 		mapTiles[newWall->start.x][y] = Wall;
 }
+
 point Map::GetChildCenter(room* childRoom)
 {
 	point center;
@@ -26,14 +30,16 @@ point Map::GetChildCenter(room* childRoom)
 	center.y = childRoom->right.start.y + (childRoom->right.end.y - childRoom->right.start.y) / 2;
 	return center;
 }
+
 UINT_CHANGEABLE Map::RandomInRange(UINT_CHANGEABLE min, UINT_CHANGEABLE max)
 {
-	// Calculate the middle of the range
+	/// Calculate the middle of the range
 	UINT_CHANGEABLE middle = (min + max) / 2;
-	// Calculate the allowable deviation from the middle
+	/// Calculate the allowable deviation from the middle
 	UINT_CHANGEABLE deviation = (max - min) / 3;
 	return (rand() % (deviation * 2 + 1)) + (middle - deviation);
 }
+
 void Map::GenerateHorizontalSplit(room* r)
 {
 	if (r == nullptr)
@@ -68,6 +74,7 @@ void Map::GenerateHorizontalSplit(room* r)
 	for (int i = child2.center.y; i > child1.center.y; i--)
 		mapTiles[child2.center.x][i] = Walkable;
 }
+
 void Map::GenerateVerticalSplit(room* r)
 {
 	if (r == nullptr)
@@ -101,6 +108,7 @@ void Map::GenerateVerticalSplit(room* r)
 	for (int i = child2.center.x; i > child1.center.x; i--)
 		mapTiles[i][child2.center.y] = Walkable;
 }
+
 room Map::InitializeBase()
 {
 	room newRoom =
@@ -165,10 +173,8 @@ void Map::InsertVendor(Vendor* newVendor)
 Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate)
 {
 	for (int i = 0; i < numberOfVendors; i++)
-	{
 		if (mapVendors->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapVendors->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
 			return &(mapVendors->at(i));
-	}
 }
 
 int Map::GetNumberOfVendors()

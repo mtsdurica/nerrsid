@@ -1,7 +1,7 @@
 
 #include "GameEventHandler.h"
 
-HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event* eventToBeHandledSDL, std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles)
+HandledEvent GameEventHandler::KeypressHandler(Player* player, SDL_Event* eventToBeHandledSDL, std::array<std::array<tiles, MAX_Y>, MAX_X> mapTiles)
 {
 	/// TODO: Needs rework
 
@@ -39,7 +39,7 @@ HandledEvent GameEventHandler::KeyPressHandler(Player* player, SDL_Event* eventT
 	}
 }
 
-HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event* eventToBeHandledSDL)
+HandledEvent GameEventHandler::VendorKeypressHandler(SDL_Event* eventToBeHandledSDL)
 {
 	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
@@ -58,7 +58,7 @@ HandledEvent GameEventHandler::VendorKeyPressHandler(SDL_Event* eventToBeHandled
 	}
 }
 
-HandledEvent GameEventHandler::InventoryKeyPressHandler(SDL_Event eventToBeHandledSDL)
+HandledEvent GameEventHandler::InventoryKeypressHandler(SDL_Event eventToBeHandledSDL)
 {
 	switch (eventToBeHandledSDL.key.keysym.sym)
 	{

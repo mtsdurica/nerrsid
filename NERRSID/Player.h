@@ -8,7 +8,10 @@
 
 typedef enum playerClass
 {
-	Wizard, Warrior, Assassin
+	UndefinedPlayerClass = -1,
+	Wizard,
+	Warrior,
+	Assassin
 } playerClass_t;
 
 class Player : public Entity
@@ -26,6 +29,7 @@ private:
 	Item* equippedLeggings;
 
 public:
+	Player();
 	Player(std::string playerName, playerClass_t playerClass, int positionXCoordinate, int positionYCoordinate);
 	~Player();
 	playerClass_t GetPlayerClass() const;

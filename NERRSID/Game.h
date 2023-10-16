@@ -38,7 +38,12 @@ public:
 	/// </summary>
 	/// <returns>Game tilemap</returns>
 	Tilemap* GetTileMap() const;
-
+	/// <summary>
+	/// asdf
+	/// </summary>
+	/// <param name="userInterface">Pointer to the UI object</param>
+	/// <param name="tilemapTexture"></param>
+	/// <returns></returns>
 	static std::tuple<bool, Player> IntroSequence(UI* userInterface, SDL_Texture* tilemapTexture);
 	/// <summary>
 	/// Build the game logic

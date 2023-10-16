@@ -1,5 +1,9 @@
 #include "Entity.h"
 
+Entity::Entity() : name(""), gold(-1), itemsInInventory(-1), maximumItemsInInventory(-1), positionXCoordinate(-1), positionYCoordinate(-1)
+{
+}
+
 Entity::Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate)
 	: name(std::move(name)), gold(gold), itemsInInventory(itemsInInventory), maximumItemsInInventory(maximumItemsInInventory), positionXCoordinate(positionXCoordinate),
 	positionYCoordinate(positionYCoordinate)

@@ -8,7 +8,6 @@
 #include "Vendor.h"
 #include "GameEventHandler.h"
 #include "Menu.h"
-#include "KeypressHandler.h"
 
 Game::Game(int screenWidth, int screenHeight) : screenWidth(screenWidth), screenHeight(screenHeight)
 {
@@ -60,17 +59,18 @@ int Game::GetScreenHeight() const
 std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* tilemapTexture)
 {
 	SDL_Event eventSDL;
-	bool menuIsActive = true;
-	bool characterCreationFlag = true;
+	bool menuIsActive = true, characterCreationFlag = true;
 	int positionOfCursor = 0;
 	Menu menu(2);
-	Player player("", Warrior, 1, 1);
+	Player player;
 	std::string playerName = "";
+	SDL_StartTextInput();
 	while (menuIsActive)
 	{
 		userInterface->RefreshUserInterface();
 		userInterface->DrawStartupMenu(tilemapTexture, menu.GetSelectedItem());
 		SDL_RenderPresent(userInterface->GetRenderer());
+
 		while (SDL_PollEvent(&eventSDL))
 		{
 			if (eventSDL.type == SDL_QUIT)
@@ -89,17 +89,19 @@ std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* til
 					switch (menu.GetSelectedItem())
 					{
 					case 0:
-						userInterface->RefreshUserInterface();
 						while (characterCreationFlag)
 						{
-							userInterface->DrawText(tilemapTexture, 0, 0, "Enter name:");
-							SDL_RenderPresent(userInterface->GetRenderer());
 							while (SDL_PollEvent(&eventSDL))
 							{
+								userInterface->RefreshUserInterface();
+								userInterface->DrawText(tilemapTexture, 0, 0, "Enter name:");
 								userInterface->DrawPlayerCreationName(tilemapTexture, playerName);
 								SDL_RenderPresent(userInterface->GetRenderer());
+
 								if (eventSDL.type == SDL_QUIT)
 									return { false, player };
+								else if (eventSDL.type == SDL_TEXTINPUT)
+									playerName += eventSDL.text.text;
 								else if (eventSDL.type == SDL_KEYDOWN)
 								{
 									switch (eventSDL.key.keysym.sym)
@@ -108,7 +110,6 @@ std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* til
 									{
 										if (playerName.empty())
 											break;
-										player.SetName(playerName);
 										Menu menuClassSelection(3);
 										while (true)
 										{
@@ -158,9 +159,11 @@ std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* til
 										}
 										break;
 									}
+									case SDLK_BACKSPACE:
+										if (!playerName.empty())
+											playerName.pop_back();
+										break;
 									default:
-										//TODO: REOWRk
-										playerName += (char)eventSDL.text.text[8];
 										break;
 									}
 								}
@@ -179,6 +182,7 @@ std::tuple<bool, Player> Game::IntroSequence(UI* userInterface, SDL_Texture* til
 			}
 		}
 	}
+	SDL_StopTextInput();
 }
 
 void Game::Build(int gameScreenWidth, int gameScreenHeight)
@@ -189,15 +193,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		exit(EXIT_FAILURE);
 	Game game(gameScreenWidth, gameScreenHeight);
 	UI userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
-
 	bool gameIsRunning = false;
-	Player player("", Warrior, 0, 0);
-	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTileMap()->GetTileMapTexture());
-
-	//Player player("foo", Warrior, 1, 1);
-	GameEvent eventGame(EmptyEvent, "");
+	Player player;
+	std::tie(gameIsRunning, player) = Game::IntroSequence(&userInterface, game.GetTileMap()->GetTileMapTexture());
+	GameEvent eventGame;
 	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
-
 
 	while (gameIsRunning)
 	{
@@ -218,7 +218,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				gameIsRunning = false;
 			else if (eventSDL.type == SDL_KEYDOWN)
 			{
-				switch (GameEventHandler::KeyPressHandler(&player, &eventSDL, map.GetMapTiles()))
+				switch (GameEventHandler::KeypressHandler(&player, &eventSDL, map.GetMapTiles()))
 				{
 				case ExitKeypressHandled:
 					gameIsRunning = false;
@@ -251,7 +251,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								}
 								else if (eventSDL.type == SDL_KEYDOWN)
 								{
-									switch (GameEventHandler::VendorKeyPressHandler(&eventSDL))
+									switch (GameEventHandler::VendorKeypressHandler(&eventSDL))
 									{
 									case ExitKeypressHandled:
 										vendorShoppingFlag = false;
@@ -312,7 +312,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 							}
 							else if (eventSDL.type == SDL_KEYDOWN)
 							{
-								switch (GameEventHandler::InventoryKeyPressHandler(eventSDL))
+								switch (GameEventHandler::InventoryKeypressHandler(eventSDL))
 								{
 								case ExitKeypressHandled:
 									inventoryBrowsingFlag = false;
@@ -324,7 +324,6 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 									userInterface.DrawPlayerInfo(game.GetTileMap()->GetTileMapTexture(), &player);
 									if (!player.GetInventory()->at(menu.GetSelectedItem()).GetIsEquipped())
 									{
-
 										lastMessage = player.EquipItem(&(player.GetInventory()->at(menu.GetSelectedItem())));
 										userInterface.DrawStatusBar(game.GetTileMap()->GetTileMapTexture(), lastMessage);
 									}
