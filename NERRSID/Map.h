@@ -18,7 +18,7 @@ enum
 
 typedef enum Tiles
 {
-	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile
+	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile, StairsTile
 } Tiles;
 
 typedef struct Point
@@ -61,6 +61,7 @@ private:
 	Room InitializeBase();
 	bool GenerateVendors();
 	bool GenerateChests();
+	void GenerateStairs();
 
 public:
 	Map();
@@ -71,7 +72,7 @@ public:
 	void InsertVendor(const Vendor* newVendor);
 	void InsertChest(const Chest* newChest);
 	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
-	static Chest* FindChest(std::array<Chest, 2>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
+	static Chest* FindChest(std::array<Chest, 2>* mapChests, int numberOfChests, int playerPositionXCoordinate, int playerPositionYCoordinate);
 	int GetNumberOfVendors() const;
 	bool GenerateMap();
 };

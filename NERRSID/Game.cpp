@@ -151,7 +151,7 @@ std::tuple<bool, Player> Game::IntroSequence(UserInterface* userInterface, SDL_T
 														}
 														}
 														break;
-													default: 
+													default:
 														break;
 													}
 												}
@@ -171,13 +171,13 @@ std::tuple<bool, Player> Game::IntroSequence(UserInterface* userInterface, SDL_T
 						break;
 					case 1:
 						return { false, player };
-					default: 
+					default:
 						break;
 					}
 					break;
 				case SDLK_ESCAPE:
 					return { false, player };
-				default: 
+				default:
 					break;
 				}
 			}
@@ -226,7 +226,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					gameIsRunning = false;
 					break;
 				case EnterKeypressHandled:
-					if (eventGame.GetTypeOfEvent() == VendorEvent)
+					switch (eventGame.GetTypeOfEvent())
+					{
+					case VendorEvent:
 					{
 						Vendor* vendor = nullptr;
 						vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
@@ -292,8 +294,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								}
 							}
 						}
+						break;
 					}
-					else if (eventGame.GetTypeOfEvent() == ChestEvent)
+					case ChestEvent:
 					{
 						Chest* chest = nullptr;
 						chest = Map::FindChest(&mapChests, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
@@ -354,6 +357,18 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								}
 							}
 						}
+						break;
+					}
+					case  StairsEvent:
+						player.SetPositionXCoordinate(1);
+						player.SetPositionYCoordinate(1);
+						Map nextMap;
+						map = nextMap;
+						if (!map.GenerateMap())
+							std::quick_exit(EXIT_FAILURE);
+						mapVendors = map.GetMapVendors();
+						mapChests = map.GetMapChests();
+						break;
 					}
 					break;
 				case InventoryKeypressHandled:
@@ -414,7 +429,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 								case InventoryKeypressHandled:
 									break;
 								}
-								
+
 							}
 						}
 					}
