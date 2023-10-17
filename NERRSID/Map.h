@@ -18,7 +18,7 @@ enum
 
 typedef enum Tiles
 {
-	WallTile, WalkableTile, PlayerTile, VendorTile
+	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile
 } Tiles;
 
 typedef struct Point
@@ -49,7 +49,9 @@ class Map
 private:
 	std::array<std::array<Tiles, MaxY>, MaxX> MapTiles{};
 	std::array<Vendor, 5> MapVendors;
+	std::array<Chest, 2> MapChests;
 	int NumberOfVendors;
+	int NumberOfChests;
 	void DrawHorizontalWall(const Wall* newWall);
 	void DrawVerticalWall(const Wall* newWall);
 	static Point GetChildCenter(const Room* childRoom);
@@ -58,14 +60,18 @@ private:
 	void GenerateVerticalSplit(Room* r);
 	Room InitializeBase();
 	bool GenerateVendors();
+	bool GenerateChests();
 
 public:
 	Map();
 	~Map();
 	std::array<std::array<Tiles, MaxY>, MaxX>& GetMapTiles();
 	std::array<Vendor, 5>& GetMapVendors();
+	std::array<Chest, 2>& GetMapChests();
 	void InsertVendor(const Vendor* newVendor);
+	void InsertChest(const Chest* newChest);
 	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
+	static Chest* FindChest(std::array<Chest, 2>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
 	int GetNumberOfVendors() const;
 	bool GenerateMap();
 };

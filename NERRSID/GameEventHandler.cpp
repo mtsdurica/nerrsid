@@ -8,19 +8,30 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
 	case SDLK_UP:
-		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == WalkableTile || mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile)
+		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == WalkableTile 
+			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile 
+			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == ChestTile)
 			player->SetPositionYCoordinate(player->GetPositionYCoordinate() - 1);
 		return PlayerNavigationKeypressHandled;
 	case SDLK_DOWN:
-		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile || mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile)
+		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile 
+			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile
+			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == ChestTile
+			)
 			player->SetPositionYCoordinate(player->GetPositionYCoordinate() + 1);
 		return PlayerNavigationKeypressHandled;
 	case SDLK_LEFT:
-		if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile || mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile)
+		if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile 
+			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile 
+			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == ChestTile
+			)
 			player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
 		return PlayerNavigationKeypressHandled;
 	case SDLK_RIGHT:
-		if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile || mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile)
+		if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile
+			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile 
+			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == ChestTile
+			)
 			player->SetPositionXCoordinate(player->GetPositionXCoordinate() + 1);
 		return PlayerNavigationKeypressHandled;
 	case SDLK_ESCAPE:
@@ -35,7 +46,7 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 	return UnusedKeypressHandled;
 }
 
-HandledEvent GameEventHandler::VendorKeypressHandler(const SDL_Event* eventToBeHandledSDL)
+HandledEvent GameEventHandler::EntityInventoryKeypressHandler(const SDL_Event* eventToBeHandledSDL)
 {
 	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
@@ -44,25 +55,6 @@ HandledEvent GameEventHandler::VendorKeypressHandler(const SDL_Event* eventToBeH
 	case SDLK_DOWN:
 		return ScrollDownKeypressHandled;
 	case SDLK_ESCAPE:
-		return ExitKeypressHandled;
-	case SDLK_RETURN:
-		return EnterKeypressHandled;
-	default:
-		break;
-	}
-	return UnusedKeypressHandled;
-}
-
-HandledEvent GameEventHandler::InventoryKeypressHandler(const SDL_Event& eventToBeHandledSDL)
-{
-	switch (eventToBeHandledSDL.key.keysym.sym)
-	{
-	case SDLK_UP:
-		return ScrollUpKeypressHandled;
-	case SDLK_DOWN:
-		return ScrollDownKeypressHandled;
-	case SDLK_ESCAPE:
-	case SDLK_i:
 		return ExitKeypressHandled;
 	case SDLK_RETURN:
 		return EnterKeypressHandled;
@@ -84,6 +76,10 @@ GameEvent GameEventHandler::CollisionHandler(const Player& player, Map map)
 	case VendorTile:
 		collisionEvent.SetTypeOfEvent(VendorEvent);
 		collisionEvent.SetEventMessage("Press ENTER to interact with vendor");
+		break;
+	case ChestTile:
+		collisionEvent.SetTypeOfEvent(ChestEvent);
+		collisionEvent.SetEventMessage("Press ENTER to loot chest");
 		break;
 	case WallTile:
 	case PlayerTile:

@@ -131,6 +131,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Chest.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GameEvent.h" />
     <ClInclude Include="Game.h" />
@@ -144,6 +145,7 @@
     <ClInclude Include="Vendor.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Chest.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="Game.cpp" />

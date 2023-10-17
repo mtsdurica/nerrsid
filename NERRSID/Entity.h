@@ -4,7 +4,7 @@
 
 #include "Item.h"
 
-class Entity
+class Entity abstract
 {
 protected:
 	std::string Name;
