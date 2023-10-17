@@ -2,7 +2,7 @@
 
 #include "Map.h"
 
-Map::Map() : NumberOfVendors(0)
+Map::Map() : NumberOfVendors(0), NumberOfChests(0)
 {
 	for (int x = 0; x < MaxX; x++)
 		for (int y = 0; y < MaxY; y++)
@@ -125,7 +125,7 @@ bool Map::GenerateVendors()
 	const int numOfGeneratedVendors = Map::RandomInRange(0, 5);
 	for (int i = 0; i < numOfGeneratedVendors; i++)
 	{
-		Vendor vendor("Bar", 0, 0);
+		Vendor vendor;
 		if (!vendor.CreateInventory())
 			return false;
 		do
@@ -140,6 +140,25 @@ bool Map::GenerateVendors()
 	return true;
 }
 
+bool Map::GenerateChests()
+{
+	const int numOfGeneratedChests = Map::RandomInRange(0, 2);
+	for (int i = 0; i < numOfGeneratedChests; i++)
+	{
+		Chest chest;
+		if (!chest.CreateInventory())
+			return false;
+		do
+		{
+			chest.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
+			chest.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+		} while (this->MapTiles[chest.GetPositionXCoordinate()][chest.GetPositionYCoordinate()] != WalkableTile);
+		this->InsertChest(&chest);
+		this->MapChests.at(this->NumberOfChests) = chest;
+		this->NumberOfChests++;
+	}
+}
+
 bool Map::GenerateMap()
 {
 	Room base = InitializeBase();
@@ -150,18 +169,25 @@ bool Map::GenerateMap()
 		GenerateHorizontalSplit(&base);
 	if (!this->GenerateVendors())
 		return false;
+	if (!this->GenerateChests())
+		return false;
 
 	return true;
 }
 
 std::array<std::array<Tiles, MaxY>, MaxX>& Map::GetMapTiles()
 {
-	return MapTiles;
+	return this->MapTiles;
 }
 
 std::array<Vendor, 5>& Map::GetMapVendors()
 {
-	return MapVendors;
+	return this->MapVendors;
+}
+
+std::array<Chest, 2>& Map::GetMapChests()
+{
+	return this->MapChests;
 }
 
 void Map::InsertVendor(const Vendor* newVendor)
@@ -169,11 +195,24 @@ void Map::InsertVendor(const Vendor* newVendor)
 	this->MapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
 }
 
+void Map::InsertChest(const Chest* newChest)
+{
+	this->MapTiles[newChest->GetPositionXCoordinate()][newChest->GetPositionYCoordinate()] = ChestTile;
+}
+
 Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, const int numberOfVendors, const int playerPositionXCoordinate, const int playerPositionYCoordinate)
 {
 	for (int i = 0; i < numberOfVendors; i++)
 		if (mapVendors->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapVendors->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
 			return &(mapVendors->at(i));
+	return nullptr;
+}
+
+Chest* Map::FindChest(std::array<Chest, 2>* mapChests, const int numberOfChests, const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < numberOfChests; i++)
+		if (mapChests->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapChests->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(mapChests->at(i));
 	return nullptr;
 }
 

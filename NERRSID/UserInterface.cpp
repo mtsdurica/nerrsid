@@ -90,6 +90,7 @@ void UserInterface::DrawMap(Map* map, const Tilemap* tilemap) const
 	const SDL_Rect wallTile = Tilemap::FindTile(3, 2);
 	const SDL_Rect walkableTile = Tilemap::FindTile(0, 0);
 	const SDL_Rect vendorTile = ALPHA_V;
+	const SDL_Rect chestTile = ALPHA_C;
 
 
 	for (int x = 0; x < MaxX; x++)
@@ -106,6 +107,9 @@ void UserInterface::DrawMap(Map* map, const Tilemap* tilemap) const
 				break;
 			case VendorTile:
 				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &vendorTile, &this->UserInterfaceRect[x][y]);
+				break;
+			case ChestTile:
+				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &chestTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case PlayerTile:
 				break;
@@ -185,20 +189,6 @@ void UserInterface::DrawPopupBorder(SDL_Texture* tilemapTexture) const
 	this->DrawCorner(tilemapTexture, TopRight, 99, 12);
 }
 
-void UserInterface::DrawInventoryPopup(SDL_Texture* tilemapTexture, Player* player, const int selectedItem, const int startingItem, const int endingItem) const
-{
-	this->DrawText(tilemapTexture, 45, 10, "Inventory: " + std::to_string(player->GetItemsInInventory()));
-	this->DrawText(tilemapTexture, 46, 11, "Item name:");
-	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
-	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
-	this->DrawText(tilemapTexture, 87, 11, "Equipped:");
-	this->DrawPopupBorder(tilemapTexture);
-	if (player->GetItemsInInventory())
-		this->DrawInventoryItems(tilemapTexture, player->GetInventory(), player->GetItemsInInventory(), selectedItem, startingItem, endingItem);
-	else
-		this->DrawText(tilemapTexture, 46, 13, "No items in inventory");
-}
-
 void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<Item, 50>* inventory, const int itemsInInventory, const int selectedItem, const int startingItem, int endingItem) const
 {
 	if (itemsInInventory <= endingItem)
@@ -216,16 +206,44 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 	}
 }
 
-void UserInterface::DrawVendorPopup(SDL_Texture* tilemapTexture, Vendor* vendor, const int selectedItem, const int startingItem, const int endingItem) const
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity, const int selectedItem, const int startingItem, const int endingItem) const
 {
-	this->DrawText(tilemapTexture, 45, 10, "Vendor " + vendor->GetName() + ": " + std::to_string(vendor->GetItemsInInventory()));
+	this->DrawText(tilemapTexture, 45, 10, "Inventory: " + std::to_string(entity->GetItemsInInventory()));
+	this->DrawText(tilemapTexture, 46, 11, "Item name:");
+	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
+	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
+	this->DrawText(tilemapTexture, 87, 11, "Equipped:");
+	this->DrawPopupBorder(tilemapTexture);
+	if (entity->GetItemsInInventory())
+		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	else
+		this->DrawText(tilemapTexture, 46, 13, "No items in inventory");
+}
+
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, const int selectedItem, const int startingItem, const int endingItem) const
+{
+	this->DrawText(tilemapTexture, 45, 10, "Chest: " + std::to_string(entity->GetItemsInInventory()));
 	this->DrawText(tilemapTexture, 46, 11, "Item name:");
 	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
 	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
 	this->DrawText(tilemapTexture, 87, 11, "Item price:");
 	this->DrawPopupBorder(tilemapTexture);
-	if (vendor->GetItemsInInventory())
-		this->DrawInventoryItems(tilemapTexture, vendor->GetInventory(), vendor->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	if (entity->GetItemsInInventory())
+		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
+	else
+		this->DrawText(tilemapTexture, 46, 13, "Chest is empty");
+}
+
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem) const
+{
+	this->DrawText(tilemapTexture, 45, 10, "Vendor " + entity->GetName() + ": " + std::to_string(entity->GetItemsInInventory()));
+	this->DrawText(tilemapTexture, 46, 11, "Item name:");
+	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
+	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
+	this->DrawText(tilemapTexture, 87, 11, "Item price:");
+	this->DrawPopupBorder(tilemapTexture);
+	if (entity->GetItemsInInventory())
+		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
 	else
 		this->DrawText(tilemapTexture, 46, 13, "No items for sale");
 }

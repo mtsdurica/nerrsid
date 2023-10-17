@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include "GameEvent.h"
 #include "Map.h"
+#include "Player.h"
 
 typedef enum HandledEvent
 {
@@ -24,13 +25,7 @@ public:
 	/// </summary>
 	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
 	/// <returns></returns>
-	static HandledEvent VendorKeypressHandler(const SDL_Event* eventToBeHandledSDL);
-	/// <summary>
-	/// Inventory popup keypress handler
-	/// </summary>
-	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
-	/// <returns></returns>
-	static HandledEvent InventoryKeypressHandler(const SDL_Event& eventToBeHandledSDL);
+	static HandledEvent EntityInventoryKeypressHandler(const SDL_Event* eventToBeHandledSDL);
 	/// <summary>
 	/// Player collision handler
 	/// </summary>

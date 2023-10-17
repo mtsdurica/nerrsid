@@ -233,3 +233,9 @@ std::tuple<std::string, bool> Player::PurchaseItem(Item item)
 	this->InsertIntoInventory(item);
 	return { item.GetItemName() + " purchased", true };
 }
+
+std::string Player::LootItem(Item item)
+{
+	this->InsertIntoInventory(item);
+	return item.GetItemName() + " looted";
+}

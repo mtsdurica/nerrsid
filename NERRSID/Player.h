@@ -54,5 +54,7 @@ public:
 	std::string EquipItem(Item* item);
 	std::string UnequipItem(ItemClassT itemClass);
 	std::tuple<std::string, bool> PurchaseItem(Item item);
+	std::string LootItem(Item item);
+
 };
 
