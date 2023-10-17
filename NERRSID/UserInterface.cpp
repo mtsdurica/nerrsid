@@ -8,10 +8,10 @@ UserInterface::UserInterface(SDL_Renderer* renderer, const int userInterfaceRect
 	{
 		for (int y = 0; y < userInterfaceRectHeight / 16; y++)
 		{
-			UserInterfaceRect[x][y].x = x * 16;
-			UserInterfaceRect[x][y].y = y * 16;
-			UserInterfaceRect[x][y].w = 16;
-			UserInterfaceRect[x][y].h = 16;
+			this->UserInterfaceRect[x][y].x = x * 16;
+			this->UserInterfaceRect[x][y].y = y * 16;
+			this->UserInterfaceRect[x][y].w = 16;
+			this->UserInterfaceRect[x][y].h = 16;
 		}
 	}
 }
@@ -35,7 +35,7 @@ void UserInterface::DrawPlayer(SDL_Texture* tilemapTexture, const Player* player
 	SDL_RenderCopy(this->Renderer,
 		tilemapTexture,
 		&playerTile,
-		&UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+		&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
 }
 
 void UserInterface::DrawText(SDL_Texture* tilemapTexture, const int textPositionX, const int textPositionY, const std::string& text) const
@@ -48,7 +48,7 @@ void UserInterface::DrawText(SDL_Texture* tilemapTexture, const int textPosition
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&letterTile,
-			&UserInterfaceRect[textPositionX + index][textPositionY]);
+			&this->UserInterfaceRect[textPositionX + index][textPositionY]);
 	}
 }
 
@@ -128,7 +128,7 @@ void UserInterface::DrawHorizontalLine(SDL_Texture* tilemapTexture, const int ro
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&rect,
-			&UserInterfaceRect[i][row]);
+			&this->UserInterfaceRect[i][row]);
 	}
 }
 
@@ -140,7 +140,7 @@ void UserInterface::DrawVerticalLine(SDL_Texture* tilemapTexture, const int colu
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&rect,
-			&UserInterfaceRect[column][i]);
+			&this->UserInterfaceRect[column][i]);
 	}
 }
 
@@ -162,7 +162,7 @@ void UserInterface::DrawCorner(SDL_Texture* tilemapTexture, const CornerType cor
 		rect = CORNER_BOTTOM_RIGHT;
 		break;
 	}
-	SDL_RenderCopy(this->Renderer, tilemapTexture, &rect, &UserInterfaceRect[column][row]);
+	SDL_RenderCopy(this->Renderer, tilemapTexture, &rect, &this->UserInterfaceRect[column][row]);
 }
 
 void UserInterface::DrawBox(SDL_Texture* tilemapTexture, const int topLeftCornerPositionX, const int topLeftCornerPositionY, const int width, const int height) const
@@ -208,10 +208,22 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 	for (int i = startingItem; i < endingItem; i++)
 	{
 		if (i == selectedItem)
-			this->DrawText(tilemapTexture, 45, 13 + positionOfCursor, "1");
+		{
+			const SDL_Rect selectorTile = SELECTOR_LEFT;
+			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[45][13 + positionOfCursor]);
+		}
 		this->DrawText(tilemapTexture, 46, 13 + positionOfCursor, inventory->at(i).GetItemName());
 		this->DrawText(tilemapTexture, 58, 13 + positionOfCursor, std::to_string(inventory->at(i).GetItemBonusStrength()) + " " + std::to_string(inventory->at(i).GetItemBonusDexterity()) + " " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
-		this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, std::to_string(inventory->at(i).GetIsEquipped()));
+		if (inventory->at(i).GetIsEquipped())
+		{
+			/// this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, std::to_string(i));
+			const SDL_Rect selectorTile = SELECTOR_CENTER;
+			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[87][13 + positionOfCursor]);
+		}
+		else
+		{
+			this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, " ");
+		}
 		positionOfCursor++;
 	}
 }
