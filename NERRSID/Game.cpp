@@ -303,6 +303,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						bool chestLootingFlag = true;
 						Menu menu(chest->GetItemsInInventory());
 						std::string message;
+
 						while (chestLootingFlag)
 						{
 							userInterface.RefreshUserInterface();
