@@ -359,7 +359,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						}
 						break;
 					}
-					case  StairsEvent:
+					case StairsEvent:
 						player.SetPositionXCoordinate(1);
 						player.SetPositionYCoordinate(1);
 						Map nextMap;
