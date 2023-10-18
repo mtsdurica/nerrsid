@@ -6,7 +6,13 @@
 
 typedef enum HandledEvent
 {
-	UnusedKeypressHandled, ExitKeypressHandled, EnterKeypressHandled, PlayerNavigationKeypressHandled, InventoryKeypressHandled, ScrollDownKeypressHandled, ScrollUpKeypressHandled
+	UnusedKeypressHandled,
+	ExitKeypressHandled,
+	EnterKeypressHandled,
+	PlayerNavigationKeypressHandled,
+	InventoryKeypressHandled,
+	ScrollDownKeypressHandled,
+	ScrollUpKeypressHandled
 } HandledEvent;
 
 class GameEventHandler

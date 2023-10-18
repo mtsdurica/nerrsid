@@ -157,6 +157,20 @@ bool Map::GenerateChests()
 		this->MapChests.at(this->NumberOfChests) = chest;
 		this->NumberOfChests++;
 	}
+	return true;
+}
+
+void Map::GenerateStairs()
+{
+	int stairsXCoordinate;
+	int stairsYCoordinate;
+	do
+	{
+		stairsXCoordinate = Map::RandomInRange(1, MaxX - 1);
+		stairsYCoordinate = Map::RandomInRange(1, MaxY - 1);
+	} while (this->MapTiles[stairsXCoordinate][stairsYCoordinate] != WalkableTile);
+
+	this->MapTiles[stairsXCoordinate][stairsYCoordinate] = StairsTile;
 }
 
 bool Map::GenerateMap()
@@ -167,6 +181,7 @@ bool Map::GenerateMap()
 		GenerateVerticalSplit(&base);
 	else
 		GenerateHorizontalSplit(&base);
+	GenerateStairs();
 	if (!this->GenerateVendors())
 		return false;
 	if (!this->GenerateChests())

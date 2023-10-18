@@ -78,6 +78,7 @@
 #define CORNER_BOTTOM_RIGHT Tilemap::FindTile(9, 13)
 #define SELECTOR_LEFT Tilemap::FindTile(0, 1)
 #define SELECTOR_CENTER Tilemap::FindTile(7, 0)
+#define STAIRS Tilemap::FindTile(8, 0)
 
 class Tilemap
 {
