@@ -13,7 +13,10 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == ChestTile
 			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == StairsTile
 			)
+		{
+			player->SetIdleStatus(false);
 			player->SetPositionYCoordinate(player->GetPositionYCoordinate() - 1);
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_DOWN:
 		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile
@@ -21,7 +24,10 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == ChestTile
 			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == StairsTile
 			)
+		{
+			player->SetIdleStatus(false);
 			player->SetPositionYCoordinate(player->GetPositionYCoordinate() + 1);
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_LEFT:
 		if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile
@@ -29,7 +35,10 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == ChestTile
 			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == StairsTile
 			)
+		{
+			player->SetIdleStatus(false);
 			player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_RIGHT:
 		if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile
@@ -37,7 +46,10 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == ChestTile
 			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == StairsTile
 			)
+		{
+			player->SetIdleStatus(false);
 			player->SetPositionXCoordinate(player->GetPositionXCoordinate() + 1);
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_ESCAPE:
 		return ExitKeypressHandled;
