@@ -9,6 +9,7 @@ typedef enum GameEventType
 	GainExperienceEvent,
 	UseConsumableEvent,
 	ChestEvent,
+	InventoryEvent,
 	StairsEvent
 } GameEventType;
 

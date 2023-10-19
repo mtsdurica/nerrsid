@@ -197,22 +197,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	bool gameIsRunning = false;
 	Player player;
 	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTilemap()->GetTileMapTexture());
-	GameEvent eventGame;
 	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
 	std::array<Chest, 2> mapChests = map.GetMapChests();
 
 	while (gameIsRunning)
 	{
 		SDL_Event eventSDL;
-
-		eventGame = GameEventHandler::CollisionHandler(player, map);
-
-		userInterface.RefreshUserInterface();
-		userInterface.DrawMap(&map, game.GetTilemap());
-		userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-		userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-		userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), eventGame.GetEventMessage());
-		SDL_RenderPresent(game.GetRenderer());
+		GameEvent eventPopup;
+		std::string lastMessage;
+		bool popupFlag = false;
+		GameEvent eventGame = GameEventHandler::CollisionHandler(player, map);
 
 		while (SDL_PollEvent(&eventSDL))
 		{
@@ -229,135 +223,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					switch (eventGame.GetTypeOfEvent())
 					{
 					case VendorEvent:
-					{
-						Vendor* vendor = nullptr;
-						vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
-						bool vendorShoppingFlag = true;
-						Menu menu(vendor->GetItemsInInventory());
-						std::string message;
-						bool itemSold = false;
-
-						while (vendorShoppingFlag)
-						{
-							userInterface.RefreshUserInterface();
-							userInterface.DrawMap(&map, game.GetTilemap());
-							userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-							userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-							userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-							userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), message);
-							SDL_RenderPresent(game.GetRenderer());
-							while (SDL_PollEvent(&eventSDL))
-							{
-								if (eventSDL.type == SDL_QUIT)
-								{
-									vendorShoppingFlag = false;
-									gameIsRunning = false;
-								}
-								else if (eventSDL.type == SDL_KEYDOWN)
-								{
-									switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
-									{
-									case ExitKeypressHandled:
-										vendorShoppingFlag = false;
-										break;
-									case EnterKeypressHandled:
-										userInterface.RefreshUserInterface();
-										userInterface.DrawMap(&map, game.GetTilemap());
-										userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-										userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-										userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), vendor, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-										if (vendor->GetItemsInInventory())
-										{
-											std::tie(message, itemSold) = player.PurchaseItem(vendor->GetInventory()->at(menu.GetSelectedItem()));
-											if (itemSold)
-											{
-												vendor->RemoveItemFromInventory(menu.GetSelectedItem());
-												menu.SetSelectedItem(0);
-												menu.SetAllItems();
-											}
-										}
-										userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), message);
-										SDL_RenderPresent(game.GetRenderer());
-
-										break;
-									case ScrollDownKeypressHandled:
-										menu.ScrollDown();
-										break;
-									case ScrollUpKeypressHandled:
-										menu.ScrollUp();
-										break;
-									case UnusedKeypressHandled:
-									case PlayerNavigationKeypressHandled:
-									case InventoryKeypressHandled:
-										break;
-									}
-								}
-							}
-						}
+						eventPopup.SetTypeOfEvent(VendorEvent);
 						break;
-					}
 					case ChestEvent:
-					{
-						Chest* chest = nullptr;
-						chest = Map::FindChest(&mapChests, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
-						bool chestLootingFlag = true;
-						Menu menu(chest->GetItemsInInventory());
-						std::string message;
-						while (chestLootingFlag)
-						{
-							userInterface.RefreshUserInterface();
-							userInterface.DrawMap(&map, game.GetTilemap());
-							userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-							userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-							userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), chest, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-							userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), message);
-							SDL_RenderPresent(game.GetRenderer());
-							while (SDL_PollEvent(&eventSDL))
-							{
-								if (eventSDL.type == SDL_QUIT)
-								{
-									chestLootingFlag = false;
-									gameIsRunning = false;
-								}
-								else if (eventSDL.type == SDL_KEYDOWN)
-								{
-									switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
-									{
-									case ExitKeypressHandled:
-										chestLootingFlag = false;
-										break;
-									case EnterKeypressHandled:
-										userInterface.RefreshUserInterface();
-										userInterface.DrawMap(&map, game.GetTilemap());
-										userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-										userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-										userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), chest, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-										if (chest->GetItemsInInventory())
-										{
-											message = player.LootItem(chest->GetInventory()->at(menu.GetSelectedItem()));
-											chest->RemoveItemFromInventory(menu.GetSelectedItem());
-											menu.SetSelectedItem(0);
-											menu.SetAllItems();
-										}
-										userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), message);
-										SDL_RenderPresent(game.GetRenderer());
-										break;
-									case ScrollDownKeypressHandled:
-										menu.ScrollDown();
-										break;
-									case ScrollUpKeypressHandled:
-										menu.ScrollUp();
-										break;
-									case UnusedKeypressHandled:
-									case PlayerNavigationKeypressHandled:
-									case InventoryKeypressHandled:
-										break;
-									}
-								}
-							}
-						}
+						eventPopup.SetTypeOfEvent(ChestEvent);
 						break;
-					}
 					case StairsEvent:
 						player.SetPositionXCoordinate(1);
 						player.SetPositionYCoordinate(1);
@@ -372,66 +242,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					break;
 				case InventoryKeypressHandled:
 				{
-					bool inventoryBrowsingFlag = true;
-					Menu menu(player.GetItemsInInventory());
-
-					std::string lastMessage;
-					while (inventoryBrowsingFlag)
-					{
-						userInterface.RefreshUserInterface();
-						userInterface.DrawMap(&map, game.GetTilemap());
-						userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-						userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-						userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-						userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), lastMessage);
-						SDL_RenderPresent(game.GetRenderer());
-						while (SDL_PollEvent(&eventSDL))
-						{
-							if (eventSDL.type == SDL_QUIT)
-							{
-								inventoryBrowsingFlag = false;
-								gameIsRunning = false;
-							}
-							else if (eventSDL.type == SDL_KEYDOWN)
-							{
-								switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
-								{
-								case ExitKeypressHandled:
-									inventoryBrowsingFlag = false;
-									break;
-								case EnterKeypressHandled:
-									userInterface.RefreshUserInterface();
-									userInterface.DrawMap(&map, game.GetTilemap());
-									userInterface.DrawPlayer(game.GetTilemap()->GetTileMapTexture(), &player);
-									userInterface.DrawPlayerInfo(game.GetTilemap()->GetTileMapTexture(), &player);
-									if (!player.GetInventory()->at(menu.GetSelectedItem()).GetIsEquipped())
-									{
-										lastMessage = player.EquipItem(&(player.GetInventory()->at(menu.GetSelectedItem())));
-										userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), lastMessage);
-									}
-									else
-									{
-										lastMessage = player.UnequipItem(player.GetInventory()->at(menu.GetSelectedItem()).GetItemClass());
-										userInterface.DrawStatusBar(game.GetTilemap()->GetTileMapTexture(), lastMessage);
-									}
-									userInterface.DrawEntityPopup(game.GetTilemap()->GetTileMapTexture(), &player, menu.GetSelectedItem(), menu.GetStartingItem(), menu.GetEndingItem());
-									SDL_RenderPresent(game.GetRenderer());
-									break;
-								case ScrollDownKeypressHandled:
-									menu.ScrollDown();
-									break;
-								case ScrollUpKeypressHandled:
-									menu.ScrollUp();
-									break;
-								case UnusedKeypressHandled:
-								case PlayerNavigationKeypressHandled:
-								case InventoryKeypressHandled:
-									break;
-								}
-
-							}
-						}
-					}
+					eventPopup.SetTypeOfEvent(InventoryEvent);
 					break;
 				}
 				case UnusedKeypressHandled:
@@ -442,5 +253,158 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				}
 			}
 		}
+
+		lastMessage = eventGame.GetEventMessage();
+
+		switch (eventPopup.GetTypeOfEvent())
+		{
+		case VendorEvent:
+		{
+			Vendor* vendor = nullptr;
+			vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+			Menu menu(vendor->GetItemsInInventory());
+			std::string message;
+			bool itemSold = false;
+			popupFlag = true;
+			while (popupFlag)
+			{
+				while (SDL_PollEvent(&eventSDL))
+				{
+					if (eventSDL.type == SDL_QUIT)
+					{
+						popupFlag = false;
+						gameIsRunning = false;
+					}
+					else if (eventSDL.type == SDL_KEYDOWN)
+					{
+						switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
+						{
+						case ExitKeypressHandled:
+							popupFlag = false;
+							break;
+						case EnterKeypressHandled:
+							if (vendor->GetItemsInInventory())
+							{
+								std::tie(lastMessage, itemSold) = player.PurchaseItem(vendor->GetInventory()->at(menu.GetSelectedItem()));
+								if (itemSold)
+								{
+									vendor->RemoveItemFromInventory(menu.GetSelectedItem());
+									menu.SetSelectedItem(0);
+									menu.SetAllItems();
+								}
+							}
+							break;
+						case ScrollDownKeypressHandled:
+							menu.ScrollDown();
+							break;
+						case ScrollUpKeypressHandled:
+							menu.ScrollUp();
+							break;
+						case UnusedKeypressHandled:
+						case PlayerNavigationKeypressHandled:
+						case InventoryKeypressHandled:
+							break;
+						}
+					}
+				}
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, vendor, &menu, lastMessage);
+			}
+			break;
+		}
+		case ChestEvent:
+		{
+			Chest* chest = nullptr;
+			chest = Map::FindChest(&mapChests, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+			Menu menu(chest->GetItemsInInventory());
+			std::string message;
+			popupFlag = true;
+			while (popupFlag)
+			{
+				while (SDL_PollEvent(&eventSDL))
+				{
+					if (eventSDL.type == SDL_QUIT)
+					{
+						popupFlag = false;
+						gameIsRunning = false;
+					}
+					else if (eventSDL.type == SDL_KEYDOWN)
+					{
+						switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
+						{
+						case ExitKeypressHandled:
+							popupFlag = false;
+							break;
+						case EnterKeypressHandled:
+							if (chest->GetItemsInInventory())
+							{
+								lastMessage = player.LootItem(chest->GetInventory()->at(menu.GetSelectedItem()));
+								chest->RemoveItemFromInventory(menu.GetSelectedItem());
+								menu.SetSelectedItem(0);
+								menu.SetAllItems();
+							}
+							break;
+						case ScrollDownKeypressHandled:
+							menu.ScrollDown();
+							break;
+						case ScrollUpKeypressHandled:
+							menu.ScrollUp();
+							break;
+						case UnusedKeypressHandled:
+						case PlayerNavigationKeypressHandled:
+						case InventoryKeypressHandled:
+							break;
+						}
+					}
+				}
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage);
+			}
+			break;
+		}
+		case InventoryEvent:
+		{
+			Menu menu(player.GetItemsInInventory());
+			popupFlag = true;
+			while (popupFlag)
+			{
+				while (SDL_PollEvent(&eventSDL))
+				{
+					if (eventSDL.type == SDL_QUIT)
+					{
+						popupFlag = false;
+						gameIsRunning = false;
+					}
+					else if (eventSDL.type == SDL_KEYDOWN)
+					{
+						switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
+						{
+						case ExitKeypressHandled:
+							popupFlag = false;
+							break;
+						case EnterKeypressHandled:
+							if (!player.GetInventory()->at(menu.GetSelectedItem()).GetIsEquipped())
+								lastMessage = player.EquipItem(&(player.GetInventory()->at(menu.GetSelectedItem())));
+							else
+								lastMessage = player.UnequipItem(player.GetInventory()->at(menu.GetSelectedItem()).GetItemClass());
+							break;
+						case ScrollDownKeypressHandled:
+							menu.ScrollDown();
+							break;
+						case ScrollUpKeypressHandled:
+							menu.ScrollUp();
+							break;
+						case UnusedKeypressHandled:
+						case PlayerNavigationKeypressHandled:
+						case InventoryKeypressHandled:
+							break;
+						}
+					}
+				}
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, &menu, lastMessage);
+			}
+			break;
+		}
+		default: break;
+		}
+		userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, lastMessage);
 	}
 }
