@@ -85,7 +85,7 @@ void UserInterface::DrawPlayerInfo(SDL_Texture* tilemapTexture, const Player* pl
 	this->DrawText(tilemapTexture, 45, 8, "Intellect:  " + std::to_string(player->GetPlayerIntellect()));
 }
 
-void UserInterface::DrawMap(Map* map, const Tilemap* tilemap) const
+void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 {
 	const SDL_Rect wallTile = Tilemap::FindTile(3, 2);
 	const SDL_Rect walkableTile = Tilemap::FindTile(0, 0);
@@ -101,19 +101,19 @@ void UserInterface::DrawMap(Map* map, const Tilemap* tilemap) const
 			switch (map->GetMapTiles()[x][y])
 			{
 			case WallTile:
-				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &wallTile, &this->UserInterfaceRect[x][y]);
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &wallTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case WalkableTile:
-				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &walkableTile, &this->UserInterfaceRect[x][y]);
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &walkableTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case VendorTile:
-				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &vendorTile, &this->UserInterfaceRect[x][y]);
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &vendorTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case ChestTile:
-				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &chestTile, &this->UserInterfaceRect[x][y]);
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &chestTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case StairsTile:
-				SDL_RenderCopy(this->Renderer, tilemap->GetTileMapTexture(), &stairsTile, &this->UserInterfaceRect[x][y]);
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &stairsTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case PlayerTile:
 				break;
@@ -295,4 +295,48 @@ void UserInterface::DrawPlayerClassSelection(SDL_Texture* tilemapTexture, const 
 void UserInterface::DrawPlayerCreationName(SDL_Texture* tilemapTexture, const std::string& playerName) const
 {
 	this->DrawText(tilemapTexture, 0, 1, playerName);
+}
+
+void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,
+	Vendor* vendor, const Menu* menu, const std::string& message) const
+{
+	this->RefreshUserInterface();
+	this->DrawMap(tilemapTexture, map);
+	this->DrawPlayer(tilemapTexture, player);
+	this->DrawPlayerInfo(tilemapTexture, player);
+	this->DrawEntityPopup(tilemapTexture, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
+	this->DrawStatusBar(tilemapTexture, message);
+	SDL_RenderPresent(this->Renderer);
+}
+void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,
+	Chest* chest, const Menu* menu, const std::string& message) const
+{
+	this->RefreshUserInterface();
+	this->DrawMap(tilemapTexture, map);
+	this->DrawPlayer(tilemapTexture, player);
+	this->DrawPlayerInfo(tilemapTexture, player);
+	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
+	this->DrawStatusBar(tilemapTexture, message);
+	SDL_RenderPresent(this->Renderer);
+}
+void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, Player* player,
+	const Menu* menu, const std::string& message) const
+{
+	this->RefreshUserInterface();
+	this->DrawMap(tilemapTexture, map);
+	this->DrawPlayer(tilemapTexture, player);
+	this->DrawPlayerInfo(tilemapTexture, player);
+	this->DrawEntityPopup(tilemapTexture, player, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
+	this->DrawStatusBar(tilemapTexture, message);
+	SDL_RenderPresent(this->Renderer);
+}
+
+void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player, const std::string& message) const
+{
+	this->RefreshUserInterface();
+	this->DrawMap(tilemapTexture, map);
+	this->DrawPlayer(tilemapTexture, player);
+	this->DrawPlayerInfo(tilemapTexture, player);
+	this->DrawStatusBar(tilemapTexture, message);
+	SDL_RenderPresent(this->Renderer);
 }

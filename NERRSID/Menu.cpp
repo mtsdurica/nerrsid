@@ -1,5 +1,10 @@
 #include "Menu.h"
 
+Menu::Menu() : DisplayedItems(10), AllItems(0), SelectedItem(0), StartingItem(0),
+EndingItem(DisplayedItems)
+{
+}
+
 Menu::Menu(const int allItems) : DisplayedItems(10), AllItems(allItems), SelectedItem(0), StartingItem(0),
 EndingItem(DisplayedItems)
 {

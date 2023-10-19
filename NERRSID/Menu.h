@@ -8,6 +8,7 @@ private:
 	int StartingItem;
 	int EndingItem;
 public:
+	Menu();
 	explicit Menu(int allItems);
 	~Menu();
 	void ScrollDown();
