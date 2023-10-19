@@ -1,12 +1,12 @@
 #include "Entity.h"
 
-Entity::Entity() : Gold(-1), ItemsInInventory(-1), MaximumItemsInInventory(-1), PositionXCoordinate(-1), PositionYCoordinate(-1)
+Entity::Entity() : Gold(-1), ItemsInInventory(-1), MaximumItemsInInventory(-1), PositionXCoordinate(-1), PositionYCoordinate(-1), IdleStatus(false)
 {
 }
 
 Entity::Entity(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate)
 	: Name(std::move(name)), Gold(gold), ItemsInInventory(itemsInInventory), MaximumItemsInInventory(maximumItemsInInventory), PositionXCoordinate(positionXCoordinate),
-	PositionYCoordinate(positionYCoordinate)
+	PositionYCoordinate(positionYCoordinate), IdleStatus(true)
 {
 }
 
@@ -47,6 +47,11 @@ int Entity::GetPositionYCoordinate() const
 	return this->PositionYCoordinate;
 }
 
+bool Entity::GetIdleStatus() const
+{
+	return this->IdleStatus;
+}
+
 void Entity::SetName(const std::string& name)
 {
 	this->Name = name;
@@ -81,4 +86,9 @@ void Entity::SetPositionXCoordinate(const int positionXCoordinate)
 void Entity::SetPositionYCoordinate(const int positionYCoordinate)
 {
 	this->PositionYCoordinate = positionYCoordinate;
+}
+
+void Entity::SetIdleStatus(const bool idleStatus)
+{
+	this->IdleStatus = idleStatus;
 }

@@ -14,6 +14,7 @@ protected:
 	int MaximumItemsInInventory;
 	int PositionXCoordinate;
 	int PositionYCoordinate;
+	bool IdleStatus;
 public:
 	Entity();
 	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
@@ -53,6 +54,8 @@ public:
 	/// </summary>
 	/// <returns>Entity position on Y axis</returns>
 	int GetPositionYCoordinate() const;
+
+	bool GetIdleStatus() const;
 	/// <summary>
 	/// Set name of entity 
 	/// </summary>
@@ -78,6 +81,7 @@ public:
 	/// </summary>
 	/// <param name="positionYCoordinate">New Y axis coordinate</param>
 	void SetPositionYCoordinate(const int positionYCoordinate);
+	void SetIdleStatus(const bool idleStatus);
 	/// <summary>
 	/// Insert item into entity inventory
 	/// </summary>

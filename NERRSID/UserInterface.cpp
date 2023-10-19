@@ -31,11 +31,31 @@ void UserInterface::RefreshUserInterface() const
 void UserInterface::DrawPlayer(SDL_Texture* tilemapTexture, const Player* player) const
 {
 	const SDL_Rect playerTile = Tilemap::FindTile(0, 4);
+	const SDL_Rect blankTile = SPACE;
 
-	SDL_RenderCopy(this->Renderer,
-		tilemapTexture,
-		&playerTile,
-		&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+	if (player->GetIdleStatus()) {
+		if ((SDL_GetTicks64() % 1000) < 500)
+		{
+			SDL_RenderCopy(this->Renderer,
+				tilemapTexture,
+				&blankTile,
+				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+		}
+		else
+		{
+			SDL_RenderCopy(this->Renderer,
+				tilemapTexture,
+				&playerTile,
+				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+		}
+	}
+	else
+	{
+		SDL_RenderCopy(this->Renderer,
+			tilemapTexture,
+			&playerTile,
+			&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+	}
 }
 
 void UserInterface::DrawText(SDL_Texture* tilemapTexture, const int textPositionX, const int textPositionY, const std::string& text) const
