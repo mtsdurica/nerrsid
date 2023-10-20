@@ -148,6 +148,8 @@ std::tuple<bool, Player> Game::IntroSequence(UserInterface* userInterface, SDL_T
 															Player playerReturning(playerName, Assassin, 1, 1);
 															return{ true, playerReturning };
 														}
+														default:
+															break;
 														}
 														break;
 													default:
@@ -207,6 +209,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		std::string lastMessage;
 		bool popupFlag = false;
 		GameEvent eventGame = GameEventHandler::CollisionHandler(player, map);
+		player.SetIdleStatus(true);
 
 		while (SDL_PollEvent(&eventSDL))
 		{
@@ -224,9 +227,11 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					{
 					case VendorEvent:
 						eventPopup.SetTypeOfEvent(VendorEvent);
+						player.SetIdleStatus(false);
 						break;
 					case ChestEvent:
 						eventPopup.SetTypeOfEvent(ChestEvent);
+						player.SetIdleStatus(false);
 						break;
 					case StairsEvent:
 						player.SetPositionXCoordinate(1);
@@ -242,6 +247,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					break;
 				case InventoryKeypressHandled:
 					eventPopup.SetTypeOfEvent(InventoryEvent);
+					player.SetIdleStatus(false);
 					break;
 				case NextTurnKeypressHandled:
 					if (player.GetPlayerMovesLeft() == 0)
