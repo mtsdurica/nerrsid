@@ -21,8 +21,7 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
 			}
 		}
-	}
-	return PlayerNavigationKeypressHandled;
+		return PlayerNavigationKeypressHandled;
 	case SDLK_DOWN:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
@@ -37,8 +36,7 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
 			}
 		}
-}
-return PlayerNavigationKeypressHandled;
+		return PlayerNavigationKeypressHandled;
 	case SDLK_LEFT:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
@@ -52,7 +50,6 @@ return PlayerNavigationKeypressHandled;
 				player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
 				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
 			}
-		}
 		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_RIGHT:
@@ -69,7 +66,6 @@ return PlayerNavigationKeypressHandled;
 				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
 			}
 		}
-		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_ESCAPE:
 		return ExitKeypressHandled;
@@ -84,7 +80,6 @@ return PlayerNavigationKeypressHandled;
 	}
 	return UnusedKeypressHandled;
 }
-
 HandledEvent GameEventHandler::EntityInventoryKeypressHandler(const SDL_Event* eventToBeHandledSDL)
 {
 	switch (eventToBeHandledSDL->key.keysym.sym)
