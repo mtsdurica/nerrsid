@@ -23,6 +23,8 @@ private:
 	int PlayerStrength;
 	int PlayerDexterity;
 	int PlayerIntellect;
+	int PlayerTurn;
+	int PlayerMovesLeft;
 	Item* EquippedWeapon;
 	Item* EquippedHelmet;
 	Item* EquippedChestplate;
@@ -37,6 +39,8 @@ public:
 	int GetPlayerStrength() const;
 	int GetPlayerDexterity() const;
 	int GetPlayerIntellect() const;
+	int GetPlayerTurn() const;
+	int GetPlayerMovesLeft() const;
 	Item* GetEquippedWeapon() const;
 	Item* GetEquippedHelmet() const;
 	Item* GetEquippedChestplate() const;
@@ -47,6 +51,8 @@ public:
 	void SetPlayerStrength(int playerStrength);
 	void SetPlayerDexterity(int playerDexterity);
 	void SetPlayerIntellect(int playerIntellect);
+	void SetPlayerTurn(int playerTurn);
+	void SetPlayerMovesLeft(int playerMovesLeft);
 	void SetEquippedWeapon(Item* equippedWeapon);
 	void SetEquippedHelmet(Item* equippedHelmet);
 	void SetEquippedChestplate(Item* equippedChestplate);

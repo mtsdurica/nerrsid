@@ -3,42 +3,226 @@
     {
       "itemName": "Spanghelm",
       "itemType": 1,
-      "itemPrice": 0,
-      "itemBonusStrength": 1,
-      "itemBonusDexterity": 0,
-      "itemBonusIntellect": 0
+      "itemPrice": 120,
+      "itemBonusStrength": 2,
+      "itemBonusDexterity": 2,
+      "itemBonusIntellect": 2
     },
     {
-      "itemName": "Estoc",
-      "itemType": 0,
-      "itemPrice": 0,
-      "itemBonusStrength": 1,
-      "itemBonusDexterity": 0,
-      "itemBonusIntellect": 0
-    },
-    {
-      "itemName": "Greataxe",
-      "itemType": 0,
-      "itemPrice": 0,
-      "itemBonusStrength": 1,
-      "itemBonusDexterity": 0,
-      "itemBonusIntellect": 0
-    },
-    {
-      "itemName": "Shotel",
-      "itemType": 0,
-      "itemPrice": 0,
-      "itemBonusStrength": 1,
-      "itemBonusDexterity": 0,
-      "itemBonusIntellect": 0
-    },
-    {
-      "itemName": "Balder Helm",
+      "itemName": "Greathelm",
       "itemType": 1,
-      "itemPrice": 0,
-      "itemBonusStrength": 1,
+      "itemPrice": 150,
+      "itemBonusStrength": 6,
       "itemBonusDexterity": 0,
       "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Barbuta",
+      "itemType": 1,
+      "itemPrice": 140,
+      "itemBonusStrength": 3,
+      "itemBonusDexterity": 3,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Pigface Bascinet",
+      "itemType": 1,
+      "itemPrice": 130,
+      "itemBonusStrength": 4,
+      "itemBonusDexterity": 1,
+      "itemBonusIntellect": 1
+    },
+    {
+      "itemName": "Pointed Hood",
+      "itemType": 1,
+      "itemPrice": 350,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 8,
+      "itemBonusIntellect": 1
+    },
+    {
+      "itemName": "Horned Greathelm",
+      "itemType": 1,
+      "itemPrice": 350,
+      "itemBonusStrength": 10,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Arcane Halo",
+      "itemType": 1,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 2,
+      "itemBonusIntellect": 8
+    },
+    {
+      "itemName": "Shortsword",
+      "itemType": 0,
+      "itemPrice": 110,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Longsword",
+      "itemType": 0,
+      "itemPrice": 160,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Dagger",
+      "itemType": 0,
+      "itemPrice": 80,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Handaxe",
+      "itemType": 0,
+      "itemPrice": 100,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Barbed Greataxe",
+      "itemType": 0,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Reverse Shotel",
+      "itemType": 0,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Erdtree Staff",
+      "itemType": 0,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Leather Vest",
+      "itemType": 2,
+      "itemPrice": 120,
+      "itemBonusStrength": 2,
+      "itemBonusDexterity": 4,
+      "itemBonusIntellect": 1
+    },
+    {
+      "itemName": "Chainmail",
+      "itemType": 2,
+      "itemPrice": 130,
+      "itemBonusStrength": 4,
+      "itemBonusDexterity": 3,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Plated Chestpiece",
+      "itemType": 2,
+      "itemPrice": 200,
+      "itemBonusStrength": 6,
+      "itemBonusDexterity": 1,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Worn Robe",
+      "itemType": 2,
+      "itemPrice": 135,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 7
+    },
+    {
+      "itemName": "Horned Chestplate",
+      "itemType": 2,
+      "itemPrice": 350,
+      "itemBonusStrength": 12,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Lightweight Chestpiece",
+      "itemType": 2,
+      "itemPrice": 350,
+      "itemBonusStrength": 2,
+      "itemBonusDexterity": 10,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Mystic Cloak",
+      "itemType": 2,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 12
+    },
+    {
+      "itemName": "Torn Leggings",
+      "itemType": 3,
+      "itemPrice": 60,
+      "itemBonusStrength": 3,
+      "itemBonusDexterity": 2,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Noble Trousers",
+      "itemType": 3,
+      "itemPrice": 120,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 1,
+      "itemBonusIntellect": 4
+    },
+    {
+      "itemName": "Iron Calfguards",
+      "itemType": 3,
+      "itemPrice": 110,
+      "itemBonusStrength": 4,
+      "itemBonusDexterity": 1,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Magic Pants",
+      "itemType": 3,
+      "itemPrice": 130,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 5
+    },
+    {
+      "itemName": "Horned Greaves",
+      "itemType": 3,
+      "itemPrice": 350,
+      "itemBonusStrength": 10,
+      "itemBonusDexterity": 0,
+      "itemBonusIntellect": 0
+    },
+    {
+      "itemName": "Arcane Pants",
+      "itemType": 3,
+      "itemPrice": 350,
+      "itemBonusStrength": 0,
+      "itemBonusDexterity": 1,
+      "itemBonusIntellect": 9
+    },
+    {
+      "itemName": "Elastic Leggings",
+      "itemType": 3,
+      "itemPrice": 350,
+      "itemBonusStrength": 1,
+      "itemBonusDexterity": 8,
+      "itemBonusIntellect": 1
     }
   ]
 }

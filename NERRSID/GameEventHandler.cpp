@@ -8,36 +8,64 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 	switch (eventToBeHandledSDL->key.keysym.sym)
 	{
 	case SDLK_UP:
-		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == WalkableTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == ChestTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == StairsTile
-			)
-			player->SetPositionYCoordinate(player->GetPositionYCoordinate() - 1);
+		if (player->GetPlayerMovesLeft() > 0)
+		{
+			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == ChestTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == StairsTile
+				)
+			{
+				player->SetIdleStatus(false);
+				player->SetPositionYCoordinate(player->GetPositionYCoordinate() - 1);
+				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
+			}
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_DOWN:
-		if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == ChestTile
-			|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == StairsTile
-			)
-			player->SetPositionYCoordinate(player->GetPositionYCoordinate() + 1);
+		if (player->GetPlayerMovesLeft() > 0)
+		{
+			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == ChestTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == StairsTile
+				)
+			{
+				player->SetIdleStatus(false);
+				player->SetPositionYCoordinate(player->GetPositionYCoordinate() + 1);
+				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
+			}
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_LEFT:
-		if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile
-			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile
-			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == ChestTile
-			|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == StairsTile
-			)
-			player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
+		if (player->GetPlayerMovesLeft() > 0)
+		{
+			if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == ChestTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == StairsTile
+				)
+			{
+				player->SetIdleStatus(false);
+				player->SetPositionXCoordinate(player->GetPositionXCoordinate() - 1);
+				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
+			}
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_RIGHT:
-		if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile
-			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile
-			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == ChestTile
-			|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == StairsTile
-			)
-			player->SetPositionXCoordinate(player->GetPositionXCoordinate() + 1);
+		if (player->GetPlayerMovesLeft() > 0)
+		{
+			if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == ChestTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == StairsTile
+				)
+			{
+				player->SetIdleStatus(false);
+				player->SetPositionXCoordinate(player->GetPositionXCoordinate() + 1);
+				player->SetPlayerMovesLeft(player->GetPlayerMovesLeft() - 1);
+			}
+		}
 		return PlayerNavigationKeypressHandled;
 	case SDLK_ESCAPE:
 		return ExitKeypressHandled;
@@ -45,6 +73,8 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const SDL_Event* 
 		return EnterKeypressHandled;
 	case SDLK_i:
 		return InventoryKeypressHandled;
+	case SDLK_n:
+		return NextTurnKeypressHandled;
 	default:
 		break;
 	}

@@ -11,6 +11,7 @@ typedef enum HandledEvent
 	EnterKeypressHandled,
 	PlayerNavigationKeypressHandled,
 	InventoryKeypressHandled,
+	NextTurnKeypressHandled,
 	ScrollDownKeypressHandled,
 	ScrollUpKeypressHandled
 } HandledEvent;

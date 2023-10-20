@@ -31,7 +31,7 @@ int Chest::RandomInRange(const int min, const int max)
 
 bool Chest::CreateInventory()
 {
-	std::array<Item, 5> itemShuffleBag;
+	std::array<Item, 28> itemShuffleBag;
 
 	FILE* fp;
 	(void)fopen_s(&fp, "./itemset.json", "rb");

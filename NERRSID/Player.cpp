@@ -11,7 +11,7 @@ EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 
 Player::Player(const std::string& playerName, const PlayerClassT playerClass, const int positionXCoordinate, const int positionYCoordinate)
 	: Entity(playerName, 0, 0, 50, positionXCoordinate, positionYCoordinate), PlayerClass(playerClass), PlayerLevel(1),
-	PlayerExperience(0), PlayerStrength(0), PlayerDexterity(0), PlayerIntellect(0), EquippedWeapon(nullptr),
+	PlayerExperience(0), PlayerStrength(0), PlayerDexterity(0), PlayerIntellect(0), PlayerTurn(1), PlayerMovesLeft(3), EquippedWeapon(nullptr),
 	EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 {
 	switch (playerClass)
@@ -69,6 +69,16 @@ int Player::GetPlayerIntellect() const
 	return this->PlayerIntellect;
 }
 
+int Player::GetPlayerTurn() const
+{
+	return this->PlayerTurn;
+}
+
+int Player::GetPlayerMovesLeft() const
+{
+	return this->PlayerMovesLeft;
+}
+
 Item* Player::GetEquippedWeapon() const
 {
 	return this->EquippedWeapon;
@@ -117,6 +127,16 @@ void Player::SetPlayerDexterity(const int playerDexterity)
 void Player::SetPlayerIntellect(const int playerIntellect)
 {
 	this->PlayerIntellect = playerIntellect;
+}
+
+void Player::SetPlayerTurn(const int playerTurn)
+{
+	this->PlayerTurn = playerTurn;
+}
+
+void Player::SetPlayerMovesLeft(const int playerMovesLeft)
+{
+	this->PlayerMovesLeft = playerMovesLeft;
 }
 
 void Player::SetEquippedWeapon(Item* equippedWeapon)

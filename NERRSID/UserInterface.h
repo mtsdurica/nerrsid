@@ -43,6 +43,7 @@ public:
 	void DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity, const int selectedItem, const int startingItem, const int endingItem) const;
 	void DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem) const;
 	void DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, const int selectedItem, const int startingItem, const int endingItem) const;
+	void DrawGameLogo(SDL_Texture* tilemapTexture) const;
 	void DrawStartupMenu(SDL_Texture* tilemapTexture, const int selectedItem) const;
 	void DrawPlayerClassSelection(SDL_Texture* tilemapTexture, const int selectedItem) const;
 	void DrawPlayerCreationName(SDL_Texture* tilemapTexture, const std::string& playerName) const;

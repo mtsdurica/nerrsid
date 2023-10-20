@@ -30,12 +30,32 @@ void UserInterface::RefreshUserInterface() const
 
 void UserInterface::DrawPlayer(SDL_Texture* tilemapTexture, const Player* player) const
 {
-	const SDL_Rect playerTile = Tilemap::FindTile(0, 4);
+	const SDL_Rect playerTile = AT;
+	const SDL_Rect blankTile = SPACE;
 
-	SDL_RenderCopy(this->Renderer,
-		tilemapTexture,
-		&playerTile,
-		&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+	if (player->GetIdleStatus()) {
+		if ((SDL_GetTicks64() % 1000) < 500)
+		{
+			SDL_RenderCopy(this->Renderer,
+				tilemapTexture,
+				&blankTile,
+				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+		}
+		else
+		{
+			SDL_RenderCopy(this->Renderer,
+				tilemapTexture,
+				&playerTile,
+				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+		}
+	}
+	else
+	{
+		SDL_RenderCopy(this->Renderer,
+			tilemapTexture,
+			&playerTile,
+			&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
+	}
 }
 
 void UserInterface::DrawText(SDL_Texture* tilemapTexture, const int textPositionX, const int textPositionY, const std::string& text) const
@@ -83,12 +103,14 @@ void UserInterface::DrawPlayerInfo(SDL_Texture* tilemapTexture, const Player* pl
 	this->DrawText(tilemapTexture, 45, 6, "Strength:   " + std::to_string(player->GetPlayerStrength()));
 	this->DrawText(tilemapTexture, 45, 7, "Dexterity:  " + std::to_string(player->GetPlayerDexterity()));
 	this->DrawText(tilemapTexture, 45, 8, "Intellect:  " + std::to_string(player->GetPlayerIntellect()));
+	this->DrawText(tilemapTexture, 72, 1, "Turn:       " + std::to_string(player->GetPlayerTurn()));
+	this->DrawText(tilemapTexture, 72, 2, "Moves left: " + std::to_string(player->GetPlayerMovesLeft()));
 }
 
 void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 {
-	const SDL_Rect wallTile = Tilemap::FindTile(3, 2);
-	const SDL_Rect walkableTile = Tilemap::FindTile(0, 0);
+	const SDL_Rect wallTile = HASH;
+	const SDL_Rect walkableTile = SPACE;
 	const SDL_Rect vendorTile = ALPHA_V;
 	const SDL_Rect chestTile = ALPHA_C;
 	const SDL_Rect stairsTile = STAIRS;
@@ -269,32 +291,53 @@ SDL_Renderer* UserInterface::GetRenderer() const
 	return this->Renderer;
 }
 
+void UserInterface::DrawGameLogo(SDL_Texture* tilemapTexture) const
+{
+	this->DrawText(tilemapTexture, 20, 5, "###  ##  ######   ######   ######    ####       ##    ####");
+	this->DrawText(tilemapTexture, 20, 6, " ###  #       ##       ##       ##  ##   #     ##      ## ##");
+	this->DrawText(tilemapTexture, 20, 7, " #### #   ##       ##   #   ##   #  ##         ##      ##  ##");
+	this->DrawText(tilemapTexture, 20, 8, " ## # #  #######  #######  #######   #####     ##      ##  ##");
+	this->DrawText(tilemapTexture, 20, 9, " ## ###   ##       ####     ####         ##    ##      ##  ##");
+	this->DrawText(tilemapTexture, 20, 10, " ##  ##   ##  ##   ## ##    ## ##   #    ##    ##      ## ##");
+	this->DrawText(tilemapTexture, 20, 11, "###   #  ######   ###  ##  ###  ##   #####    ##      ####");
+}
+
 void UserInterface::DrawStartupMenu(SDL_Texture* tilemapTexture, const int selectedItem) const
 {
+	this->DrawGameLogo(tilemapTexture);
+
+	this->DrawBox(tilemapTexture, 39, 21, 22, 3);
+	const SDL_Rect selectorTile = SELECTOR_LEFT;
 	for (int i = 0; i < 2; i++)
 	{
 		if (i == selectedItem)
-			this->DrawText(tilemapTexture, 0, 0 + i, "1");
-		this->DrawText(tilemapTexture, 1, 0, "Create new character");
-		this->DrawText(tilemapTexture, 1, 1, "Exit game");
+			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[40][22 + i]);
 	}
+	this->DrawText(tilemapTexture, 41, 22, "Create New Character");
+	this->DrawText(tilemapTexture, 41, 23, "Exit Game");
+	this->DrawText(tilemapTexture, 0, 44, "Alpha Release 0.1");
 }
 
 void UserInterface::DrawPlayerClassSelection(SDL_Texture* tilemapTexture, const int selectedItem) const
 {
+	this->DrawBox(tilemapTexture, 39, 21, 22, 5);
+	const SDL_Rect selectorTile = SELECTOR_LEFT;
+	this->DrawText(tilemapTexture, 40, 22, "Select Class:");
 	for (int i = 0; i < 3; i++)
 	{
 		if (i == selectedItem)
-			this->DrawText(tilemapTexture, 0, 0 + i, "1");
-		this->DrawText(tilemapTexture, 1, 0, "Warrior");
-		this->DrawText(tilemapTexture, 1, 1, "Wizard");
-		this->DrawText(tilemapTexture, 1, 2, "Assassin");
+			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[40][23 + i]);
 	}
+	this->DrawText(tilemapTexture, 41, 23, "Warrior");
+	this->DrawText(tilemapTexture, 41, 24, "Wizard");
+	this->DrawText(tilemapTexture, 41, 25, "Assassin");
 }
 
 void UserInterface::DrawPlayerCreationName(SDL_Texture* tilemapTexture, const std::string& playerName) const
 {
-	this->DrawText(tilemapTexture, 0, 1, playerName);
+	this->DrawBox(tilemapTexture, 39, 21, 22, 3);
+	this->DrawText(tilemapTexture, 40, 22, "Enter Name:");
+	this->DrawText(tilemapTexture, 40, 23, playerName);
 }
 
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,

@@ -39,7 +39,6 @@ public:
 	/// <returns>Game tilemap</returns>
 	Tilemap* GetTilemap() const;
 	/// <summary>
-	/// asdf
 	/// </summary>
 	/// <param name="userInterface">Pointer to the UserInterface object</param>
 	/// <param name="tilemapTexture"></param>

@@ -70,6 +70,13 @@
 /// Other
 #define SPACE Tilemap::FindTile(0, 0)
 #define COLON Tilemap::FindTile(10, 3)
+#define AT Tilemap::FindTile(0, 4)
+#define HASH Tilemap::FindTile(3, 2)
+#define DOT Tilemap::FindTile(14, 2)
+
+
+
+
 #define LINE_HORIZONTAL Tilemap::FindTile(4, 12)
 #define LINE_VERTICAL Tilemap::FindTile(3, 11)
 #define CORNER_TOP_RIGHT Tilemap::FindTile(15, 11)

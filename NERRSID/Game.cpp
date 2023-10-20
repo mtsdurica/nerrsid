@@ -95,7 +95,6 @@ std::tuple<bool, Player> Game::IntroSequence(UserInterface* userInterface, SDL_T
 							while (SDL_PollEvent(&eventSDL))
 							{
 								userInterface->RefreshUserInterface();
-								userInterface->DrawText(tilemapTexture, 0, 0, "Enter name:");
 								userInterface->DrawPlayerCreationName(tilemapTexture, playerName);
 								SDL_RenderPresent(userInterface->GetRenderer());
 
@@ -188,15 +187,16 @@ std::tuple<bool, Player> Game::IntroSequence(UserInterface* userInterface, SDL_T
 
 void Game::Build(int gameScreenWidth, int gameScreenHeight)
 {
+	Player player;
+	Game game(gameScreenWidth, gameScreenHeight);
+	UserInterface userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
+	bool gameIsRunning = false;
+	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTilemap()->GetTileMapTexture());
 	srand(time(nullptr));
 	Map map;
 	if (!map.GenerateMap())
 		std::quick_exit(EXIT_FAILURE);
-	Game game(gameScreenWidth, gameScreenHeight);
-	UserInterface userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
-	bool gameIsRunning = false;
-	Player player;
-	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTilemap()->GetTileMapTexture());
+
 	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
 	std::array<Chest, 2> mapChests = map.GetMapChests();
 
@@ -241,10 +241,19 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					}
 					break;
 				case InventoryKeypressHandled:
-				{
 					eventPopup.SetTypeOfEvent(InventoryEvent);
 					break;
-				}
+				case NextTurnKeypressHandled:
+					if (player.GetPlayerMovesLeft() == 0)
+					{
+						player.SetPlayerTurn(player.GetPlayerTurn() + 1);
+						player.SetPlayerMovesLeft(3);
+					}
+					else
+					{
+						// TODO: Add popup for confirmation of skipping move
+					}
+					break;
 				case UnusedKeypressHandled:
 				case PlayerNavigationKeypressHandled:
 				case ScrollDownKeypressHandled:
