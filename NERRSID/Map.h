@@ -3,6 +3,8 @@
 #include <array>
 #include <SDL.h>
 
+#include "Enemy.h"
+#include "Corpse.h"
 #include "Vendor.h"
 
 #define UINT_CHANGEABLE uint8_t // Changeable data type if needed to generate larger maps than 0-255
@@ -18,7 +20,7 @@ enum
 
 typedef enum Tiles
 {
-	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile, StairsTile
+	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile, EnemyTile, CorpseTile, StairsTile
 } Tiles;
 
 typedef struct Point
@@ -49,9 +51,13 @@ class Map
 private:
 	std::array<std::array<Tiles, MaxY>, MaxX> MapTiles{};
 	std::array<Vendor, 5> MapVendors;
-	std::array<Chest, 2> MapChests;
+	std::vector<Chest> MapChests;
+	std::vector<Enemy> MapEnemies;
+	std::vector<Corpse> MapCorpses;
 	int NumberOfVendors;
 	int NumberOfChests;
+	int NumberOfEnemies;
+	int NumberOfCorpses;
 	void DrawHorizontalWall(const Wall* newWall);
 	void DrawVerticalWall(const Wall* newWall);
 	static Point GetChildCenter(const Room* childRoom);
@@ -61,18 +67,25 @@ private:
 	Room InitializeBase();
 	bool GenerateVendors();
 	bool GenerateChests();
+	bool GenerateEnemies();
 	void GenerateStairs();
 
 public:
 	Map();
 	~Map();
 	std::array<std::array<Tiles, MaxY>, MaxX>& GetMapTiles();
-	std::array<Vendor, 5>& GetMapVendors();
-	std::array<Chest, 2>& GetMapChests();
 	void InsertVendor(const Vendor* newVendor);
 	void InsertChest(const Chest* newChest);
-	static Vendor* FindVendor(std::array<Vendor, 5>* mapVendors, int numberOfVendors, int playerPositionXCoordinate, int playerPositionYCoordinate);
-	static Chest* FindChest(std::array<Chest, 2>* mapChests, int numberOfChests, int playerPositionXCoordinate, int playerPositionYCoordinate);
-	int GetNumberOfVendors() const;
+	void InsertEnemy(const Enemy* newEnemy);
+	void InsertCorpse(const Corpse* newCorpse);
+	Vendor* FindVendor(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	Chest* FindChest(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	Enemy* FindEnemy(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	void RemoveEnemy(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	void RemoveChest(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	void RemoveCorpse(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	Corpse* FindCorpse(int playerPositionXCoordinate, int playerPositionYCoordinate);
+	void MoveEnemies(int playerXCoordinate, int playerYCoordinate);
+	void AddCorpse(const Corpse* corpse);
 	bool GenerateMap();
 };

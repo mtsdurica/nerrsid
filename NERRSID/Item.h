@@ -40,4 +40,3 @@ public:
 	ItemClassT GetItemClass() const;
 	void SetIsEquipped(bool isEquipped);
 };
-

@@ -6,6 +6,8 @@
 #include "Game.h"
 #include "GameEvent.h"
 #include "Vendor.h"
+#include "Enemy.h"
+#include "Corpse.h"
 #include "GameEventHandler.h"
 #include "Menu.h"
 
@@ -199,9 +201,6 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	if (!map.GenerateMap())
 		std::quick_exit(EXIT_FAILURE);
 
-	std::array<Vendor, 5> mapVendors = map.GetMapVendors();
-	std::array<Chest, 2> mapChests = map.GetMapChests();
-
 	while (gameIsRunning)
 	{
 		SDL_Event eventSDL;
@@ -217,7 +216,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 				gameIsRunning = false;
 			else if (eventSDL.type == SDL_KEYDOWN)
 			{
-				switch (GameEventHandler::KeypressHandler(&player, &eventSDL, map.GetMapTiles()))
+				switch (GameEventHandler::KeypressHandler(&player, eventGame, &eventSDL, map.GetMapTiles()))
 				{
 				case ExitKeypressHandled:
 					gameIsRunning = false;
@@ -233,6 +232,21 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						eventPopup.SetTypeOfEvent(ChestEvent);
 						player.SetIdleStatus(false);
 						break;
+					case CorpseEvent:
+						eventPopup.SetTypeOfEvent(CorpseEvent);
+						player.SetIdleStatus(false);
+						break;
+					case EnemyEvent:
+					{
+						Enemy* enemy = nullptr;
+						enemy = map.FindEnemy(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+						Corpse corpse(enemy->GetPositionXCoordinate(), enemy->GetPositionYCoordinate());
+						map.RemoveEnemy(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+						corpse.CreateInventory();
+						map.InsertCorpse(&corpse);
+						map.AddCorpse(&corpse);
+						break;
+					}
 					case StairsEvent:
 						player.SetPositionXCoordinate(1);
 						player.SetPositionYCoordinate(1);
@@ -240,8 +254,6 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						map = nextMap;
 						if (!map.GenerateMap())
 							std::quick_exit(EXIT_FAILURE);
-						mapVendors = map.GetMapVendors();
-						mapChests = map.GetMapChests();
 						break;
 					}
 					break;
@@ -250,15 +262,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					player.SetIdleStatus(false);
 					break;
 				case NextTurnKeypressHandled:
-					if (player.GetPlayerMovesLeft() == 0)
-					{
-						player.SetPlayerTurn(player.GetPlayerTurn() + 1);
-						player.SetPlayerMovesLeft(3);
-					}
-					else
-					{
-						// TODO: Add popup for confirmation of skipping move
-					}
+					//if (player.GetPlayerMovesLeft() == 0)
+					//{
+					map.MoveEnemies(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+					player.SetPlayerTurn(player.GetPlayerTurn() + 1);
+					player.SetPlayerMovesLeft(1);
+					//}
+					//else
+					//{
+					//	// TODO: Add popup for confirmation of skipping move
+					//}
 					break;
 				case UnusedKeypressHandled:
 				case PlayerNavigationKeypressHandled:
@@ -276,7 +289,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		case VendorEvent:
 		{
 			Vendor* vendor = nullptr;
-			vendor = Map::FindVendor(&mapVendors, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+			vendor = map.FindVendor(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 			Menu menu(vendor->GetItemsInInventory());
 			std::string message;
 			bool itemSold = false;
@@ -329,7 +342,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		case ChestEvent:
 		{
 			Chest* chest = nullptr;
-			chest = Map::FindChest(&mapChests, map.GetNumberOfVendors(), player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+			chest = map.FindChest(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 			Menu menu(chest->GetItemsInInventory());
 			std::string message;
 			popupFlag = true;
@@ -348,6 +361,8 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						{
 						case ExitKeypressHandled:
 							popupFlag = false;
+							if (chest->GetItemsInInventory() == 0)
+								map.RemoveChest(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 							break;
 						case EnterKeypressHandled:
 							if (chest->GetItemsInInventory())
@@ -372,6 +387,57 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					}
 				}
 				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage);
+			}
+			break;
+		}
+		case CorpseEvent:
+		{
+			Corpse* corpse = nullptr;
+			corpse = map.FindCorpse(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+			Menu menu(corpse->GetItemsInInventory());
+			std::string message;
+			popupFlag = true;
+			while (popupFlag)
+			{
+				while (SDL_PollEvent(&eventSDL))
+				{
+					if (eventSDL.type == SDL_QUIT)
+					{
+						popupFlag = false;
+						gameIsRunning = false;
+					}
+					else if (eventSDL.type == SDL_KEYDOWN)
+					{
+						switch (GameEventHandler::EntityInventoryKeypressHandler(&eventSDL))
+						{
+						case ExitKeypressHandled:
+							popupFlag = false;
+							if (corpse->GetItemsInInventory() == 0)
+								map.RemoveCorpse(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
+							break;
+						case EnterKeypressHandled:
+							if (corpse->GetItemsInInventory())
+							{
+								lastMessage = player.LootItem(corpse->GetInventory()->at(menu.GetSelectedItem()));
+								corpse->RemoveItemFromInventory(menu.GetSelectedItem());
+								menu.SetSelectedItem(0);
+								menu.SetAllItems();
+							}
+							break;
+						case ScrollDownKeypressHandled:
+							menu.ScrollDown();
+							break;
+						case ScrollUpKeypressHandled:
+							menu.ScrollUp();
+							break;
+						case UnusedKeypressHandled:
+						case PlayerNavigationKeypressHandled:
+						case InventoryKeypressHandled:
+							break;
+						}
+					}
+				}
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, corpse, &menu, lastMessage);
 			}
 			break;
 		}

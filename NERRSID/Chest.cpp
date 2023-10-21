@@ -9,8 +9,13 @@ Chest::Chest() : Entity()
 {
 }
 
-Chest::Chest(const std::string& chestName, const int positionXCoordinate, const int positionYCoordinate)
-	: Entity(chestName, 0, 0, 5, positionXCoordinate, positionYCoordinate)
+Chest::Chest(const std::string& name, const int positionXCoordinate, const int positionYCoordinate)
+	: Entity(name, 0, 0, 5, positionXCoordinate, positionYCoordinate)
+{
+}
+
+Chest::Chest(const int positionXCoordinate, const int positionYCoordinate)
+	: Entity(0, 0, 5, positionXCoordinate, positionYCoordinate)
 {
 }
 
@@ -98,7 +103,7 @@ bool Chest::CreateInventory()
 	this->ItemsInInventory = Chest::RandomInRange(1, 5);
 	for (int i = 0; i < this->ItemsInInventory; i++)
 	{
-		const int selectedItem = Chest::RandomInRange(0, 4);
+		const int selectedItem = Chest::RandomInRange(0, 27);
 		this->Inventory.at(i) = itemShuffleBag.at(selectedItem);
 	}
 

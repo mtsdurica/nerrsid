@@ -10,6 +10,12 @@ Entity::Entity(std::string name, const int gold, const int itemsInInventory, con
 {
 }
 
+Entity::Entity(const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate)
+	: Gold(gold), ItemsInInventory(itemsInInventory), MaximumItemsInInventory(maximumItemsInInventory), PositionXCoordinate(positionXCoordinate),
+	PositionYCoordinate(positionYCoordinate), IdleStatus(true)
+{
+}
+
 Entity::~Entity() = default;
 
 std::string Entity::GetName() const

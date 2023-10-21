@@ -114,7 +114,8 @@ void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 	const SDL_Rect vendorTile = ALPHA_V;
 	const SDL_Rect chestTile = ALPHA_C;
 	const SDL_Rect stairsTile = STAIRS;
-
+	const SDL_Rect enemyTile = ALPHA_E;
+	const SDL_Rect corpseTile = ALPHA_c;
 
 	for (int x = 0; x < MaxX; x++)
 	{
@@ -136,6 +137,12 @@ void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 				break;
 			case StairsTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &stairsTile, &this->UserInterfaceRect[x][y]);
+				break;
+			case EnemyTile:
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &enemyTile, &this->UserInterfaceRect[x][y]);
+				break;
+			case CorpseTile:
+				SDL_RenderCopy(this->Renderer, tilemapTexture, &corpseTile, &this->UserInterfaceRect[x][y]);
 				break;
 			case PlayerTile:
 				break;

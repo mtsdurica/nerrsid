@@ -6,7 +6,8 @@ private:
 	static int RandomInRange(int min, int max);
 public:
 	Chest();
-	Chest(const std::string& chestName, int positionXCoordinate, int positionYCoordinate);
+	Chest(const std::string& name, int positionXCoordinate, int positionYCoordinate);
+	Chest(int positionXCoordinate, int positionYCoordinate);
 	void RemoveItemFromInventory(int selectedItem);
 	bool CreateInventory();
 };

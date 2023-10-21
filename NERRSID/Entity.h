@@ -18,6 +18,7 @@ protected:
 public:
 	Entity();
 	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
+	Entity(int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
 	virtual ~Entity();
 	/// <summary>
 	/// Get entity name
