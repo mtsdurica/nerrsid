@@ -2,7 +2,7 @@
 
 #include "Map.h"
 
-Map::Map() : NumberOfVendors(0), NumberOfChests(0)
+Map::Map() : NumberOfVendors(0), NumberOfChests(0), NumberOfEnemies(0), NumberOfCorpses(0)
 {
 	for (int x = 0; x < MaxX; x++)
 		for (int y = 0; y < MaxY; y++)
@@ -133,6 +133,7 @@ bool Map::GenerateVendors()
 			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
 			vendor.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
 		} while (this->MapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != WalkableTile);
+		vendor.SetName("Joseph"); // TODO: Generating names randomly
 		this->InsertVendor(&vendor);
 		this->MapVendors.at(this->NumberOfVendors) = vendor;
 		this->NumberOfVendors++;
@@ -154,10 +155,34 @@ bool Map::GenerateChests()
 			chest.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
 		} while (this->MapTiles[chest.GetPositionXCoordinate()][chest.GetPositionYCoordinate()] != WalkableTile);
 		this->InsertChest(&chest);
-		this->MapChests.at(this->NumberOfChests) = chest;
+		this->MapChests.push_back(chest);
 		this->NumberOfChests++;
 	}
 	return true;
+}
+
+bool Map::GenerateEnemies()
+{
+	const int numOfGeneratedEnemies = Map::RandomInRange(0, 5);
+	for (int i = 0; i < numOfGeneratedEnemies; i++)
+	{
+		Enemy enemy;
+		do
+		{
+			enemy.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
+			enemy.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+		} while (this->MapTiles[enemy.GetPositionXCoordinate()][enemy.GetPositionYCoordinate()] != WalkableTile);
+		this->InsertEnemy(&enemy);
+		this->MapEnemies.push_back(enemy);
+		this->NumberOfEnemies++;
+	}
+	return true;
+}
+
+void Map::AddCorpse(const Corpse* corpse)
+{
+	this->MapCorpses.push_back(*corpse);
+	this->NumberOfCorpses = this->NumberOfCorpses + 1;
 }
 
 void Map::GenerateStairs()
@@ -186,6 +211,8 @@ bool Map::GenerateMap()
 		return false;
 	if (!this->GenerateChests())
 		return false;
+	if (!this->GenerateEnemies())
+		return false;
 
 	return true;
 }
@@ -195,14 +222,9 @@ std::array<std::array<Tiles, MaxY>, MaxX>& Map::GetMapTiles()
 	return this->MapTiles;
 }
 
-std::array<Vendor, 5>& Map::GetMapVendors()
+void Map::InsertChest(const Chest* newChest)
 {
-	return this->MapVendors;
-}
-
-std::array<Chest, 2>& Map::GetMapChests()
-{
-	return this->MapChests;
+	this->MapTiles[newChest->GetPositionXCoordinate()][newChest->GetPositionYCoordinate()] = ChestTile;
 }
 
 void Map::InsertVendor(const Vendor* newVendor)
@@ -210,28 +232,84 @@ void Map::InsertVendor(const Vendor* newVendor)
 	this->MapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
 }
 
-void Map::InsertChest(const Chest* newChest)
+void Map::InsertEnemy(const Enemy* newEnemy)
 {
-	this->MapTiles[newChest->GetPositionXCoordinate()][newChest->GetPositionYCoordinate()] = ChestTile;
+	this->MapTiles[newEnemy->GetPositionXCoordinate()][newEnemy->GetPositionYCoordinate()] = EnemyTile;
 }
 
-Vendor* Map::FindVendor(std::array<Vendor, 5>* mapVendors, const int numberOfVendors, const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+void Map::InsertCorpse(const Corpse* newCorpse)
 {
-	for (int i = 0; i < numberOfVendors; i++)
-		if (mapVendors->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapVendors->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
-			return &(mapVendors->at(i));
+	this->MapTiles[newCorpse->GetPositionXCoordinate()][newCorpse->GetPositionYCoordinate()] = CorpseTile;
+}
+
+Vendor* Map::FindVendor(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfVendors; i++)
+		if (this->MapVendors.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapVendors.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(this->MapVendors.at(i));
 	return nullptr;
 }
 
-Chest* Map::FindChest(std::array<Chest, 2>* mapChests, const int numberOfChests, const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+Chest* Map::FindChest(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
 {
-	for (int i = 0; i < numberOfChests; i++)
-		if (mapChests->at(i).GetPositionXCoordinate() == playerPositionXCoordinate && mapChests->at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
-			return &(mapChests->at(i));
+	for (int i = 0; i < this->NumberOfChests; i++)
+		if (this->MapChests.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapChests.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(this->MapChests.at(i));
 	return nullptr;
 }
 
-int Map::GetNumberOfVendors() const
+Enemy* Map::FindEnemy(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
 {
-	return this->NumberOfVendors;
+	for (int i = 0; i < this->NumberOfEnemies; i++)
+		if (this->MapEnemies.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapEnemies.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(this->MapEnemies.at(i));
+	return nullptr;
+}
+
+void Map::RemoveEnemy(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfEnemies; i++)
+		if (this->MapEnemies.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapEnemies.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+		{
+			this->MapEnemies.erase(this->MapEnemies.begin() + i);
+			this->NumberOfEnemies = this->NumberOfEnemies - 1;
+		}
+}
+
+void Map::RemoveChest(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfChests; i++)
+		if (this->MapChests.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapChests.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+		{
+			this->MapChests.erase(this->MapChests.begin() + i);
+			this->NumberOfChests = this->NumberOfChests - 1;
+			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = WalkableTile;
+		}
+}
+
+void Map::RemoveCorpse(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfCorpses; i++)
+		if (this->MapCorpses.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapCorpses.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+		{
+			this->MapCorpses.erase(this->MapCorpses.begin() + i);
+			this->NumberOfCorpses = this->NumberOfCorpses - 1;
+			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = WalkableTile;
+		}
+}
+
+Corpse* Map::FindCorpse(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfCorpses; i++)
+		if (this->MapCorpses.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapCorpses.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
+			return &(this->MapCorpses.at(i));
+	return nullptr;
+}
+
+void Map::MoveEnemies(const int playerXCoordinate, const int playerYCoordinate)
+{
+	for (int i = 0; i < this->NumberOfEnemies; i++)
+	{
+		this->MapEnemies[i].Move(this, playerXCoordinate, playerYCoordinate);
+	}
 }

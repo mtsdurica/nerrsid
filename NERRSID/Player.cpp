@@ -11,7 +11,7 @@ EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 
 Player::Player(const std::string& playerName, const PlayerClassT playerClass, const int positionXCoordinate, const int positionYCoordinate)
 	: Entity(playerName, 0, 0, 50, positionXCoordinate, positionYCoordinate), PlayerClass(playerClass), PlayerLevel(1),
-	PlayerExperience(0), PlayerStrength(0), PlayerDexterity(0), PlayerIntellect(0), PlayerTurn(1), PlayerMovesLeft(3), EquippedWeapon(nullptr),
+	PlayerExperience(0), PlayerStrength(0), PlayerDexterity(0), PlayerIntellect(0), PlayerTurn(1), PlayerMovesLeft(1), EquippedWeapon(nullptr),
 	EquippedHelmet(nullptr), EquippedChestplate(nullptr), EquippedLeggings(nullptr)
 {
 	switch (playerClass)

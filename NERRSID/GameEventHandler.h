@@ -23,10 +23,11 @@ public:
 	/// Main game window keypress handler
 	/// </summary>
 	/// <param name="player">Pointer to the player object</param>
+	/// <param name="eventToBeHandledGame">Game event containing collision information</param>
 	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
 	/// <param name="mapTiles">Map tiles</param>
 	/// <returns></returns>
-	static HandledEvent KeypressHandler(Player* player, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, MaxY>, MaxX>& mapTiles);
+	static HandledEvent KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, MaxY>, MaxX>& mapTiles);
 	/// <summary>
 	/// Vendor popup keypress handler
 	/// </summary>
