@@ -1,6 +1,7 @@
 #include <string>
 
 #include "UserInterface.h"
+#include <iostream>
 
 UserInterface::UserInterface(SDL_Renderer* renderer, const int userInterfaceRectWidth, const int userInterfaceRectHeight) : Renderer(renderer)
 {
@@ -33,29 +34,22 @@ void UserInterface::DrawPlayer(SDL_Texture* tilemapTexture, const Player* player
 	const SDL_Rect playerTile = AT;
 	const SDL_Rect blankTile = SPACE;
 
-	if (player->GetIdleStatus()) {
-		if ((SDL_GetTicks64() % 1000) < 500)
-		{
+	if (player->GetIdleStatus())
+		if (SDL_GetTicks64() % 1000 < 500)
 			SDL_RenderCopy(this->Renderer,
 				tilemapTexture,
 				&blankTile,
 				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
-		}
 		else
-		{
 			SDL_RenderCopy(this->Renderer,
 				tilemapTexture,
 				&playerTile,
 				&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
-		}
-	}
 	else
-	{
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&playerTile,
 			&this->UserInterfaceRect[player->GetPositionXCoordinate()][player->GetPositionYCoordinate()]);
-	}
 }
 
 void UserInterface::DrawText(SDL_Texture* tilemapTexture, const int textPositionX, const int textPositionY, const std::string& text) const
@@ -117,9 +111,9 @@ void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 	const SDL_Rect enemyTile = ALPHA_E;
 	const SDL_Rect corpseTile = ALPHA_c;
 
-	for (int x = 0; x < MaxX; x++)
+	for (int x = 0; x < Util::MAX_X; x++)
 	{
-		for (int y = 0; y < MaxY; y++)
+		for (int y = 0; y < Util::MAX_Y; y++)
 		{
 			switch (map->GetMapTiles()[x][y])
 			{
@@ -161,24 +155,20 @@ void UserInterface::DrawHorizontalLine(SDL_Texture* tilemapTexture, const int ro
 {
 	const SDL_Rect rect = LINE_HORIZONTAL;
 	for (int i = startingPoint; i < endingPoint; i++)
-	{
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&rect,
 			&this->UserInterfaceRect[i][row]);
-	}
 }
 
 void UserInterface::DrawVerticalLine(SDL_Texture* tilemapTexture, const int column, const int startingPoint, const int endingPoint) const
 {
 	const SDL_Rect rect = LINE_VERTICAL;
 	for (int i = startingPoint; i < endingPoint; i++)
-	{
 		SDL_RenderCopy(this->Renderer,
 			tilemapTexture,
 			&rect,
 			&this->UserInterfaceRect[column][i]);
-	}
 }
 
 void UserInterface::DrawCorner(SDL_Texture* tilemapTexture, const CornerType cornerType, const int column, const int row) const
@@ -222,31 +212,42 @@ void UserInterface::DrawPopupBorder(SDL_Texture* tilemapTexture) const
 	this->DrawCorner(tilemapTexture, TopRight, 99, 12);
 }
 
+std::string UserInterface::DrawAnimatedText(SDL_Texture* tilemapTexture, const int textPositionX, const int textPositionY, const std::string& text, const int lastUpdate) const
+{
+	/// TODO: Maybe fix, as for now it is not working and i have no clue how to make it work
+	std::string textTmp = text;
+	if (SDL_GetTicks64() % 500 < 500)
+		textTmp.erase(0, 1);
+	this->DrawText(tilemapTexture, textPositionX, textPositionY, textTmp);
+	return textTmp;
+}
+
 void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<Item, 50>* inventory, const int itemsInInventory, const int selectedItem, const int startingItem, int endingItem) const
 {
 	if (itemsInInventory <= endingItem)
 		endingItem = itemsInInventory;
-
 	int positionOfCursor = 0;
 	for (int i = startingItem; i < endingItem; i++)
 	{
+		/// Drawing cursor
 		if (i == selectedItem)
 		{
 			const SDL_Rect selectorTile = SELECTOR_LEFT;
 			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[45][13 + positionOfCursor]);
 		}
-		this->DrawText(tilemapTexture, 46, 13 + positionOfCursor, inventory->at(i).GetItemName());
-		this->DrawText(tilemapTexture, 58, 13 + positionOfCursor, std::to_string(inventory->at(i).GetItemBonusStrength()) + " " + std::to_string(inventory->at(i).GetItemBonusDexterity()) + " " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
+		/// Checking if item name is not longer than 20 characters, if yes, only 20 characters will be displayed
+		std::string tempItemName = inventory->at(i).GetItemName();
+		if (inventory->at(i).GetItemName().length() > 20)
+			tempItemName = tempItemName.substr(20, tempItemName.length() - 20);
+		this->DrawText(tilemapTexture, 46, 13 + positionOfCursor, tempItemName);
+		this->DrawText(tilemapTexture, 68, 13 + positionOfCursor, std::to_string(inventory->at(i).GetItemBonusStrength()) + " " + std::to_string(inventory->at(i).GetItemBonusDexterity()) + " " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
 		if (inventory->at(i).GetIsEquipped())
 		{
 			/// this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, std::to_string(i));
 			const SDL_Rect selectorTile = SELECTOR_CENTER;
-			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[87][13 + positionOfCursor]);
+			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[90][13 + positionOfCursor]);
 		}
-		else
-		{
-			this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, " ");
-		}
+		else this->DrawText(tilemapTexture, 87, 13 + positionOfCursor, " ");
 		positionOfCursor++;
 	}
 }
@@ -254,10 +255,10 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity, const int selectedItem, const int startingItem, const int endingItem) const
 {
 	this->DrawText(tilemapTexture, 45, 10, "Inventory: " + std::to_string(entity->GetItemsInInventory()));
-	this->DrawText(tilemapTexture, 46, 11, "Item name:");
-	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
-	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
-	this->DrawText(tilemapTexture, 87, 11, "Equipped:");
+	this->DrawText(tilemapTexture, 46, 11, "Name:");
+	this->DrawText(tilemapTexture, 68, 11, "Stats:");
+	this->DrawText(tilemapTexture, 81, 11, "Qty:");
+	this->DrawText(tilemapTexture, 90, 11, "Equipped:");
 	this->DrawPopupBorder(tilemapTexture);
 	if (entity->GetItemsInInventory())
 		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
@@ -265,13 +266,18 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity,
 		this->DrawText(tilemapTexture, 46, 13, "No items in inventory");
 }
 
-void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, const int selectedItem, const int startingItem, const int endingItem) const
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, const int selectedItem, const int startingItem, const int endingItem, const bool isCorpse) const
 {
-	this->DrawText(tilemapTexture, 45, 10, "Chest: " + std::to_string(entity->GetItemsInInventory()));
-	this->DrawText(tilemapTexture, 46, 11, "Item name:");
-	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
-	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
-	this->DrawText(tilemapTexture, 87, 11, "Item price:");
+	std::string entityTitle;
+	if (isCorpse)
+		entityTitle = "Corpse: ";
+	else
+		entityTitle = "Chest: ";
+	this->DrawText(tilemapTexture, 45, 10, entityTitle + std::to_string(entity->GetItemsInInventory()));
+	this->DrawText(tilemapTexture, 46, 11, "Name:");
+	this->DrawText(tilemapTexture, 68, 11, "Stats:");
+	this->DrawText(tilemapTexture, 81, 11, "Qty:");
+	this->DrawText(tilemapTexture, 90, 11, "Price:");
 	this->DrawPopupBorder(tilemapTexture);
 	if (entity->GetItemsInInventory())
 		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
@@ -282,10 +288,10 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, 
 void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem) const
 {
 	this->DrawText(tilemapTexture, 45, 10, "Vendor " + entity->GetName() + ": " + std::to_string(entity->GetItemsInInventory()));
-	this->DrawText(tilemapTexture, 46, 11, "Item name:");
-	this->DrawText(tilemapTexture, 58, 11, "Item stats:");
-	this->DrawText(tilemapTexture, 71, 11, "Item quantity:");
-	this->DrawText(tilemapTexture, 87, 11, "Item price:");
+	this->DrawText(tilemapTexture, 46, 11, "Name:");
+	this->DrawText(tilemapTexture, 68, 11, "Stats:");
+	this->DrawText(tilemapTexture, 81, 11, "Qty:");
+	this->DrawText(tilemapTexture, 90, 11, "Price:");
 	this->DrawPopupBorder(tilemapTexture);
 	if (entity->GetItemsInInventory())
 		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
@@ -300,26 +306,23 @@ SDL_Renderer* UserInterface::GetRenderer() const
 
 void UserInterface::DrawGameLogo(SDL_Texture* tilemapTexture) const
 {
-	this->DrawText(tilemapTexture, 20, 5, "###  ##  ######   ######   ######    ####       ##    ####");
-	this->DrawText(tilemapTexture, 20, 6, " ###  #       ##       ##       ##  ##   #     ##      ## ##");
-	this->DrawText(tilemapTexture, 20, 7, " #### #   ##       ##   #   ##   #  ##         ##      ##  ##");
-	this->DrawText(tilemapTexture, 20, 8, " ## # #  #######  #######  #######   #####     ##      ##  ##");
-	this->DrawText(tilemapTexture, 20, 9, " ## ###   ##       ####     ####         ##    ##      ##  ##");
-	this->DrawText(tilemapTexture, 20, 10, " ##  ##   ##  ##   ## ##    ## ##   #    ##    ##      ## ##");
-	this->DrawText(tilemapTexture, 20, 11, "###   #  ######   ###  ##  ###  ##   #####    ##      ####");
+	this->DrawText(tilemapTexture, 20, 5, "###  ##  ######   ######   ######    ####      ##   ####");
+	this->DrawText(tilemapTexture, 20, 6, " ###  #       ##       ##       ##  ##   #    ##     ## ##");
+	this->DrawText(tilemapTexture, 20, 7, " #### #   ##       ##   #   ##   #  ##        ##     ##  ##");
+	this->DrawText(tilemapTexture, 20, 8, " ## # #  #######  #######  #######   #####    ##     ##  ##");
+	this->DrawText(tilemapTexture, 20, 9, " ## ###   ##       ####     ####         ##   ##     ##  ##");
+	this->DrawText(tilemapTexture, 20, 10, " ##  ##   ##  ##   ## ##    ## ##   #    ##   ##     ## ##");
+	this->DrawText(tilemapTexture, 20, 11, "###   #  ######   ###  ##  ###  ##   #####   ##    ####");
 }
 
 void UserInterface::DrawStartupMenu(SDL_Texture* tilemapTexture, const int selectedItem) const
 {
 	this->DrawGameLogo(tilemapTexture);
-
 	this->DrawBox(tilemapTexture, 39, 21, 22, 3);
 	const SDL_Rect selectorTile = SELECTOR_LEFT;
 	for (int i = 0; i < 2; i++)
-	{
 		if (i == selectedItem)
 			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[40][22 + i]);
-	}
 	this->DrawText(tilemapTexture, 41, 22, "Create New Character");
 	this->DrawText(tilemapTexture, 41, 23, "Exit Game");
 	this->DrawText(tilemapTexture, 0, 44, "Alpha Release 0.1");
@@ -331,10 +334,8 @@ void UserInterface::DrawPlayerClassSelection(SDL_Texture* tilemapTexture, const 
 	const SDL_Rect selectorTile = SELECTOR_LEFT;
 	this->DrawText(tilemapTexture, 40, 22, "Select Class:");
 	for (int i = 0; i < 3; i++)
-	{
 		if (i == selectedItem)
 			SDL_RenderCopy(this->Renderer, tilemapTexture, &selectorTile, &this->UserInterfaceRect[40][23 + i]);
-	}
 	this->DrawText(tilemapTexture, 41, 23, "Warrior");
 	this->DrawText(tilemapTexture, 41, 24, "Wizard");
 	this->DrawText(tilemapTexture, 41, 25, "Assassin");
@@ -359,13 +360,13 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 	SDL_RenderPresent(this->Renderer);
 }
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,
-	Chest* chest, const Menu* menu, const std::string& message) const
+	Chest* chest, const Menu* menu, const std::string& message, const bool isCorpse) const
 {
 	this->RefreshUserInterface();
 	this->DrawMap(tilemapTexture, map);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
-	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
+	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), isCorpse);
 	this->DrawStatusBar(tilemapTexture, message);
 	SDL_RenderPresent(this->Renderer);
 }

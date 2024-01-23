@@ -4,8 +4,8 @@
 
 Map::Map() : NumberOfVendors(0), NumberOfChests(0), NumberOfEnemies(0), NumberOfCorpses(0)
 {
-	for (int x = 0; x < MaxX; x++)
-		for (int y = 0; y < MaxY; y++)
+	for (int x = 0; x < Util::MAX_X; x++)
+		for (int y = 0; y < Util::MAX_Y; y++)
 			MapTiles[x][y] = WalkableTile;
 }
 
@@ -31,35 +31,24 @@ Point Map::GetChildCenter(const Room* childRoom)
 	return center;
 }
 
-UINT_CHANGEABLE Map::RandomInRange(const UINT_CHANGEABLE min, const UINT_CHANGEABLE max)
-{
-	/// Calculate the middle of the range
-	const UINT_CHANGEABLE middle = (min + max) / 2;
-	/// Calculate the allowable deviation from the middle
-	const UINT_CHANGEABLE deviation = (max - min) / 3;
-	return static_cast<uint8_t>(rand() % (deviation * 2 + 1)) + (middle - deviation);
-}
-
 void Map::GenerateHorizontalSplit(Room* r)
 {
 	if (r == nullptr)
 		return;
 
-	if (r->Left.Start.Y + (PseudoRoomSize / 2) >= r->Left.End.Y - (PseudoRoomSize / 2))
+	if (r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2) >= r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2))
 		return;
 
-	const UINT_CHANGEABLE randY = RandomInRange(r->Left.Start.Y + (PseudoRoomSize / 2), r->Left.End.Y - (PseudoRoomSize / 2));
+	const UINT_CHANGEABLE randY = Util::RandomChangeableIntInRange(r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2), r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2));
 
-	const Wall newSplit = { { r->Top.Start.X, randY }, { r->Top.End.X, randY } };
+	const Wall newSplit = { {r->Top.Start.X, randY}, {r->Top.End.X, randY} };
 
 	Room child1 =
-	{ r->Top, newSplit, { r->Top.Start, newSplit.Start }, { r->Top.End, newSplit.End }, nullptr, nullptr,
-	  { 0, 0 } };
+	{ r->Top, newSplit, {r->Top.Start, newSplit.Start}, {r->Top.End, newSplit.End}, nullptr, nullptr, {0, 0} };
 	r->Child1 = &child1;
 
 	Room child2 =
-	{ newSplit, r->Bot, { newSplit.Start, r->Bot.Start }, { newSplit.End, r->Bot.End }, nullptr, nullptr,
-	  { 0, 0 } };
+	{ newSplit, r->Bot, {newSplit.Start, r->Bot.Start}, {newSplit.End, r->Bot.End}, nullptr, nullptr, {0, 0} };
 	r->Child2 = &child2;
 
 	DrawHorizontalWall(&newSplit);
@@ -79,21 +68,19 @@ void Map::GenerateVerticalSplit(Room* r)
 	if (r == nullptr)
 		return;
 
-	if (r->Top.Start.X + PseudoRoomSize >= r->Top.End.X - PseudoRoomSize)
+	if (r->Top.Start.X + Util::PSEUDO_ROOM_SIZE >= r->Top.End.X - Util::PSEUDO_ROOM_SIZE)
 		return;
 
-	const UINT_CHANGEABLE randX = RandomInRange(r->Top.Start.X + PseudoRoomSize, r->Top.End.X - PseudoRoomSize);
+	const UINT_CHANGEABLE randX = Util::RandomChangeableIntInRange(r->Top.Start.X + Util::PSEUDO_ROOM_SIZE, r->Top.End.X - Util::PSEUDO_ROOM_SIZE);
 
-	const Wall newSplit = { { randX, r->Top.Start.Y }, { randX, r->Bot.Start.Y } }; // third thingy maybe wrong
+	const Wall newSplit = { {randX, r->Top.Start.Y}, {randX, r->Bot.Start.Y} }; // third thingy maybe wrong
 
 	Room child1 =
-	{ { r->Top.Start, newSplit.Start }, { r->Bot.Start, newSplit.End }, r->Left, newSplit, nullptr, nullptr,
-	 { 0, 0 } };
+	{ {r->Top.Start, newSplit.Start}, {r->Bot.Start, newSplit.End}, r->Left, newSplit, nullptr, nullptr, {0, 0} };
 	r->Child1 = &child1;
 
 	Room child2 =
-	{ { newSplit.Start, r->Top.End }, { newSplit.End, r->Bot.End }, newSplit, r->Right, nullptr, nullptr,
-	 { 0, 0 } };
+	{ {newSplit.Start, r->Top.End}, {newSplit.End, r->Bot.End}, newSplit, r->Right, nullptr, nullptr, {0, 0} };
 	r->Child2 = &child2;
 
 	DrawVerticalWall(&newSplit);
@@ -111,8 +98,7 @@ void Map::GenerateVerticalSplit(Room* r)
 Room Map::InitializeBase()
 {
 	constexpr Room newRoom =
-	{ {{ 0, 0 }, { MaxX - 1, 0 }}, {{ 0, MaxY - 1 }, { MaxX - 1, MaxY - 1 }}, {{ 0, 0 }, { 0, MaxY - 1 }},
-	 {{ MaxX - 1, 0 }, { MaxX - 1, MaxY - 1 }}, nullptr, nullptr, { 0, 0 } };
+	{ {{0, 0}, {Util::MAX_X - 1, 0}}, {{0, Util::MAX_Y - 1}, {Util::MAX_X - 1, Util::MAX_Y - 1}}, {{0, 0}, {0, Util::MAX_Y - 1}}, {{Util::MAX_X - 1, 0}, {Util::MAX_X - 1, Util::MAX_Y - 1}}, nullptr, nullptr, {0, 0} };
 	DrawHorizontalWall(&newRoom.Top);
 	DrawHorizontalWall(&newRoom.Bot);
 	DrawVerticalWall(&newRoom.Left);
@@ -122,7 +108,7 @@ Room Map::InitializeBase()
 
 bool Map::GenerateVendors()
 {
-	const int numOfGeneratedVendors = Map::RandomInRange(0, 5);
+	const int numOfGeneratedVendors = Util::RandomChangeableIntInRange(0, 5);
 	for (int i = 0; i < numOfGeneratedVendors; i++)
 	{
 		Vendor vendor;
@@ -130,8 +116,8 @@ bool Map::GenerateVendors()
 			return false;
 		do
 		{
-			vendor.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
-			vendor.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+			vendor.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
+			vendor.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
 		} while (this->MapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != WalkableTile);
 		vendor.SetName("Joseph"); // TODO: Generating names randomly
 		this->InsertVendor(&vendor);
@@ -143,7 +129,7 @@ bool Map::GenerateVendors()
 
 bool Map::GenerateChests()
 {
-	const int numOfGeneratedChests = Map::RandomInRange(0, 2);
+	const int numOfGeneratedChests = Util::RandomChangeableIntInRange(0, 2);
 	for (int i = 0; i < numOfGeneratedChests; i++)
 	{
 		Chest chest;
@@ -151,8 +137,8 @@ bool Map::GenerateChests()
 			return false;
 		do
 		{
-			chest.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
-			chest.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+			chest.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
+			chest.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
 		} while (this->MapTiles[chest.GetPositionXCoordinate()][chest.GetPositionYCoordinate()] != WalkableTile);
 		this->InsertChest(&chest);
 		this->MapChests.push_back(chest);
@@ -163,14 +149,14 @@ bool Map::GenerateChests()
 
 bool Map::GenerateEnemies()
 {
-	const int numOfGeneratedEnemies = Map::RandomInRange(0, 5);
+	const int numOfGeneratedEnemies = Util::RandomChangeableIntInRange(0, 5);
 	for (int i = 0; i < numOfGeneratedEnemies; i++)
 	{
 		Enemy enemy;
 		do
 		{
-			enemy.SetPositionXCoordinate(Map::RandomInRange(1, MaxX - 1));
-			enemy.SetPositionYCoordinate(Map::RandomInRange(1, MaxY - 1));
+			enemy.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
+			enemy.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
 		} while (this->MapTiles[enemy.GetPositionXCoordinate()][enemy.GetPositionYCoordinate()] != WalkableTile);
 		this->InsertEnemy(&enemy);
 		this->MapEnemies.push_back(enemy);
@@ -191,8 +177,8 @@ void Map::GenerateStairs()
 	int stairsYCoordinate;
 	do
 	{
-		stairsXCoordinate = Map::RandomInRange(1, MaxX - 1);
-		stairsYCoordinate = Map::RandomInRange(1, MaxY - 1);
+		stairsXCoordinate = Util::RandomChangeableIntInRange(1, Util::MAX_X - 1);
+		stairsYCoordinate = Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1);
 	} while (this->MapTiles[stairsXCoordinate][stairsYCoordinate] != WalkableTile);
 
 	this->MapTiles[stairsXCoordinate][stairsYCoordinate] = StairsTile;
@@ -202,7 +188,7 @@ bool Map::GenerateMap()
 {
 	Room base = InitializeBase();
 
-	if (rand() % 2)
+	if (Util::RandomChangeableIntInRange(0, 1))
 		GenerateVerticalSplit(&base);
 	else
 		GenerateHorizontalSplit(&base);
@@ -217,7 +203,7 @@ bool Map::GenerateMap()
 	return true;
 }
 
-std::array<std::array<Tiles, MaxY>, MaxX>& Map::GetMapTiles()
+std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& Map::GetMapTiles()
 {
 	return this->MapTiles;
 }

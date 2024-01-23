@@ -1,7 +1,7 @@
 
 #include "GameEventHandler.h"
 
-HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, MaxY>, MaxX>& mapTiles)
+HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles)
 {
 	/// TODO: Needs rework
 	if (eventToBeHandledGame.GetTypeOfEvent() == EnemyEvent)
@@ -129,7 +129,6 @@ GameEvent GameEventHandler::CollisionHandler(const Player& player, Map map)
 
 	switch (mapTiles[player.GetPositionXCoordinate()][player.GetPositionYCoordinate()])
 	{
-
 	case VendorTile:
 		collisionEvent.SetTypeOfEvent(VendorEvent);
 		collisionEvent.SetEventMessage("Press ENTER to interact with vendor");

@@ -55,7 +55,10 @@ public:
 	/// </summary>
 	/// <returns>Entity position on Y axis</returns>
 	int GetPositionYCoordinate() const;
-
+	/// <summary>
+	///	Get idle status of entity
+	/// </summary>
+	///<returns>Idle status of entity</returns>
 	bool GetIdleStatus() const;
 	/// <summary>
 	/// Set name of entity 

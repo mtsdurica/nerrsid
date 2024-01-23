@@ -26,20 +26,20 @@ public:
 	/// <param name="eventToBeHandledGame">Game event containing collision information</param>
 	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
 	/// <param name="mapTiles">Map tiles</param>
-	/// <returns></returns>
-	static HandledEvent KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, MaxY>, MaxX>& mapTiles);
+	/// <returns>Handled keypress</returns>
+	static HandledEvent KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles);
 	/// <summary>
 	/// Vendor popup keypress handler
 	/// </summary>
 	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
-	/// <returns></returns>
+	/// <returns>Handled keypress</returns>
 	static HandledEvent EntityInventoryKeypressHandler(const SDL_Event* eventToBeHandledSDL);
 	/// <summary>
 	/// Player collision handler
 	/// </summary>
 	/// <param name="player">Player object</param>
 	/// <param name="map">Map object</param>
-	/// <returns></returns>
+	/// <returns>Collision event</returns>
 	static GameEvent CollisionHandler(const Player& player, Map map);
 };
 

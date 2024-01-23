@@ -3,14 +3,14 @@
 
 
 Item::Item()
-	: ItemMinimumLevel(-1), ItemPrice(-1), ItemBonusStrength(-1), ItemBonusDexterity(-1), ItemBonusIntellect(-1),
+	: LastUpdate(0), ItemMinimumLevel(-1), ItemPrice(-1), ItemBonusStrength(-1), ItemBonusDexterity(-1), ItemBonusIntellect(-1),
 	IsEquipped(false),
 	ItemClass(UndefinedItemClass)
 {
 }
 
 Item::Item(std::string itemName, const ItemClassT itemClass, const int itemPrice, const int itemBonusStrength, const int itemBonusDexterity, const int itemBonusIntellect)
-	: ItemName(std::move(itemName)), ItemMinimumLevel(1), ItemPrice(itemPrice), ItemBonusStrength(itemBonusStrength), ItemBonusDexterity(itemBonusDexterity),
+	: ItemName(std::move(itemName)), AnimatedItemName(this->ItemName), LastUpdate(0), ItemMinimumLevel(1), ItemPrice(itemPrice), ItemBonusStrength(itemBonusStrength), ItemBonusDexterity(itemBonusDexterity),
 	ItemBonusIntellect(itemBonusIntellect), IsEquipped(false), ItemClass(itemClass)
 {
 }
@@ -20,6 +20,16 @@ Item::~Item() = default;
 std::string Item::GetItemName()
 {
 	return this->ItemName;
+}
+
+std::string Item::GetAnimatedItemName()
+{
+	return this->AnimatedItemName;
+}
+
+int Item::GetLastUpdate() const
+{
+	return this->LastUpdate;
 }
 
 int Item::GetItemMinimumLevel() const
@@ -55,6 +65,16 @@ bool Item::GetIsEquipped() const
 ItemClassT Item::GetItemClass() const
 {
 	return this->ItemClass;
+}
+
+void Item::SetLastUpdate(const int lastUpate)
+{
+	this->LastUpdate = lastUpate;
+}
+
+void Item::SetAnimatedItemName(const std::string& animatedItemName)
+{
+	this->AnimatedItemName = animatedItemName;
 }
 
 void Item::SetIsEquipped(const bool isEquipped)

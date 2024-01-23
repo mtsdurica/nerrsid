@@ -4,6 +4,7 @@
 
 #include "Chest.h"
 #include "Map.h"
+#include "Util.h"
 
 Chest::Chest() : Entity()
 {
@@ -27,11 +28,6 @@ void Chest::RemoveItemFromInventory(const int selectedItem)
 		this->Inventory.at(i) = this->Inventory.at(i + 1);
 	}
 	this->ItemsInInventory--;
-}
-
-int Chest::RandomInRange(const int min, const int max)
-{
-	return (rand() % (max + 1 - min) + min);
 }
 
 bool Chest::CreateInventory()
@@ -100,10 +96,10 @@ bool Chest::CreateInventory()
 		}
 	}
 
-	this->ItemsInInventory = Chest::RandomInRange(1, 5);
+	this->ItemsInInventory = Util::RandomChangeableIntInRange(1, 5);
 	for (int i = 0; i < this->ItemsInInventory; i++)
 	{
-		const int selectedItem = Chest::RandomInRange(0, 27);
+		const int selectedItem = Util::RandomChangeableIntInRange(0, 27);
 		this->Inventory.at(i) = itemShuffleBag.at(selectedItem);
 	}
 

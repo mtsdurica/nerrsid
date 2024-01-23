@@ -6,17 +6,7 @@
 #include "Enemy.h"
 #include "Corpse.h"
 #include "Vendor.h"
-
-#define UINT_CHANGEABLE uint8_t // Changeable data type if needed to generate larger maps than 0-255
-
-enum
-{
-	GameResolutionWidth = 1600,
-	GameResolutionHeight = 720,
-	MaxX = 40,            // Max base room width
-	MaxY = (GameResolutionHeight / 16),    // Max base room height
-	PseudoRoomSize = 4      // Pseudo max room size
-};
+#include "Util.h"
 
 typedef enum Tiles
 {
@@ -49,7 +39,7 @@ typedef struct Room
 class Map
 {
 private:
-	std::array<std::array<Tiles, MaxY>, MaxX> MapTiles{};
+	std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X> MapTiles{};
 	std::array<Vendor, 5> MapVendors;
 	std::vector<Chest> MapChests;
 	std::vector<Enemy> MapEnemies;
@@ -61,7 +51,6 @@ private:
 	void DrawHorizontalWall(const Wall* newWall);
 	void DrawVerticalWall(const Wall* newWall);
 	static Point GetChildCenter(const Room* childRoom);
-	static UINT_CHANGEABLE RandomInRange(const UINT_CHANGEABLE min, const UINT_CHANGEABLE max);
 	void GenerateHorizontalSplit(Room* r);
 	void GenerateVerticalSplit(Room* r);
 	Room InitializeBase();
@@ -73,7 +62,7 @@ private:
 public:
 	Map();
 	~Map();
-	std::array<std::array<Tiles, MaxY>, MaxX>& GetMapTiles();
+	std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& GetMapTiles();
 	void InsertVendor(const Vendor* newVendor);
 	void InsertChest(const Chest* newChest);
 	void InsertEnemy(const Enemy* newEnemy);

@@ -5,22 +5,24 @@
 #include <queue>
 #include <stack>
 #include <cmath>
+#include <utility>
 
 Enemy::Enemy() : Entity(), AggroFlag(false)
 {
 }
 
-Enemy::Enemy(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate) : Entity(name, gold, itemsInInventory, maximumItemsInInventory, positionXCoordinate, positionYCoordinate), AggroFlag(false)
+Enemy::Enemy(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate) : Entity(
+	std::move(name), gold, itemsInInventory, maximumItemsInInventory, positionXCoordinate, positionYCoordinate), AggroFlag(false)
 {
 }
 
 std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 {
-	std::vector<std::vector<int>> intMap(MaxY, std::vector<int>(MaxX, 0));
+	std::vector<std::vector<int>> intMap(Util::MAX_Y, std::vector<int>(Util::MAX_X, 0));
 
-	for (int x = 0; x < MaxX; x++)
+	for (int x = 0; x < Util::MAX_X; x++)
 	{
-		for (int y = 0; y < MaxY; y++)
+		for (int y = 0; y < Util::MAX_Y; y++)
 		{
 			if (map->GetMapTiles()[x][y] == WalkableTile
 				|| map->GetMapTiles()[x][y] == ChestTile
@@ -37,7 +39,7 @@ std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 
 bool Enemy::IsValidMove(const std::vector<std::vector<int>>& map, const int row, const int col)
 {
-	return row >= 0 && row < MaxX && col >= 0 && col < MaxY && map[row][col] == 1;
+	return row >= 0 && row < Util::MAX_X && col >= 0 && col < Util::MAX_Y && map[row][col] == 1;
 }
 
 bool Enemy::GetAggroFlag() const
@@ -50,6 +52,7 @@ void Enemy::SetAggroFlag(const bool aggroFlag)
 	this->AggroFlag = aggroFlag;
 }
 
+// TODO: Needs rework big time
 std::vector<PointBFS> Enemy::FindShortestPath(const std::vector<std::vector<int>>& map, const PointBFS start, const PointBFS end) const
 {
 	const std::vector<int> dr = { 1, -1, 0, 0 };
@@ -114,7 +117,7 @@ void Enemy::Move(Map* map, int playerXCoordinate, int playerYCoordinate)
 	if (!this->AggroFlag)
 		return;
 
-	std::vector<std::vector<int>> intMap(MaxX, std::vector<int>(MaxY, 0));
+	std::vector<std::vector<int>> intMap(Util::MAX_X, std::vector<int>(Util::MAX_Y, 0));
 	intMap = this->TileToInt(map);
 
 	const std::vector<PointBFS> result = FindShortestPath(

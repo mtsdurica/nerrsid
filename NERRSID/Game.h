@@ -14,7 +14,7 @@ private:
 	SDL_Window* GameWindow;
 	SDL_Renderer* GameRenderer;
 	Tilemap* TileMap;
-	Game(const int screenWidth, const int screenHeight);
+	Game(int screenWidth, int screenHeight);
 
 public:
 	~Game();
