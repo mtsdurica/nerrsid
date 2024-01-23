@@ -195,7 +195,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	Player player;
 	Game game(gameScreenWidth, gameScreenHeight);
 	UserInterface userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
-	bool gameIsRunning = false;
+	bool gameIsRunning = false, helpDisplayedFlag = false;
 	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTilemap()->GetTileMapTexture());
 	Map map;
 	if (!map.GenerateMap())
@@ -274,6 +274,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					//	// TODO: Add popup for confirmation of skipping move
 					//}
 					break;
+				case HelpKeypressHandled:
+					helpDisplayedFlag = !helpDisplayedFlag;
+					break;
 				case UnusedKeypressHandled:
 				case PlayerNavigationKeypressHandled:
 				case ScrollDownKeypressHandled:
@@ -329,6 +332,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case ScrollUpKeypressHandled:
 							menu.ScrollUp();
 							break;
+						case HelpKeypressHandled:
+							helpDisplayedFlag = !helpDisplayedFlag;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
 						case InventoryKeypressHandled:
@@ -336,7 +342,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, vendor, &menu, lastMessage);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, vendor, &menu, lastMessage, helpDisplayedFlag);
 			}
 			break;
 		}
@@ -380,6 +386,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case ScrollUpKeypressHandled:
 							menu.ScrollUp();
 							break;
+						case HelpKeypressHandled:
+							helpDisplayedFlag = !helpDisplayedFlag;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
 						case InventoryKeypressHandled:
@@ -387,7 +396,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage, false);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage, false, helpDisplayedFlag);
 			}
 			break;
 		}
@@ -431,6 +440,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case ScrollUpKeypressHandled:
 							menu.ScrollUp();
 							break;
+						case HelpKeypressHandled:
+							helpDisplayedFlag = !helpDisplayedFlag;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
 						case InventoryKeypressHandled:
@@ -438,7 +450,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, corpse, &menu, lastMessage, true);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, corpse, &menu, lastMessage, true, helpDisplayedFlag);
 			}
 			break;
 		}
@@ -474,6 +486,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case ScrollUpKeypressHandled:
 							menu.ScrollUp();
 							break;
+						case HelpKeypressHandled:
+							helpDisplayedFlag = !helpDisplayedFlag;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
 						case InventoryKeypressHandled:
@@ -481,12 +496,12 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, &menu, lastMessage);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, &menu, lastMessage, helpDisplayedFlag);
 			}
 			break;
 		}
 		default: break;
 		}
-		userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, lastMessage);
+		userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, lastMessage, helpDisplayedFlag);
 	}
 }

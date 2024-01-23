@@ -97,6 +97,8 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 		return InventoryKeypressHandled;
 	case SDLK_n:
 		return NextTurnKeypressHandled;
+	case SDLK_h:
+		return HelpKeypressHandled;
 	default:
 		break;
 	}
@@ -115,6 +117,8 @@ HandledEvent GameEventHandler::EntityInventoryKeypressHandler(const SDL_Event* e
 		return ExitKeypressHandled;
 	case SDLK_RETURN:
 		return EnterKeypressHandled;
+	case SDLK_h:
+		return HelpKeypressHandled;
 	default:
 		break;
 	}

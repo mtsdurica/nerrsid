@@ -164,5 +164,11 @@ SDL_Rect Tilemap::CharToRect(const char srcChar)
 		return HASH;
 	case '.':
 		return DOT;
+	case '-':
+		return MINUS;
+	case '&':
+		return AMPERSAND;
+	case '/':
+		return SLASH;
 	}
 }
