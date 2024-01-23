@@ -282,7 +282,10 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, 
 	if (entity->GetItemsInInventory())
 		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem);
 	else
-		this->DrawText(tilemapTexture, 46, 13, "Chest is empty");
+		if (isCorpse)
+			this->DrawText(tilemapTexture, 46, 13, "Corpse is looted");
+		else
+			this->DrawText(tilemapTexture, 46, 13, "Chest is empty");
 }
 
 void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem) const
