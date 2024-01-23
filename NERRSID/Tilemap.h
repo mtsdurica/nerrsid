@@ -73,6 +73,9 @@
 #define AT Tilemap::FindTile(0, 4)
 #define HASH Tilemap::FindTile(3, 2)
 #define DOT Tilemap::FindTile(14, 2)
+#define AMPERSAND Tilemap::FindTile(6, 2)
+#define MINUS Tilemap::FindTile(13, 2)
+#define SLASH Tilemap::FindTile(15, 2)
 
 
 

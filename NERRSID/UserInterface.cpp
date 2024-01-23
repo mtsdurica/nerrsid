@@ -252,6 +252,45 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 	}
 }
 
+void UserInterface::DrawHelp(SDL_Texture* tilemapTexture, const HelpType typeOfHelp) const
+{
+	this->DrawBox(tilemapTexture, 44, 23, 55, 14);
+	switch (typeOfHelp)
+	{
+	case InteractionHelp:
+		this->DrawText(tilemapTexture, 45, 24, "Up/Down/Left/Right Arrow - Move Player");
+		this->DrawText(tilemapTexture, 45, 25, "Enter - Interact with Game Entities");
+		this->DrawText(tilemapTexture, 45, 26, "I - Open Inventory");
+		this->DrawText(tilemapTexture, 45, 27, "H - Display Help");
+		this->DrawText(tilemapTexture, 45, 28, "Escape - Exit Game");
+		break;
+	case InventoryHelp:
+		this->DrawText(tilemapTexture, 45, 24, "Up/Down - Navigate through Inventory");
+		this->DrawText(tilemapTexture, 45, 25, "Enter - Equip Item");
+		this->DrawText(tilemapTexture, 45, 26, "I - Display Item Details");
+		this->DrawText(tilemapTexture, 45, 27, "D - Drop Item");
+		this->DrawText(tilemapTexture, 45, 28, "H - Display Help");
+		this->DrawText(tilemapTexture, 45, 29, "Escape - Exit Inventory");
+		break;
+	case VendorHelp:
+		this->DrawText(tilemapTexture, 45, 24, "Up/Down - Navigate through Inventory");
+		this->DrawText(tilemapTexture, 45, 25, "Enter - Buy Item");
+		this->DrawText(tilemapTexture, 45, 26, "I - Display Item Details");
+		this->DrawText(tilemapTexture, 45, 27, "H - Display Help");
+		this->DrawText(tilemapTexture, 45, 28, "Escape - Exit Inventory");
+		break;
+	case ChestHelp:
+	case CorpseHelp:
+		this->DrawText(tilemapTexture, 45, 24, "Up/Down - Navigate through Inventory");
+		this->DrawText(tilemapTexture, 45, 25, "Enter - Loot Item");
+		this->DrawText(tilemapTexture, 45, 26, "I - Display Item Details");
+		this->DrawText(tilemapTexture, 45, 28, "H - Display Help");
+		this->DrawText(tilemapTexture, 45, 29, "Escape - Exit Inventory");
+		break;
+	}
+}
+
+
 void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity, const int selectedItem, const int startingItem, const int endingItem) const
 {
 	this->DrawText(tilemapTexture, 45, 10, "Inventory: " + std::to_string(entity->GetItemsInInventory()));
@@ -352,18 +391,20 @@ void UserInterface::DrawPlayerCreationName(SDL_Texture* tilemapTexture, const st
 }
 
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,
-	Vendor* vendor, const Menu* menu, const std::string& message) const
+	Vendor* vendor, const Menu* menu, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
 	this->DrawMap(tilemapTexture, map);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
-	this->DrawEntityPopup(tilemapTexture, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
+	this->DrawEntityPopup(tilemapTexture, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), helpDisplayed);
 	this->DrawStatusBar(tilemapTexture, message);
+	if (helpDisplayed)
+		this->DrawHelp(tilemapTexture, VendorHelp);
 	SDL_RenderPresent(this->Renderer);
 }
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player,
-	Chest* chest, const Menu* menu, const std::string& message, const bool isCorpse) const
+	Chest* chest, const Menu* menu, const std::string& message, const bool isCorpse, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
 	this->DrawMap(tilemapTexture, map);
@@ -371,10 +412,15 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), isCorpse);
 	this->DrawStatusBar(tilemapTexture, message);
+	if (helpDisplayed)
+		if (isCorpse)
+			this->DrawHelp(tilemapTexture, CorpseHelp);
+		else
+			this->DrawHelp(tilemapTexture, CorpseHelp);
 	SDL_RenderPresent(this->Renderer);
 }
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, Player* player,
-	const Menu* menu, const std::string& message) const
+	const Menu* menu, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
 	this->DrawMap(tilemapTexture, map);
@@ -382,15 +428,19 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, P
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawEntityPopup(tilemapTexture, player, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
 	this->DrawStatusBar(tilemapTexture, message);
+	if (helpDisplayed)
+		this->DrawHelp(tilemapTexture, InventoryHelp);
 	SDL_RenderPresent(this->Renderer);
 }
 
-void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player, const std::string& message) const
+void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
 	this->DrawMap(tilemapTexture, map);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawStatusBar(tilemapTexture, message);
+	if (helpDisplayed)
+		this->DrawHelp(tilemapTexture, InteractionHelp);
 	SDL_RenderPresent(this->Renderer);
 }
