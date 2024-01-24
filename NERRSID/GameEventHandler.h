@@ -15,7 +15,8 @@ typedef enum HandledEvent
 	NextTurnKeypressHandled,
 	ScrollDownKeypressHandled,
 	ScrollUpKeypressHandled,
-	HelpKeypressHandled
+	HelpKeypressHandled,
+	DebugKeypressHandled
 } HandledEvent;
 
 class GameEventHandler

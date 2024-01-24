@@ -195,7 +195,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 	Player player;
 	Game game(gameScreenWidth, gameScreenHeight);
 	UserInterface userInterface(game.GetRenderer(), game.GetScreenWidth(), game.GetScreenHeight());
-	bool gameIsRunning = false, helpDisplayedFlag = false;
+	bool gameIsRunning = false, helpDisplayedFlag = false, debugMode = false; // TODO: REMOVE DEBUGMODE BEFORE SHIPPING
 	std::tie(gameIsRunning, player) = IntroSequence(&userInterface, game.GetTilemap()->GetTileMapTexture());
 	Map map;
 	if (!map.GenerateMap())
@@ -276,6 +276,9 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					break;
 				case HelpKeypressHandled:
 					helpDisplayedFlag = !helpDisplayedFlag;
+					break;
+				case DebugKeypressHandled:
+					debugMode = !debugMode;
 					break;
 				case UnusedKeypressHandled:
 				case PlayerNavigationKeypressHandled:
@@ -502,6 +505,6 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		}
 		default: break;
 		}
-		userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, lastMessage, helpDisplayedFlag);
+		userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, lastMessage, helpDisplayedFlag, debugMode);
 	}
 }

@@ -25,6 +25,7 @@ private:
 	int PlayerIntellect;
 	int PlayerTurn;
 	int PlayerMovesLeft;
+	int PlayerVisibilityRange;
 	Item* EquippedWeapon;
 	Item* EquippedHelmet;
 	Item* EquippedChestplate;
@@ -41,6 +42,7 @@ public:
 	int GetPlayerIntellect() const;
 	int GetPlayerTurn() const;
 	int GetPlayerMovesLeft() const;
+	int GetPlayerVisibilityRange() const;
 	Item* GetEquippedWeapon() const;
 	Item* GetEquippedHelmet() const;
 	Item* GetEquippedChestplate() const;
@@ -53,6 +55,7 @@ public:
 	void SetPlayerIntellect(int playerIntellect);
 	void SetPlayerTurn(int playerTurn);
 	void SetPlayerMovesLeft(int playerMovesLeft);
+	void SetPlayerVisibilityRange(int playerVisibilityRange);
 	void SetEquippedWeapon(Item* equippedWeapon);
 	void SetEquippedHelmet(Item* equippedHelmet);
 	void SetEquippedChestplate(Item* equippedChestplate);

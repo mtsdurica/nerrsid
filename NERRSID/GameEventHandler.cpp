@@ -99,6 +99,8 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 		return NextTurnKeypressHandled;
 	case SDLK_h:
 		return HelpKeypressHandled;
+	case SDLK_q:
+		return DebugKeypressHandled;
 	default:
 		break;
 	}
