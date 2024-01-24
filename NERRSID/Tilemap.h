@@ -74,8 +74,10 @@
 #define HASH Tilemap::FindTile(3, 2)
 #define DOT Tilemap::FindTile(14, 2)
 #define AMPERSAND Tilemap::FindTile(6, 2)
+#define PLUS Tilemap::FindTile(11, 2)
 #define MINUS Tilemap::FindTile(13, 2)
 #define SLASH Tilemap::FindTile(15, 2)
+#define DOUBLE_ARROW_RIGHT Tilemap::FindTile(15, 10)
 
 
 

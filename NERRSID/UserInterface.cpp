@@ -23,6 +23,26 @@ UserInterface::~UserInterface()
 	SDL_DestroyRenderer(this->Renderer);
 }
 
+void UserInterface::SetTextureToWhite(SDL_Texture* tilemapTexture)
+{
+	SDL_SetTextureColorMod(tilemapTexture, 255, 255, 255);
+}
+
+void UserInterface::SetTextureToRed(SDL_Texture* tilemapTexture)
+{
+	SDL_SetTextureColorMod(tilemapTexture, 255, 0, 0);
+}
+
+void UserInterface::SetTextureToGreen(SDL_Texture* tilemapTexture)
+{
+	SDL_SetTextureColorMod(tilemapTexture, 0, 255, 0);
+}
+
+void UserInterface::SetTextureToBlue(SDL_Texture* tilemapTexture)
+{
+	SDL_SetTextureColorMod(tilemapTexture, 0, 0, 255);
+}
+
 void UserInterface::RefreshUserInterface() const
 {
 	SDL_SetRenderDrawColor(this->Renderer, 0, 0, 0, 0);
@@ -102,7 +122,7 @@ void UserInterface::DrawPlayerInfo(SDL_Texture* tilemapTexture, const Player* pl
 	this->DrawText(tilemapTexture, 72, 2, "Moves left: " + std::to_string(player->GetPlayerMovesLeft()));
 }
 
-void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map, const Player* player, bool debugMode) const
+void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map, const Player* player, const bool debugMode) const
 {
 	const SDL_Rect wallTile = HASH;
 	const SDL_Rect walkableTile = SPACE;
@@ -276,11 +296,11 @@ std::string UserInterface::DrawAnimatedText(SDL_Texture* tilemapTexture, const i
 	return textTmp;
 }
 
-void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<Item, 50>* inventory, const int itemsInInventory, const int selectedItem, const int startingItem, int endingItem, const bool itemDetails) const
+void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, const Player* player, std::array<Item, 50>* inventory, const int itemsInInventory, const int selectedItem, const int startingItem, int endingItem, const bool itemDetails) const
 {
 	if (itemsInInventory <= endingItem)
 		endingItem = itemsInInventory;
-	int positionOfCursor = 0;
+	int positionOfCursor = 0, strengthDelta = 0, dexterityDelta = 0, intellectDelta = 0;
 	for (int i = startingItem; i < endingItem; i++)
 	{
 		// Drawing cursor
@@ -298,8 +318,91 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 				this->DrawText(tilemapTexture, 1, 6, "Dexterity: " + std::to_string(inventory->at(i).GetItemBonusDexterity()));
 				this->DrawText(tilemapTexture, 1, 7, "Intellect: " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
 			}
+			// Calculate stats without item item of the selected class
+			int baseStrength = player->GetPlayerStrength();
+			int baseDexterity = player->GetPlayerDexterity();
+			int baseIntellect = player->GetPlayerIntellect();
+			switch (inventory->at(i).GetItemClass())
+			{
+			case Weapon:
+				if (player->GetEquippedWeapon())
+				{
+					baseStrength = player->GetPlayerStrength() - player->GetEquippedWeapon()->GetItemBonusStrength();
+					baseDexterity = player->GetPlayerDexterity() - player->GetEquippedWeapon()->GetItemBonusDexterity();
+					baseIntellect = player->GetPlayerIntellect() - player->GetEquippedWeapon()->GetItemBonusIntellect();
+				}
+				break;
+			case Helmet:
+				if (player->GetEquippedHelmet())
+				{
+					baseStrength = player->GetPlayerStrength() - player->GetEquippedHelmet()->GetItemBonusStrength();
+					baseDexterity = player->GetPlayerDexterity() - player->GetEquippedHelmet()->GetItemBonusDexterity();
+					baseIntellect = player->GetPlayerIntellect() - player->GetEquippedHelmet()->GetItemBonusIntellect();
+				}
+				break;
+			case Chestplate:
+				if (player->GetEquippedChestplate())
+				{
+					baseStrength = player->GetPlayerStrength() - player->GetEquippedChestplate()->GetItemBonusStrength();
+					baseDexterity = player->GetPlayerDexterity() - player->GetEquippedChestplate()->GetItemBonusDexterity();
+					baseIntellect = player->GetPlayerIntellect() - player->GetEquippedChestplate()->GetItemBonusIntellect();
+				}
+				break;
+			case Leggings:
+				if (player->GetEquippedLeggings())
+				{
+					baseStrength = player->GetPlayerStrength() - player->GetEquippedLeggings()->GetItemBonusStrength();
+					baseDexterity = player->GetPlayerDexterity() - player->GetEquippedLeggings()->GetItemBonusDexterity();
+					baseIntellect = player->GetPlayerIntellect() - player->GetEquippedLeggings()->GetItemBonusIntellect();
+					break;
+				}
+			case UndefinedItemClass:
+				break;
+			}
+
+			strengthDelta = baseStrength + inventory->at(i).GetItemBonusStrength();
+			dexterityDelta = baseDexterity + inventory->at(i).GetItemBonusDexterity();
+			intellectDelta = baseIntellect + inventory->at(i).GetItemBonusIntellect();
+
+			SDL_Texture* tmp = SDL_CreateTextureFromSurface(this->Renderer, SDL_LoadBMP("tilemap.bmp"));
+			SDL_Rect doubleArrowRight = DOUBLE_ARROW_RIGHT;
+			if (strengthDelta > player->GetPlayerStrength())
+			{
+				this->SetTextureToGreen(tmp);
+			}
+			else if (strengthDelta < player->GetPlayerStrength())
+			{
+				this->SetTextureToRed(tmp);
+			}
+			SDL_RenderCopy(this->Renderer, tmp, &doubleArrowRight, &this->UserInterfaceRect[57 + static_cast<int>(std::to_string(player->GetPlayerStrength()).length())][6]);
+			this->DrawText(tmp, 57 + static_cast<int>(std::to_string(player->GetPlayerStrength()).length()) + 1, 6, std::to_string(strengthDelta));
+			this->SetTextureToWhite(tmp);
+
+			if (dexterityDelta > player->GetPlayerDexterity())
+			{
+				this->SetTextureToGreen(tmp);
+			}
+			else if (dexterityDelta < player->GetPlayerDexterity())
+			{
+				this->SetTextureToRed(tmp);
+			}
+			SDL_RenderCopy(this->Renderer, tmp, &doubleArrowRight, &this->UserInterfaceRect[57 + static_cast<int>(std::to_string(player->GetPlayerDexterity()).length())][7]);
+			this->DrawText(tmp, 57 + static_cast<int>(std::to_string(player->GetPlayerDexterity()).length()) + 1, 7, std::to_string(dexterityDelta));
+			this->SetTextureToWhite(tmp);
+
+			if (intellectDelta > player->GetPlayerIntellect())
+			{
+				this->SetTextureToGreen(tmp);
+			}
+			else if (intellectDelta < player->GetPlayerIntellect())
+			{
+				this->SetTextureToRed(tmp);
+			}
+			SDL_RenderCopy(this->Renderer, tmp, &doubleArrowRight, &this->UserInterfaceRect[57 + static_cast<int>(std::to_string(player->GetPlayerIntellect()).length())][8]);
+			this->DrawText(tmp, 57 + static_cast<int>(std::to_string(player->GetPlayerIntellect()).length()) + 1, 8, std::to_string(intellectDelta));
+			SDL_DestroyTexture(tmp);
 		}
-		// Checking if item name is not longer than 20 characters, if yes, only 20 characters will be displayed
+		// Checking if item name is not longer than 25 characters, if yes, only 25 characters will be displayed
 		std::string tempItemName = inventory->at(i).GetItemName();
 		if (inventory->at(i).GetItemName().length() > 25)
 			tempItemName = tempItemName.substr(0, 25);
@@ -367,13 +470,13 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity,
 	{
 		if (itemDetails)
 			this->DrawItemDetailsBorder(tilemapTexture);
-		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
+		this->DrawInventoryItems(tilemapTexture, entity, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
 	}
 	else
 		this->DrawText(tilemapTexture, 46, 13, "No items in inventory");
 }
 
-void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, const int selectedItem, const int startingItem, const int endingItem, const bool isCorpse, const bool itemDetails) const
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, const Player* player, Chest* entity, const int selectedItem, const int startingItem, const int endingItem, const bool isCorpse, const bool itemDetails) const
 {
 	std::string entityTitle;
 	if (isCorpse)
@@ -390,7 +493,7 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, 
 	{
 		if (itemDetails)
 			this->DrawItemDetailsBorder(tilemapTexture);
-		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
+		this->DrawInventoryItems(tilemapTexture, player, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
 	}
 	else
 		if (isCorpse)
@@ -399,7 +502,7 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, 
 			this->DrawText(tilemapTexture, 46, 13, "Chest is empty");
 }
 
-void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem, const bool itemDetails) const
+void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, const Player* player, Vendor* entity, const int selectedItem, const int startingItem, const int endingItem, const bool itemDetails) const
 {
 	this->DrawText(tilemapTexture, 45, 10, "Vendor " + entity->GetName() + ": " + std::to_string(entity->GetItemsInInventory()));
 	this->DrawText(tilemapTexture, 46, 11, "Name:");
@@ -411,7 +514,7 @@ void UserInterface::DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity,
 	{
 		if (itemDetails)
 			this->DrawItemDetailsBorder(tilemapTexture);
-		this->DrawInventoryItems(tilemapTexture, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
+		this->DrawInventoryItems(tilemapTexture, player, entity->GetInventory(), entity->GetItemsInInventory(), selectedItem, startingItem, endingItem, itemDetails);
 	}
 	else
 		this->DrawText(tilemapTexture, 46, 13, "No items for sale");
@@ -430,7 +533,7 @@ void UserInterface::DrawGameLogo(SDL_Texture* tilemapTexture) const
 	this->DrawText(tilemapTexture, 20, 8, " ## # #  #######  #######  #######   #####    ##     ##  ##");
 	this->DrawText(tilemapTexture, 20, 9, " ## ###   ##       ####     ####         ##   ##     ##  ##");
 	this->DrawText(tilemapTexture, 20, 10, " ##  ##   ##  ##   ## ##    ## ##   #    ##   ##     ## ##");
-	this->DrawText(tilemapTexture, 20, 11, "###   #  ######   ###  ##  ###  ##   #####   ##    ####");
+	this->DrawText(tilemapTexture, 20, 11, "###   #  ######   ###  ##  ###  ##   #####   ##     ####");
 }
 
 void UserInterface::DrawStartupMenu(SDL_Texture* tilemapTexture, const int selectedItem) const
@@ -476,7 +579,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 		//this->DrawPlayer(tilemapTexture, player);
 	}
 	this->DrawPlayerInfo(tilemapTexture, player);
-	this->DrawEntityPopup(tilemapTexture, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), helpDisplayed, itemDetails);
+	this->DrawEntityPopup(tilemapTexture, player, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), helpDisplayed, itemDetails);
 	this->DrawStatusBar(tilemapTexture, message);
 	if (helpDisplayed)
 		this->DrawHelp(tilemapTexture, VendorHelp);
@@ -493,7 +596,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 		//this->DrawPlayer(tilemapTexture, player);
 	}
 	this->DrawPlayerInfo(tilemapTexture, player);
-	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), isCorpse, itemDetails);
+	this->DrawEntityPopup(tilemapTexture, player, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), isCorpse, itemDetails);
 	this->DrawStatusBar(tilemapTexture, message);
 	if (helpDisplayed)
 		if (isCorpse)
