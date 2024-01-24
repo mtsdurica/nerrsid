@@ -13,16 +13,10 @@ typedef enum Tiles
 	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile, EnemyTile, CorpseTile, StairsTile
 } Tiles;
 
-typedef struct Point
-{
-	UINT_CHANGEABLE X;
-	UINT_CHANGEABLE Y;
-} Point;
-
 typedef struct Wall
 {
-	Point Start; // Start point of the wall
-	Point End;   // End point of the wall
+	Util::Point Start; // Start point of the wall
+	Util::Point End;   // End point of the wall
 } Wall;
 
 typedef struct Room
@@ -33,7 +27,7 @@ typedef struct Room
 	Wall Right;          // Right wall
 	struct Room* Child1; // Left/top child
 	struct Room* Child2; // Right/Bottom child
-	Point Center;        // Center point of the room
+	Util::Point Center;        // Center point of the room
 } Room;
 
 class Map
@@ -50,7 +44,7 @@ private:
 	int NumberOfCorpses;
 	void DrawHorizontalWall(const Wall* newWall);
 	void DrawVerticalWall(const Wall* newWall);
-	static Point GetChildCenter(const Room* childRoom);
+	static Util::Point GetChildCenter(const Room* childRoom);
 	void GenerateHorizontalSplit(Room* r);
 	void GenerateVerticalSplit(Room* r);
 	Room InitializeBase();

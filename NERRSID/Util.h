@@ -2,6 +2,7 @@
 
 #include <random>
 
+#define INT_CHANGEABLE int8_t // Changeable data type if needed to generate larger maps than 0-255
 #define UINT_CHANGEABLE uint8_t // Changeable data type if needed to generate larger maps than 0-255
 
 namespace Util
@@ -27,4 +28,13 @@ namespace Util
 		std::uniform_int_distribution<std::mt19937::result_type> uniformDistribution(minNum, maxNum);
 		return static_cast<int>(uniformDistribution(randomNumberGenerator));
 	}
+
+	typedef struct Point
+	{
+		INT_CHANGEABLE X;
+		INT_CHANGEABLE Y;
+
+		Point(const INT_CHANGEABLE coordX, const INT_CHANGEABLE coordY) : X(static_cast<INT_CHANGEABLE>(coordX)), Y(static_cast<INT_CHANGEABLE>(coordY)) {}
+		Point() = default;
+	} Point;
 }

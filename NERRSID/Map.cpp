@@ -23,9 +23,9 @@ void Map::DrawVerticalWall(const Wall* newWall)
 		MapTiles[newWall->Start.X][y] = WallTile;
 }
 
-Point Map::GetChildCenter(const Room* childRoom)
+Util::Point Map::GetChildCenter(const Room* childRoom)
 {
-	Point center;
+	Util::Point center;
 	center.X = childRoom->Top.Start.X + (childRoom->Top.End.X - childRoom->Top.Start.X) / 2;
 	center.Y = childRoom->Right.Start.Y + (childRoom->Right.End.Y - childRoom->Right.Start.Y) / 2;
 	return center;
@@ -41,7 +41,7 @@ void Map::GenerateHorizontalSplit(Room* r)
 
 	const UINT_CHANGEABLE randY = Util::RandomChangeableIntInRange(r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2), r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2));
 
-	const Wall newSplit = { {r->Top.Start.X, randY}, {r->Top.End.X, randY} };
+	const Wall newSplit = { Util::Point(r->Top.Start.X, randY), Util::Point(r->Top.End.X, randY) };
 
 	Room child1 =
 	{ r->Top, newSplit, {r->Top.Start, newSplit.Start}, {r->Top.End, newSplit.End}, nullptr, nullptr, {0, 0} };
@@ -73,7 +73,7 @@ void Map::GenerateVerticalSplit(Room* r)
 
 	const UINT_CHANGEABLE randX = Util::RandomChangeableIntInRange(r->Top.Start.X + Util::PSEUDO_ROOM_SIZE, r->Top.End.X - Util::PSEUDO_ROOM_SIZE);
 
-	const Wall newSplit = { {randX, r->Top.Start.Y}, {randX, r->Bot.Start.Y} }; // third thingy maybe wrong
+	const Wall newSplit = { Util::Point(randX, r->Top.Start.Y), Util::Point(randX, r->Bot.Start.Y) }; // third thingy maybe wrong
 
 	Room child1 =
 	{ {r->Top.Start, newSplit.Start}, {r->Bot.Start, newSplit.End}, r->Left, newSplit, nullptr, nullptr, {0, 0} };
@@ -97,8 +97,16 @@ void Map::GenerateVerticalSplit(Room* r)
 
 Room Map::InitializeBase()
 {
-	constexpr Room newRoom =
-	{ {{0, 0}, {Util::MAX_X - 1, 0}}, {{0, Util::MAX_Y - 1}, {Util::MAX_X - 1, Util::MAX_Y - 1}}, {{0, 0}, {0, Util::MAX_Y - 1}}, {{Util::MAX_X - 1, 0}, {Util::MAX_X - 1, Util::MAX_Y - 1}}, nullptr, nullptr, {0, 0} };
+	const Room newRoom =
+	{
+		{Util::Point(0, 0), Util::Point(Util::MAX_X - 1, 0)},
+		{Util::Point(0, Util::MAX_Y - 1), Util::Point(Util::MAX_X - 1, Util::MAX_Y - 1)},
+		{Util::Point(0, 0), Util::Point(0, Util::MAX_Y - 1)},
+		{Util::Point(Util::MAX_X - 1, 0), Util::Point(Util::MAX_X - 1, Util::MAX_Y - 1)},
+		nullptr,
+		nullptr,
+		Util::Point(0, 0)
+	};
 	DrawHorizontalWall(&newRoom.Top);
 	DrawHorizontalWall(&newRoom.Bot);
 	DrawVerticalWall(&newRoom.Left);

@@ -2,14 +2,9 @@
 #include <vector>
 
 #include "Entity.h"
+#include "Util.h"
 
 class Map;
-
-struct PointBFS
-{
-	int row, col;
-	PointBFS(int r, int c) : row(r), col(c) {}
-};
 
 class Enemy final : public Entity
 {
@@ -18,7 +13,7 @@ private:
 	bool AggroFlag;
 	static bool IsValidMove(const std::vector<std::vector<int>>& map, int row, int col);
 	static std::vector<std::vector<int>> TileToInt(Map* map);
-	std::vector<PointBFS> FindShortestPath(const std::vector<std::vector<int>>& map, PointBFS start, PointBFS end) const;
+	std::vector<Util::Point> FindShortestPath(const std::vector<std::vector<int>>& map, Util::Point start, Util::Point end) const;
 public:
 	Enemy();
 	Enemy(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);

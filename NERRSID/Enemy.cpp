@@ -18,7 +18,7 @@ Enemy::Enemy(std::string name, const int gold, const int itemsInInventory, const
 
 std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 {
-	std::vector<std::vector<int>> intMap(Util::MAX_Y, std::vector<int>(Util::MAX_X, 0));
+	std::vector<std::vector<int>> intMap(Util::MAX_X, std::vector<int>(Util::MAX_Y, 0));
 
 	for (int x = 0; x < Util::MAX_X; x++)
 	{
@@ -30,7 +30,7 @@ std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 				|| map->GetMapTiles()[x][y] == CorpseTile
 				|| map->GetMapTiles()[x][y] == StairsTile)
 			{
-				intMap[y][x] = 1;
+				intMap[x][y] = 1;
 			}
 		}
 	}
@@ -39,7 +39,7 @@ std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 
 bool Enemy::IsValidMove(const std::vector<std::vector<int>>& map, const int row, const int col)
 {
-	return row >= 0 && row < Util::MAX_X && col >= 0 && col < Util::MAX_Y && map[row][col] == 1;
+	return row >= 0 && row < Util::MAX_X && col >= 0 && col < Util::MAX_Y && map[col][row] == 1;
 }
 
 bool Enemy::GetAggroFlag() const
@@ -53,31 +53,31 @@ void Enemy::SetAggroFlag(const bool aggroFlag)
 }
 
 // TODO: Needs rework big time
-std::vector<PointBFS> Enemy::FindShortestPath(const std::vector<std::vector<int>>& map, const PointBFS start, const PointBFS end) const
+std::vector<Util::Point> Enemy::FindShortestPath(const std::vector<std::vector<int>>& map, const Util::Point start, const Util::Point end) const
 {
 	const std::vector<int> dr = { 1, -1, 0, 0 };
 	const std::vector<int> dc = { 0, 0, 1, -1 };
 
 	std::vector<std::vector<bool>> visited(map.size(), std::vector<bool>(map[0].size(), false));
-	std::vector<std::vector<PointBFS>> previous(map.size(), std::vector<PointBFS>(map[0].size(), PointBFS(-1, -1)));
+	std::vector<std::vector<Util::Point>> previous(map.size(), std::vector<Util::Point>(map[0].size(), Util::Point(-1, -1)));
 
-	std::queue<PointBFS> q;
+	std::queue<Util::Point> q;
 	q.push(start);
-	visited[start.row][start.col] = true;
+	visited[start.X][start.Y] = true;
 
 	while (!q.empty()) {
-		PointBFS current = q.front();
+		Util::Point current = q.front();
 		q.pop();
 
-		if (current.row == end.row && current.col == end.col) {
+		if (current.X == end.X && current.Y == end.Y) {
 			// Reconstruct the path from 'end' to 'start'
-			std::stack<PointBFS> path;
-			while (current.row != -1 && current.col != -1) {
+			std::stack<Util::Point> path;
+			while (current.X != -1 && current.Y != -1) {
 				path.push(current);
-				current = previous[current.row][current.col];
+				current = previous[current.X][current.Y];
 			}
 
-			std::vector<PointBFS> result;
+			std::vector<Util::Point> result;
 			while (!path.empty()) {
 				result.push_back(path.top());
 				path.pop();
@@ -88,13 +88,13 @@ std::vector<PointBFS> Enemy::FindShortestPath(const std::vector<std::vector<int>
 		}
 
 		for (int i = 0; i < 4; ++i) {
-			int newRow = current.row + dr[i];
-			int newCol = current.col + dc[i];
+			int newRow = current.Y + dr[i];
+			int newCol = current.X + dc[i];
 
-			if (this->IsValidMove(map, newRow, newCol) && !visited[newRow][newCol]) {
-				visited[newRow][newCol] = true;
-				previous[newRow][newCol] = current;
-				q.emplace(newRow, newCol);
+			if (this->IsValidMove(map, newRow, newCol) && !visited[newCol][newRow]) {
+				visited[newCol][newRow] = true;
+				previous[newCol][newRow] = current;
+				q.emplace(newCol, newRow);
 			}
 		}
 	}
@@ -120,17 +120,17 @@ void Enemy::Move(Map* map, int playerXCoordinate, int playerYCoordinate)
 	std::vector<std::vector<int>> intMap(Util::MAX_X, std::vector<int>(Util::MAX_Y, 0));
 	intMap = this->TileToInt(map);
 
-	const std::vector<PointBFS> result = FindShortestPath(
-		intMap, { this->PositionYCoordinate,this->PositionXCoordinate, }, { playerYCoordinate, playerXCoordinate });
+	const std::vector<Util::Point> result = FindShortestPath(
+		intMap, Util::Point(this->PositionXCoordinate, this->PositionYCoordinate), Util::Point(playerXCoordinate, playerYCoordinate));
 	if (!result.empty()) {
-		const PointBFS move = result.at(0);
-		if (map->GetMapTiles()[move.col][move.row] == WalkableTile)
+		const Util::Point move = result.at(0);
+		if (map->GetMapTiles()[move.X][move.Y] == WalkableTile)
 		{
 			map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = WalkableTile;
-			this->PositionXCoordinate = move.col;
-			this->PositionYCoordinate = move.row;
+			this->PositionXCoordinate = move.X;
+			this->PositionYCoordinate = move.Y;
 			map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = EnemyTile;
-			std::cerr << move.col << " " << move.row << std::endl;
+			std::cerr << move.X << " " << move.Y << std::endl;
 		}
 	}
 }
