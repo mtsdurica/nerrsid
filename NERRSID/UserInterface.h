@@ -3,11 +3,9 @@
 #include <SDL.h>
 #include <tuple>
 
-#include "GameEvent.h"
 #include "Map.h"
 #include "Menu.h"
 #include "Player.h"
-#include "Tilemap.h"
 #include "Util.h"
 
 typedef enum CornerType
@@ -45,7 +43,7 @@ public:
 	void RefreshUserInterface() const;
 	void DrawPlayer(SDL_Texture* tilemapTexture, const Player* player) const;
 	void DrawPlayerInfo(SDL_Texture* tilemapTexture, const Player* player) const;
-	void DrawMap(SDL_Texture* tilemapTexture, Map* map) const;
+	void DrawMap(SDL_Texture* tilemapTexture, Map* map, const Player* player) const;
 	void DrawText(SDL_Texture*, int textPositionX, int textPositionY, const std::string& text) const;
 	std::string DrawAnimatedText(SDL_Texture*, int textPositionX, int textPositionY, const std::string& text, int lastUpdate) const;
 	void DrawStatusBar(SDL_Texture* tilemapTexture, const std::string& message) const;

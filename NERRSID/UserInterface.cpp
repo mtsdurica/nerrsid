@@ -1,7 +1,8 @@
 #include <string>
 
-#include "UserInterface.h"
 #include <iostream>
+#include "UserInterface.h"
+#include "Tilemap.h"
 
 UserInterface::UserInterface(SDL_Renderer* renderer, const int userInterfaceRectWidth, const int userInterfaceRectHeight) : Renderer(renderer)
 {
@@ -101,7 +102,7 @@ void UserInterface::DrawPlayerInfo(SDL_Texture* tilemapTexture, const Player* pl
 	this->DrawText(tilemapTexture, 72, 2, "Moves left: " + std::to_string(player->GetPlayerMovesLeft()));
 }
 
-void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
+void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map, const Player* player) const
 {
 	const SDL_Rect wallTile = HASH;
 	const SDL_Rect walkableTile = SPACE;
@@ -115,31 +116,41 @@ void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 	{
 		for (int y = 0; y < Util::MAX_Y; y++)
 		{
-			switch (map->GetMapTiles()[x][y])
+			/// Calculate the 5x5 square around the player tile
+			const int playerVisiblityRange = player->GetPlayerVisibilityRange();
+			if (x <= player->GetPositionXCoordinate() + playerVisiblityRange && x >= player->GetPositionXCoordinate() - playerVisiblityRange)
 			{
-			case Util::WallTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &wallTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::WalkableTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &walkableTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::VendorTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &vendorTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::ChestTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &chestTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::StairsTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &stairsTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::EnemyTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &enemyTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::CorpseTile:
-				SDL_RenderCopy(this->Renderer, tilemapTexture, &corpseTile, &this->UserInterfaceRect[x][y]);
-				break;
-			case Util::PlayerTile:
-				break;
+				if (y <= player->GetPositionYCoordinate() + playerVisiblityRange && y >= player->GetPositionYCoordinate() - playerVisiblityRange)
+				{
+					/// TODO: Add if statement to check if currently drawn tile is not behind a wall
+					switch (map->GetMapTiles()[x][y])
+					{
+					case Util::WallTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &wallTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::WalkableTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &walkableTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::VendorTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &vendorTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::ChestTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &chestTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::StairsTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &stairsTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::EnemyTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &enemyTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::CorpseTile:
+						SDL_RenderCopy(this->Renderer, tilemapTexture, &corpseTile, &this->UserInterfaceRect[x][y]);
+						break;
+					case Util::PlayerTile:
+						break;
+
+					}
+				}
 			}
 		}
 	}
@@ -394,7 +405,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 	Vendor* vendor, const Menu* menu, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
-	this->DrawMap(tilemapTexture, map);
+	this->DrawMap(tilemapTexture, map, player);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawEntityPopup(tilemapTexture, vendor, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), helpDisplayed);
@@ -407,7 +418,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, c
 	Chest* chest, const Menu* menu, const std::string& message, const bool isCorpse, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
-	this->DrawMap(tilemapTexture, map);
+	this->DrawMap(tilemapTexture, map, player);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawEntityPopup(tilemapTexture, chest, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem(), isCorpse);
@@ -423,7 +434,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, P
 	const Menu* menu, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
-	this->DrawMap(tilemapTexture, map);
+	this->DrawMap(tilemapTexture, map, player);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawEntityPopup(tilemapTexture, player, menu->GetSelectedItem(), menu->GetStartingItem(), menu->GetEndingItem());
@@ -436,7 +447,7 @@ void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, P
 void UserInterface::UpdateUserInterface(SDL_Texture* tilemapTexture, Map* map, const Player* player, const std::string& message, const bool helpDisplayed) const
 {
 	this->RefreshUserInterface();
-	this->DrawMap(tilemapTexture, map);
+	this->DrawMap(tilemapTexture, map, player);
 	this->DrawPlayer(tilemapTexture, player);
 	this->DrawPlayerInfo(tilemapTexture, player);
 	this->DrawStatusBar(tilemapTexture, message);
