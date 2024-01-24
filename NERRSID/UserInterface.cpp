@@ -117,28 +117,28 @@ void UserInterface::DrawMap(SDL_Texture* tilemapTexture, Map* map) const
 		{
 			switch (map->GetMapTiles()[x][y])
 			{
-			case WallTile:
+			case Util::WallTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &wallTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case WalkableTile:
+			case Util::WalkableTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &walkableTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case VendorTile:
+			case Util::VendorTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &vendorTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case ChestTile:
+			case Util::ChestTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &chestTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case StairsTile:
+			case Util::StairsTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &stairsTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case EnemyTile:
+			case Util::EnemyTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &enemyTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case CorpseTile:
+			case Util::CorpseTile:
 				SDL_RenderCopy(this->Renderer, tilemapTexture, &corpseTile, &this->UserInterfaceRect[x][y]);
 				break;
-			case PlayerTile:
+			case Util::PlayerTile:
 				break;
 			}
 		}
@@ -237,8 +237,8 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<I
 		}
 		/// Checking if item name is not longer than 20 characters, if yes, only 20 characters will be displayed
 		std::string tempItemName = inventory->at(i).GetItemName();
-		if (inventory->at(i).GetItemName().length() > 20)
-			tempItemName = tempItemName.substr(20, tempItemName.length() - 20);
+		if (inventory->at(i).GetItemName().length() > 25)
+			tempItemName = tempItemName.substr(0, 25);
 		this->DrawText(tilemapTexture, 46, 13 + positionOfCursor, tempItemName);
 		this->DrawText(tilemapTexture, 68, 13 + positionOfCursor, std::to_string(inventory->at(i).GetItemBonusStrength()) + " " + std::to_string(inventory->at(i).GetItemBonusDexterity()) + " " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
 		if (inventory->at(i).GetIsEquipped())

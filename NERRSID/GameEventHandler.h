@@ -3,6 +3,7 @@
 #include "GameEvent.h"
 #include "Map.h"
 #include "Player.h"
+#include "Util.h"
 
 typedef enum HandledEvent
 {
@@ -28,7 +29,7 @@ public:
 	/// <param name="eventToBeHandledSDL">SDL event containing the keypress</param>
 	/// <param name="mapTiles">Map tiles</param>
 	/// <returns>Handled keypress</returns>
-	static HandledEvent KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles);
+	static HandledEvent KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Util::Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles);
 	/// <summary>
 	/// Vendor popup keypress handler
 	/// </summary>

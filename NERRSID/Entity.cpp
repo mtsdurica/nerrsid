@@ -4,15 +4,15 @@ Entity::Entity() : Gold(-1), ItemsInInventory(-1), MaximumItemsInInventory(-1), 
 {
 }
 
-Entity::Entity(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate)
+Entity::Entity(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate, Util::Tiles standingOnTile)
 	: Name(std::move(name)), Gold(gold), ItemsInInventory(itemsInInventory), MaximumItemsInInventory(maximumItemsInInventory), PositionXCoordinate(positionXCoordinate),
-	PositionYCoordinate(positionYCoordinate), IdleStatus(true)
+	PositionYCoordinate(positionYCoordinate), IdleStatus(true), StandingOnTile(standingOnTile)
 {
 }
 
-Entity::Entity(const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate)
+Entity::Entity(const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate, Util::Tiles standingOnTile)
 	: Gold(gold), ItemsInInventory(itemsInInventory), MaximumItemsInInventory(maximumItemsInInventory), PositionXCoordinate(positionXCoordinate),
-	PositionYCoordinate(positionYCoordinate), IdleStatus(true)
+	PositionYCoordinate(positionYCoordinate), IdleStatus(true), StandingOnTile(standingOnTile)
 {
 }
 
@@ -58,6 +58,11 @@ bool Entity::GetIdleStatus() const
 	return this->IdleStatus;
 }
 
+Util::Tiles Entity::GetStandingOnTile() const
+{
+	return this->StandingOnTile;
+}
+
 void Entity::SetName(const std::string& name)
 {
 	this->Name = name;
@@ -97,4 +102,9 @@ void Entity::SetPositionYCoordinate(const int positionYCoordinate)
 void Entity::SetIdleStatus(const bool idleStatus)
 {
 	this->IdleStatus = idleStatus;
+}
+
+void Entity::SetStandingOnTile(const Util::Tiles standingOnTile)
+{
+	this->StandingOnTile = standingOnTile;
 }

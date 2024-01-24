@@ -1,7 +1,7 @@
 
 #include "GameEventHandler.h"
 
-HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles)
+HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& eventToBeHandledGame, const SDL_Event* eventToBeHandledSDL, const std::array<std::array<Util::Tiles, Util::MAX_Y>, Util::MAX_X>& mapTiles)
 {
 	/// TODO: Needs rework
 	if (eventToBeHandledGame.GetTypeOfEvent() == EnemyEvent)
@@ -16,12 +16,12 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 	case SDLK_UP:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
-			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == WalkableTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == VendorTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == ChestTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == StairsTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == EnemyTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == CorpseTile
+			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::VendorTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::ChestTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::StairsTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::EnemyTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() - 1] == Util::CorpseTile
 				)
 			{
 				player->SetIdleStatus(false);
@@ -35,12 +35,12 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 	case SDLK_DOWN:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
-			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == WalkableTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == VendorTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == ChestTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == StairsTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == EnemyTile
-				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == CorpseTile
+			if (mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::VendorTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::ChestTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::StairsTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::EnemyTile
+				|| mapTiles[player->GetPositionXCoordinate()][player->GetPositionYCoordinate() + 1] == Util::CorpseTile
 				)
 			{
 				player->SetIdleStatus(false);
@@ -54,12 +54,12 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 	case SDLK_LEFT:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
-			if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == WalkableTile
-				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == VendorTile
-				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == ChestTile
-				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == StairsTile
-				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == EnemyTile
-				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == CorpseTile
+			if (mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::VendorTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::ChestTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::StairsTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::EnemyTile
+				|| mapTiles[player->GetPositionXCoordinate() - 1][player->GetPositionYCoordinate()] == Util::CorpseTile
 				)
 			{
 				player->SetIdleStatus(false);
@@ -73,12 +73,12 @@ HandledEvent GameEventHandler::KeypressHandler(Player* player, const GameEvent& 
 	case SDLK_RIGHT:
 		if (player->GetPlayerMovesLeft() > 0)
 		{
-			if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == WalkableTile
-				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == VendorTile
-				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == ChestTile
-				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == StairsTile
-				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == EnemyTile
-				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == CorpseTile
+			if (mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::WalkableTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::VendorTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::ChestTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::StairsTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::EnemyTile
+				|| mapTiles[player->GetPositionXCoordinate() + 1][player->GetPositionYCoordinate()] == Util::CorpseTile
 				)
 			{
 				player->SetIdleStatus(false);
@@ -133,29 +133,29 @@ GameEvent GameEventHandler::CollisionHandler(const Player& player, Map map)
 
 	switch (mapTiles[player.GetPositionXCoordinate()][player.GetPositionYCoordinate()])
 	{
-	case VendorTile:
+	case Util::VendorTile:
 		collisionEvent.SetTypeOfEvent(VendorEvent);
 		collisionEvent.SetEventMessage("Press ENTER to interact with vendor");
 		break;
-	case ChestTile:
+	case Util::ChestTile:
 		collisionEvent.SetTypeOfEvent(ChestEvent);
 		collisionEvent.SetEventMessage("Press ENTER to loot chest");
 		break;
-	case StairsTile:
+	case Util::StairsTile:
 		collisionEvent.SetTypeOfEvent(StairsEvent);
 		collisionEvent.SetEventMessage("Press ENTER to traverse to lower level");
 		break;
-	case EnemyTile:
+	case Util::EnemyTile:
 		collisionEvent.SetTypeOfEvent(EnemyEvent);
 		collisionEvent.SetEventMessage("Press ENTER to slay enemy");
 		break;
-	case CorpseTile:
+	case Util::CorpseTile:
 		collisionEvent.SetTypeOfEvent(CorpseEvent);
 		collisionEvent.SetEventMessage("Press ENTER to loot corpse");
 		break;
-	case WallTile:
-	case PlayerTile:
-	case WalkableTile:
+	case Util::WallTile:
+	case Util::PlayerTile:
+	case Util::WalkableTile:
 		break;
 	}
 

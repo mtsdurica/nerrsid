@@ -241,7 +241,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 					{
 						Enemy* enemy = nullptr;
 						enemy = map.FindEnemy(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
-						Corpse corpse(enemy->GetPositionXCoordinate(), enemy->GetPositionYCoordinate());
+						Corpse corpse(enemy->GetPositionXCoordinate(), enemy->GetPositionYCoordinate(), enemy->GetStandingOnTile());
 						map.RemoveEnemy(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 						corpse.CreateInventory();
 						map.InsertCorpse(&corpse);

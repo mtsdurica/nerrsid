@@ -12,7 +12,7 @@ Enemy::Enemy() : Entity(), AggroFlag(false)
 }
 
 Enemy::Enemy(std::string name, const int gold, const int itemsInInventory, const int maximumItemsInInventory, const int positionXCoordinate, const int positionYCoordinate) : Entity(
-	std::move(name), gold, itemsInInventory, maximumItemsInInventory, positionXCoordinate, positionYCoordinate), AggroFlag(false)
+	std::move(name), gold, itemsInInventory, maximumItemsInInventory, positionXCoordinate, positionYCoordinate, Util::WalkableTile), AggroFlag(false)
 {
 }
 
@@ -24,11 +24,11 @@ std::vector<std::vector<int>> Enemy::TileToInt(Map* map)
 	{
 		for (int y = 0; y < Util::MAX_Y; y++)
 		{
-			if (map->GetMapTiles()[x][y] == WalkableTile
-				|| map->GetMapTiles()[x][y] == ChestTile
-				|| map->GetMapTiles()[x][y] == VendorTile
-				|| map->GetMapTiles()[x][y] == CorpseTile
-				|| map->GetMapTiles()[x][y] == StairsTile)
+			if (map->GetMapTiles()[x][y] == Util::WalkableTile
+				|| map->GetMapTiles()[x][y] == Util::ChestTile
+				|| map->GetMapTiles()[x][y] == Util::VendorTile
+				|| map->GetMapTiles()[x][y] == Util::CorpseTile
+				|| map->GetMapTiles()[x][y] == Util::StairsTile)
 			{
 				intMap[x][y] = 1;
 			}
@@ -65,20 +65,24 @@ std::vector<Util::Point> Enemy::FindShortestPath(const std::vector<std::vector<i
 	q.push(start);
 	visited[start.X][start.Y] = true;
 
-	while (!q.empty()) {
+	while (!q.empty())
+	{
 		Util::Point current = q.front();
 		q.pop();
 
-		if (current.X == end.X && current.Y == end.Y) {
+		if (current.X == end.X && current.Y == end.Y)
+		{
 			// Reconstruct the path from 'end' to 'start'
 			std::stack<Util::Point> path;
-			while (current.X != -1 && current.Y != -1) {
+			while (current.X != -1 && current.Y != -1)
+			{
 				path.push(current);
 				current = previous[current.X][current.Y];
 			}
 
 			std::vector<Util::Point> result;
-			while (!path.empty()) {
+			while (!path.empty())
+			{
 				result.push_back(path.top());
 				path.pop();
 			}
@@ -87,11 +91,13 @@ std::vector<Util::Point> Enemy::FindShortestPath(const std::vector<std::vector<i
 			return result;
 		}
 
-		for (int i = 0; i < 4; ++i) {
+		for (int i = 0; i < 4; ++i)
+		{
 			int newRow = current.Y + dr[i];
 			int newCol = current.X + dc[i];
 
-			if (this->IsValidMove(map, newRow, newCol) && !visited[newCol][newRow]) {
+			if (this->IsValidMove(map, newRow, newCol) && !visited[newCol][newRow])
+			{
 				visited[newCol][newRow] = true;
 				previous[newCol][newRow] = current;
 				q.emplace(newCol, newRow);
@@ -103,7 +109,7 @@ std::vector<Util::Point> Enemy::FindShortestPath(const std::vector<std::vector<i
 	return {};
 }
 
-void Enemy::Move(Map* map, int playerXCoordinate, int playerYCoordinate)
+void Enemy::Move(Map* map, const int playerXCoordinate, const int playerYCoordinate)
 {
 	const int deltaX = this->PositionXCoordinate - playerXCoordinate;
 	const int deltaY = this->PositionYCoordinate - playerYCoordinate;
@@ -121,16 +127,34 @@ void Enemy::Move(Map* map, int playerXCoordinate, int playerYCoordinate)
 	intMap = this->TileToInt(map);
 
 	const std::vector<Util::Point> result = FindShortestPath(
-		intMap, Util::Point(this->PositionXCoordinate, this->PositionYCoordinate), Util::Point(playerXCoordinate, playerYCoordinate));
-	if (!result.empty()) {
+		intMap,
+		Util::Point(this->PositionXCoordinate, this->PositionYCoordinate),
+		Util::Point(playerXCoordinate, playerYCoordinate));
+	if (!result.empty())
+	{
 		const Util::Point move = result.at(0);
-		if (map->GetMapTiles()[move.X][move.Y] == WalkableTile)
+		map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = this->StandingOnTile;
+		// TODO: fix
+		switch (map->GetMapTiles()[move.X][move.Y])
 		{
-			map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = WalkableTile;
-			this->PositionXCoordinate = move.X;
-			this->PositionYCoordinate = move.Y;
-			map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = EnemyTile;
-			std::cerr << move.X << " " << move.Y << std::endl;
+		case Util::WalkableTile:
+			this->StandingOnTile = Util::WalkableTile;
+			break;
+		case Util::VendorTile:
+			this->StandingOnTile = Util::VendorTile;
+			break;
+		case Util::CorpseTile:
+			this->StandingOnTile = Util::CorpseTile;
+			break;
+		case Util::ChestTile:
+			this->StandingOnTile = Util::ChestTile;
+			break;
+		case Util::StairsTile:
+			this->StandingOnTile = Util::StairsTile;
+			break;
 		}
+		this->PositionXCoordinate = move.X;
+		this->PositionYCoordinate = move.Y;
+		map->GetMapTiles()[this->PositionXCoordinate][this->PositionYCoordinate] = Util::EnemyTile;
 	}
 }

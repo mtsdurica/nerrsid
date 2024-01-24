@@ -1,29 +1,27 @@
-#include <cstdlib>
-
 #include "Map.h"
 
 Map::Map() : NumberOfVendors(0), NumberOfChests(0), NumberOfEnemies(0), NumberOfCorpses(0)
 {
 	for (int x = 0; x < Util::MAX_X; x++)
 		for (int y = 0; y < Util::MAX_Y; y++)
-			MapTiles[x][y] = WalkableTile;
+			MapTiles[x][y] = Util::WalkableTile;
 }
 
 Map::~Map() = default;
 
-void Map::DrawHorizontalWall(const Wall* newWall)
+void Map::DrawHorizontalWall(const Util::Wall* newWall)
 {
-	for (UINT_CHANGEABLE x = newWall->Start.X; x <= newWall->End.X; x++)
-		MapTiles[x][newWall->Start.Y] = WallTile;
+	for (int x = newWall->Start.X; x <= newWall->End.X; x++)
+		MapTiles[x][newWall->Start.Y] = Util::WallTile;
 }
 
-void Map::DrawVerticalWall(const Wall* newWall)
+void Map::DrawVerticalWall(const Util::Wall* newWall)
 {
-	for (UINT_CHANGEABLE y = newWall->Start.Y; y <= newWall->End.Y; y++)
-		MapTiles[newWall->Start.X][y] = WallTile;
+	for (int y = newWall->Start.Y; y <= newWall->End.Y; y++)
+		MapTiles[newWall->Start.X][y] = Util::WallTile;
 }
 
-Util::Point Map::GetChildCenter(const Room* childRoom)
+Util::Point Map::GetChildCenter(const Util::Room* childRoom)
 {
 	Util::Point center;
 	center.X = childRoom->Top.Start.X + (childRoom->Top.End.X - childRoom->Top.Start.X) / 2;
@@ -31,7 +29,7 @@ Util::Point Map::GetChildCenter(const Room* childRoom)
 	return center;
 }
 
-void Map::GenerateHorizontalSplit(Room* r)
+void Map::GenerateHorizontalSplit(Util::Room* r)
 {
 	if (r == nullptr)
 		return;
@@ -39,15 +37,15 @@ void Map::GenerateHorizontalSplit(Room* r)
 	if (r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2) >= r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2))
 		return;
 
-	const UINT_CHANGEABLE randY = Util::RandomChangeableIntInRange(r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2), r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2));
+	const int randY = Util::RandomChangeableIntInRange(r->Left.Start.Y + (Util::PSEUDO_ROOM_SIZE / 2), r->Left.End.Y - (Util::PSEUDO_ROOM_SIZE / 2));
 
-	const Wall newSplit = { Util::Point(r->Top.Start.X, randY), Util::Point(r->Top.End.X, randY) };
+	const Util::Wall newSplit = { Util::Point(r->Top.Start.X, randY), Util::Point(r->Top.End.X, randY) };
 
-	Room child1 =
+	Util::Room child1 =
 	{ r->Top, newSplit, {r->Top.Start, newSplit.Start}, {r->Top.End, newSplit.End}, nullptr, nullptr, {0, 0} };
 	r->Child1 = &child1;
 
-	Room child2 =
+	Util::Room child2 =
 	{ newSplit, r->Bot, {newSplit.Start, r->Bot.Start}, {newSplit.End, r->Bot.End}, nullptr, nullptr, {0, 0} };
 	r->Child2 = &child2;
 
@@ -60,10 +58,10 @@ void Map::GenerateHorizontalSplit(Room* r)
 	child2.Center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
 	for (int i = child2.Center.Y; i > child1.Center.Y; i--)
-		MapTiles[child2.Center.X][i] = WalkableTile;
+		MapTiles[child2.Center.X][i] = Util::WalkableTile;
 }
 
-void Map::GenerateVerticalSplit(Room* r)
+void Map::GenerateVerticalSplit(Util::Room* r)
 {
 	if (r == nullptr)
 		return;
@@ -71,15 +69,15 @@ void Map::GenerateVerticalSplit(Room* r)
 	if (r->Top.Start.X + Util::PSEUDO_ROOM_SIZE >= r->Top.End.X - Util::PSEUDO_ROOM_SIZE)
 		return;
 
-	const UINT_CHANGEABLE randX = Util::RandomChangeableIntInRange(r->Top.Start.X + Util::PSEUDO_ROOM_SIZE, r->Top.End.X - Util::PSEUDO_ROOM_SIZE);
+	const int randX = Util::RandomChangeableIntInRange(r->Top.Start.X + Util::PSEUDO_ROOM_SIZE, r->Top.End.X - Util::PSEUDO_ROOM_SIZE);
 
-	const Wall newSplit = { Util::Point(randX, r->Top.Start.Y), Util::Point(randX, r->Bot.Start.Y) }; // third thingy maybe wrong
+	const Util::Wall newSplit = { Util::Point(randX, r->Top.Start.Y), Util::Point(randX, r->Bot.Start.Y) }; // third thingy maybe wrong
 
-	Room child1 =
+	Util::Room child1 =
 	{ {r->Top.Start, newSplit.Start}, {r->Bot.Start, newSplit.End}, r->Left, newSplit, nullptr, nullptr, {0, 0} };
 	r->Child1 = &child1;
 
-	Room child2 =
+	Util::Room child2 =
 	{ {newSplit.Start, r->Top.End}, {newSplit.End, r->Bot.End}, newSplit, r->Right, nullptr, nullptr, {0, 0} };
 	r->Child2 = &child2;
 
@@ -92,12 +90,12 @@ void Map::GenerateVerticalSplit(Room* r)
 	child2.Center = GetChildCenter(&child2);
 	// Drawing path between two sister rooms
 	for (int i = child2.Center.X; i > child1.Center.X; i--)
-		MapTiles[i][child2.Center.Y] = WalkableTile;
+		MapTiles[i][child2.Center.Y] = Util::WalkableTile;
 }
 
-Room Map::InitializeBase()
+Util::Room Map::InitializeBase()
 {
-	const Room newRoom =
+	const Util::Room newRoom =
 	{
 		{Util::Point(0, 0), Util::Point(Util::MAX_X - 1, 0)},
 		{Util::Point(0, Util::MAX_Y - 1), Util::Point(Util::MAX_X - 1, Util::MAX_Y - 1)},
@@ -126,7 +124,7 @@ bool Map::GenerateVendors()
 		{
 			vendor.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
 			vendor.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
-		} while (this->MapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != WalkableTile);
+		} while (this->MapTiles[vendor.GetPositionXCoordinate()][vendor.GetPositionYCoordinate()] != Util::WalkableTile);
 		vendor.SetName("Joseph"); // TODO: Generating names randomly
 		this->InsertVendor(&vendor);
 		this->MapVendors.at(this->NumberOfVendors) = vendor;
@@ -147,7 +145,7 @@ bool Map::GenerateChests()
 		{
 			chest.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
 			chest.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
-		} while (this->MapTiles[chest.GetPositionXCoordinate()][chest.GetPositionYCoordinate()] != WalkableTile);
+		} while (this->MapTiles[chest.GetPositionXCoordinate()][chest.GetPositionYCoordinate()] != Util::WalkableTile);
 		this->InsertChest(&chest);
 		this->MapChests.push_back(chest);
 		this->NumberOfChests++;
@@ -165,7 +163,7 @@ bool Map::GenerateEnemies()
 		{
 			enemy.SetPositionXCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_X - 1));
 			enemy.SetPositionYCoordinate(Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1));
-		} while (this->MapTiles[enemy.GetPositionXCoordinate()][enemy.GetPositionYCoordinate()] != WalkableTile);
+		} while (this->MapTiles[enemy.GetPositionXCoordinate()][enemy.GetPositionYCoordinate()] != Util::WalkableTile);
 		this->InsertEnemy(&enemy);
 		this->MapEnemies.push_back(enemy);
 		this->NumberOfEnemies++;
@@ -187,14 +185,14 @@ void Map::GenerateStairs()
 	{
 		stairsXCoordinate = Util::RandomChangeableIntInRange(1, Util::MAX_X - 1);
 		stairsYCoordinate = Util::RandomChangeableIntInRange(1, Util::MAX_Y - 1);
-	} while (this->MapTiles[stairsXCoordinate][stairsYCoordinate] != WalkableTile);
+	} while (this->MapTiles[stairsXCoordinate][stairsYCoordinate] != Util::WalkableTile);
 
-	this->MapTiles[stairsXCoordinate][stairsYCoordinate] = StairsTile;
+	this->MapTiles[stairsXCoordinate][stairsYCoordinate] = Util::StairsTile;
 }
 
 bool Map::GenerateMap()
 {
-	Room base = InitializeBase();
+	Util::Room base = InitializeBase();
 
 	if (Util::RandomChangeableIntInRange(0, 1))
 		GenerateVerticalSplit(&base);
@@ -211,29 +209,29 @@ bool Map::GenerateMap()
 	return true;
 }
 
-std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& Map::GetMapTiles()
+std::array<std::array<Util::Tiles, Util::MAX_Y>, Util::MAX_X>& Map::GetMapTiles()
 {
 	return this->MapTiles;
 }
 
 void Map::InsertChest(const Chest* newChest)
 {
-	this->MapTiles[newChest->GetPositionXCoordinate()][newChest->GetPositionYCoordinate()] = ChestTile;
+	this->MapTiles[newChest->GetPositionXCoordinate()][newChest->GetPositionYCoordinate()] = Util::ChestTile;
 }
 
 void Map::InsertVendor(const Vendor* newVendor)
 {
-	this->MapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = VendorTile;
+	this->MapTiles[newVendor->GetPositionXCoordinate()][newVendor->GetPositionYCoordinate()] = Util::VendorTile;
 }
 
 void Map::InsertEnemy(const Enemy* newEnemy)
 {
-	this->MapTiles[newEnemy->GetPositionXCoordinate()][newEnemy->GetPositionYCoordinate()] = EnemyTile;
+	this->MapTiles[newEnemy->GetPositionXCoordinate()][newEnemy->GetPositionYCoordinate()] = Util::EnemyTile;
 }
 
 void Map::InsertCorpse(const Corpse* newCorpse)
 {
-	this->MapTiles[newCorpse->GetPositionXCoordinate()][newCorpse->GetPositionYCoordinate()] = CorpseTile;
+	this->MapTiles[newCorpse->GetPositionXCoordinate()][newCorpse->GetPositionYCoordinate()] = Util::CorpseTile;
 }
 
 Vendor* Map::FindVendor(const int playerPositionXCoordinate, const int playerPositionYCoordinate)
@@ -277,7 +275,7 @@ void Map::RemoveChest(const int playerPositionXCoordinate, const int playerPosit
 		{
 			this->MapChests.erase(this->MapChests.begin() + i);
 			this->NumberOfChests = this->NumberOfChests - 1;
-			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = WalkableTile;
+			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = Util::WalkableTile;
 		}
 }
 
@@ -286,9 +284,9 @@ void Map::RemoveCorpse(const int playerPositionXCoordinate, const int playerPosi
 	for (int i = 0; i < this->NumberOfCorpses; i++)
 		if (this->MapCorpses.at(i).GetPositionXCoordinate() == playerPositionXCoordinate && this->MapCorpses.at(i).GetPositionYCoordinate() == playerPositionYCoordinate)
 		{
+			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = this->MapCorpses.at(i).GetStandingOnTile();
 			this->MapCorpses.erase(this->MapCorpses.begin() + i);
 			this->NumberOfCorpses = this->NumberOfCorpses - 1;
-			this->MapTiles[playerPositionXCoordinate][playerPositionYCoordinate] = WalkableTile;
 		}
 }
 

@@ -8,32 +8,10 @@
 #include "Vendor.h"
 #include "Util.h"
 
-typedef enum Tiles
-{
-	WallTile, WalkableTile, PlayerTile, VendorTile, ChestTile, EnemyTile, CorpseTile, StairsTile
-} Tiles;
-
-typedef struct Wall
-{
-	Util::Point Start; // Start point of the wall
-	Util::Point End;   // End point of the wall
-} Wall;
-
-typedef struct Room
-{
-	Wall Top;            // Top wall
-	Wall Bot;            // Bottom wall
-	Wall Left;           // Left wall
-	Wall Right;          // Right wall
-	struct Room* Child1; // Left/top child
-	struct Room* Child2; // Right/Bottom child
-	Util::Point Center;        // Center point of the room
-} Room;
-
 class Map
 {
 private:
-	std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X> MapTiles{};
+	std::array<std::array<Util::Tiles, Util::MAX_Y>, Util::MAX_X> MapTiles{};
 	std::array<Vendor, 5> MapVendors;
 	std::vector<Chest> MapChests;
 	std::vector<Enemy> MapEnemies;
@@ -42,12 +20,12 @@ private:
 	int NumberOfChests;
 	int NumberOfEnemies;
 	int NumberOfCorpses;
-	void DrawHorizontalWall(const Wall* newWall);
-	void DrawVerticalWall(const Wall* newWall);
-	static Util::Point GetChildCenter(const Room* childRoom);
-	void GenerateHorizontalSplit(Room* r);
-	void GenerateVerticalSplit(Room* r);
-	Room InitializeBase();
+	void DrawHorizontalWall(const Util::Wall* newWall);
+	void DrawVerticalWall(const Util::Wall* newWall);
+	static Util::Point GetChildCenter(const Util::Room* childRoom);
+	void GenerateHorizontalSplit(Util::Room* r);
+	void GenerateVerticalSplit(Util::Room* r);
+	Util::Room InitializeBase();
 	bool GenerateVendors();
 	bool GenerateChests();
 	bool GenerateEnemies();
@@ -56,7 +34,7 @@ private:
 public:
 	Map();
 	~Map();
-	std::array<std::array<Tiles, Util::MAX_Y>, Util::MAX_X>& GetMapTiles();
+	std::array<std::array<Util::Tiles, Util::MAX_Y>, Util::MAX_X>& GetMapTiles();
 	void InsertVendor(const Vendor* newVendor);
 	void InsertChest(const Chest* newChest);
 	void InsertEnemy(const Enemy* newEnemy);
