@@ -12,14 +12,14 @@ public:
 	/// </summary>
 	/// <param name="name">Chest entity name</param>
 	/// <param name="positionXCoordinate">Chest entity position X coordinate</param>
-	///	<param name="positionYCoordinate">Chest entity position X coordinate</param>
-	Chest(const std::string& name, int positionXCoordinate, int positionYCoordinate);
+	///	<param name="positionYCoordinate">Chest entity position Y coordinate</param>
+	Chest(const std::string& name, int positionXCoordinate, int positionYCoordinate, Util::Tiles standingOnTile);
 	/// <summary>
 	///	Construct chest object
 	/// </summary>
 	/// <param name="positionXCoordinate">Chest entity position X coordinate</param>
-	///	<param name="positionYCoordinate">Chest entity position X coordinate</param>
-	Chest(int positionXCoordinate, int positionYCoordinate);
+	///	<param name="positionYCoordinate">Chest entity position Y coordinate</param>
+	Chest(int positionXCoordinate, int positionYCoordinate, Util::Tiles standingOnTile);
 	/// <summary>
 	///	Removes item from entity inventory
 	/// </summary>

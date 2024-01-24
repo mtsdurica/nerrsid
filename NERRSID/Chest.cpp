@@ -10,13 +10,13 @@ Chest::Chest() : Entity()
 {
 }
 
-Chest::Chest(const std::string& name, const int positionXCoordinate, const int positionYCoordinate)
-	: Entity(name, 0, 0, 5, positionXCoordinate, positionYCoordinate)
+Chest::Chest(const std::string& name, const int positionXCoordinate, const int positionYCoordinate, Util::Tiles standingOnTile)
+	: Entity(name, 0, 0, 5, positionXCoordinate, positionYCoordinate, standingOnTile)
 {
 }
 
-Chest::Chest(const int positionXCoordinate, const int positionYCoordinate)
-	: Entity(0, 0, 5, positionXCoordinate, positionYCoordinate)
+Chest::Chest(const int positionXCoordinate, const int positionYCoordinate, Util::Tiles standingOnTile)
+	: Entity(0, 0, 5, positionXCoordinate, positionYCoordinate, standingOnTile)
 {
 }
 

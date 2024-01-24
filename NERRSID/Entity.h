@@ -3,6 +3,7 @@
 #include <array>
 
 #include "Item.h"
+#include "Util.h"
 
 class Entity abstract
 {
@@ -15,10 +16,11 @@ protected:
 	int PositionXCoordinate;
 	int PositionYCoordinate;
 	bool IdleStatus;
+	Util::Tiles StandingOnTile;
 public:
 	Entity();
-	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
-	Entity(int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate);
+	Entity(std::string name, int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate, Util::Tiles standingOnTile);
+	Entity(int gold, int itemsInInventory, int maximumItemsInInventory, int positionXCoordinate, int positionYCoordinate, Util::Tiles standingOnTile);
 	virtual ~Entity();
 	/// <summary>
 	/// Get entity name
@@ -60,6 +62,7 @@ public:
 	/// </summary>
 	///<returns>Idle status of entity</returns>
 	bool GetIdleStatus() const;
+	virtual Util::Tiles GetStandingOnTile() const;
 	/// <summary>
 	/// Set name of entity 
 	/// </summary>
@@ -69,23 +72,24 @@ public:
 	/// Set entity gold
 	/// </summary>
 	/// <param name="gold">New gold value</param>
-	void SetGold(const int gold);
+	void SetGold(int gold);
 	/// <summary>
 	/// Set number of items in entity inventory
 	/// </summary>
 	/// <param name="itemsInInventory">New number of items in inventory</param>
-	void SetItemsInInventory(const int itemsInInventory);
+	void SetItemsInInventory(int itemsInInventory);
 	/// <summary>
 	/// Set entity position X axis coordinate
 	/// </summary>
 	/// <param name="positionXCoordinate">New X axis coordinate</param>
-	void SetPositionXCoordinate(const int positionXCoordinate);
+	void SetPositionXCoordinate(int positionXCoordinate);
 	/// <summary>
 	/// Set entity position Y axis coordinate
 	/// </summary>
 	/// <param name="positionYCoordinate">New Y axis coordinate</param>
-	void SetPositionYCoordinate(const int positionYCoordinate);
-	void SetIdleStatus(const bool idleStatus);
+	void SetPositionYCoordinate(int positionYCoordinate);
+	void SetIdleStatus(bool idleStatus);
+	void SetStandingOnTile(Util::Tiles standingOnTile);
 	/// <summary>
 	/// Insert item into entity inventory
 	/// </summary>
