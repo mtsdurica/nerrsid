@@ -119,6 +119,8 @@ HandledEvent GameEventHandler::EntityInventoryKeypressHandler(const SDL_Event* e
 		return ExitKeypressHandled;
 	case SDLK_RETURN:
 		return EnterKeypressHandled;
+	case SDLK_i:
+		return InventoryKeypressHandled;
 	case SDLK_h:
 		return HelpKeypressHandled;
 	default:

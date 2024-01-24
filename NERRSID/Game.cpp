@@ -299,7 +299,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 			vendor = map.FindVendor(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 			Menu menu(vendor->GetItemsInInventory());
 			std::string message;
-			bool itemSold = false;
+			bool itemSold = false, itemDetails = false;
 			popupFlag = true;
 			while (popupFlag)
 			{
@@ -338,14 +338,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case HelpKeypressHandled:
 							helpDisplayedFlag = !helpDisplayedFlag;
 							break;
+						case InventoryKeypressHandled:
+							itemDetails = !itemDetails;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
-						case InventoryKeypressHandled:
 							break;
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, vendor, &menu, lastMessage, helpDisplayedFlag);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, vendor, &menu, lastMessage, helpDisplayedFlag, itemDetails);
 			}
 			break;
 		}
@@ -355,6 +357,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 			chest = map.FindChest(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 			Menu menu(chest->GetItemsInInventory());
 			std::string message;
+			bool itemDetails = false;
 			popupFlag = true;
 			while (popupFlag)
 			{
@@ -392,14 +395,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case HelpKeypressHandled:
 							helpDisplayedFlag = !helpDisplayedFlag;
 							break;
+						case InventoryKeypressHandled:
+							itemDetails = !itemDetails;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
-						case InventoryKeypressHandled:
 							break;
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage, false, helpDisplayedFlag);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, chest, &menu, lastMessage, false, helpDisplayedFlag, itemDetails);
 			}
 			break;
 		}
@@ -409,6 +414,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 			corpse = map.FindCorpse(player.GetPositionXCoordinate(), player.GetPositionYCoordinate());
 			Menu menu(corpse->GetItemsInInventory());
 			std::string message;
+			bool itemDetails = false;
 			popupFlag = true;
 			while (popupFlag)
 			{
@@ -446,14 +452,16 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case HelpKeypressHandled:
 							helpDisplayedFlag = !helpDisplayedFlag;
 							break;
+						case InventoryKeypressHandled:
+							itemDetails = !itemDetails;
+							break;
 						case UnusedKeypressHandled:
 						case PlayerNavigationKeypressHandled:
-						case InventoryKeypressHandled:
 							break;
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, corpse, &menu, lastMessage, true, helpDisplayedFlag);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, corpse, &menu, lastMessage, true, helpDisplayedFlag, itemDetails);
 			}
 			break;
 		}
@@ -461,6 +469,7 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 		{
 			Menu menu(player.GetItemsInInventory());
 			popupFlag = true;
+			bool itemDetails = false;
 			while (popupFlag)
 			{
 				while (SDL_PollEvent(&eventSDL))
@@ -492,14 +501,15 @@ void Game::Build(int gameScreenWidth, int gameScreenHeight)
 						case HelpKeypressHandled:
 							helpDisplayedFlag = !helpDisplayedFlag;
 							break;
-						case UnusedKeypressHandled:
-						case PlayerNavigationKeypressHandled:
 						case InventoryKeypressHandled:
+							itemDetails = !itemDetails;
+							break;
+						default:
 							break;
 						}
 					}
 				}
-				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, &menu, lastMessage, helpDisplayedFlag);
+				userInterface.UpdateUserInterface(game.GetTilemap()->GetTileMapTexture(), &map, &player, &menu, lastMessage, helpDisplayedFlag, itemDetails);
 			}
 			break;
 		}
