@@ -314,11 +314,12 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, const Player
 				this->DrawText(tilemapTexture, 1, 1, "Item Name:");
 				this->DrawText(tilemapTexture, 1, 2, inventory->at(i).GetItemName());
 				this->DrawText(tilemapTexture, 1, 4, "Item Stats:");
-				this->DrawText(tilemapTexture, 1, 5, "Strength: " + std::to_string(inventory->at(i).GetItemBonusStrength()));
+				this->DrawText(tilemapTexture, 1, 5, "Strength:  " + std::to_string(inventory->at(i).GetItemBonusStrength()));
 				this->DrawText(tilemapTexture, 1, 6, "Dexterity: " + std::to_string(inventory->at(i).GetItemBonusDexterity()));
 				this->DrawText(tilemapTexture, 1, 7, "Intellect: " + std::to_string(inventory->at(i).GetItemBonusIntellect()));
 			}
 			// Calculate stats without item item of the selected class
+			// TODO: Move this to a function, probably a player class one
 			int baseStrength = player->GetPlayerStrength();
 			int baseDexterity = player->GetPlayerDexterity();
 			int baseIntellect = player->GetPlayerIntellect();
@@ -365,6 +366,7 @@ void UserInterface::DrawInventoryItems(SDL_Texture* tilemapTexture, const Player
 			intellectDelta = baseIntellect + inventory->at(i).GetItemBonusIntellect();
 
 			SDL_Texture* tmp = SDL_CreateTextureFromSurface(this->Renderer, SDL_LoadBMP("tilemap.bmp"));
+			SDL_SetTextureAlphaMod(tmp, 150);
 			SDL_Rect doubleArrowRight = DOUBLE_ARROW_RIGHT;
 			if (strengthDelta > player->GetPlayerStrength())
 			{
