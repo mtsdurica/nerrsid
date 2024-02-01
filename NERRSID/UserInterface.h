@@ -42,12 +42,17 @@ private:
 	void DrawText(SDL_Texture*, int textPositionX, int textPositionY, const std::string& text) const;
 	std::string DrawAnimatedText(SDL_Texture*, int textPositionX, int textPositionY, const std::string& text, int lastUpdate) const;
 	void DrawStatusBar(SDL_Texture* tilemapTexture, const std::string& message) const;
-	void DrawInventoryItems(SDL_Texture* tilemapTexture, std::array<Item, 50>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem, bool itemDetails) const;
+	void DrawInventoryItems(SDL_Texture* tilemapTexture, const Player* player, std::array<Item, 50>* inventory, int itemsInInventory, int selectedItem, int startingItem, int endingItem, bool itemDetails) const;
 	void DrawHelp(SDL_Texture* tilemapTexture, HelpType typeOfHelp) const;
 	void DrawEntityPopup(SDL_Texture* tilemapTexture, Player* entity, int selectedItem, int startingItem, int endingItem, bool itemDetails) const;
-	void DrawEntityPopup(SDL_Texture* tilemapTexture, Vendor* entity, int selectedItem, int startingItem, int endingItem, bool itemDetails) const;
-	void DrawEntityPopup(SDL_Texture* tilemapTexture, Chest* entity, int selectedItem, int startingItem, int endingItem, bool isCorpse, bool itemDetails) const;
+	void DrawEntityPopup(SDL_Texture* tilemapTexture, const Player* player, Vendor* entity, int selectedItem, int startingItem, int endingItem, bool itemDetails) const;
+	void DrawEntityPopup(SDL_Texture* tilemapTexture, const Player* player, Chest* entity, int selectedItem, int startingItem, int endingItem, bool isCorpse, bool itemDetails) const;
 	void DrawGameLogo(SDL_Texture* tilemapTexture) const;
+	// Colored texture
+	static void SetTextureToWhite(SDL_Texture* tilemapTexture);
+	static void SetTextureToRed(SDL_Texture* tilemapTexture);
+	static void SetTextureToGreen(SDL_Texture* tilemapTexture);
+	static void SetTextureToBlue(SDL_Texture* tilemapTexture);
 
 public:
 	UserInterface(SDL_Renderer* renderer, int userInterfaceRectWidth, int userInterfaceRectHeight);
